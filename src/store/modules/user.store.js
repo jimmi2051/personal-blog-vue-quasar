@@ -1,12 +1,16 @@
+/* eslint-disable no-unused-vars */
 /* User.store.js */
-import FetchApi from "utils/FetchApi";
+import actionMiddleware from "store/actionMiddleware";
 
-const initialState = () => ({
-  trainingList: [1, 2, 3]
-});
+const initialState = {
+  trainingList: {
+    data: [],
+    loading: true
+  }
+};
 
 // State object
-const state = initialState();
+const state = initialState;
 
 // Getter functions
 const getters = {
@@ -17,13 +21,17 @@ const getters = {
 
 // Actions
 const actions = {
-  getListTraining({ commit }) {
-    const payload = {
+  getListTraining(store, payload) {
+    const { nextErr, nextSuccess } = payload;
+    const action = {
+      beforeCallType: "GET_TRAINING_REQUEST",
+      successType: "GET_TRAINING_SUCCESS",
+      errorType: "GET_TRAINING_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
       uri: "trainings"
     };
-    FetchApi(payload).then(result => {
-      commit("SET_TRAINING_LIST", result);
-    });
+    actionMiddleware(action, store);
   },
   reset({ commit }) {
     commit("RESET");
@@ -33,13 +41,20 @@ const actions = {
 // Mutations
 const mutations = {
   RESET(state) {
-    const newState = initialState();
+    const newState = initialState;
     Object.keys(newState).forEach(key => {
       state[key] = newState[key];
     });
   },
-  SET_TRAINING_LIST(state, data) {
-    state.trainingList = data;
+  GET_TRAINING_REQUEST(state) {
+    state.trainingList = initialState.trainingList;
+  },
+  GET_TRAINING_SUCCESS(state, data) {
+    state.trainingList.data = data;
+    state.trainingList.loading = false;
+  },
+  GET_TRAINING_ERROR(state, data) {
+    state.trainingList = [];
   }
 };
 

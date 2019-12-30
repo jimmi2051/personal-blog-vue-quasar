@@ -7,7 +7,12 @@
 @import "./components/body";
 
 // Import element
+@import "./elements/button";
+@import "./elements/padding";
 
+/*===========================
+    1. COMMON css 
+===========================*/
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800");
 body {
   font-family: "Poppins", sans-serif;
@@ -109,4 +114,17 @@ p {
   background-repeat: no-repeat;
   width: 100%;
   height: 100%;
+}
+
+/*===== All Section Title Style =====*/
+.section-title .title {
+  font-weight: 700;
+  font-size: 45px;
+  color: #000;
+  padding-bottom: 20px;
+}
+@media (max-width: 767px) {
+  .section-title .title {
+    font-size: 30px;
+  }
 }

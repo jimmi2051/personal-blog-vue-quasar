@@ -6,8 +6,8 @@
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
               <router-link class="navbar-brand" to="/">
-                <img src="@/assets/logo.png" alt="Logo"
-              /></router-link>
+                <img src="@/assets/logo.png" alt="Logo" />
+              </router-link>
               <!-- Logo -->
               <button
                 class="navbar-toggler"
@@ -110,7 +110,7 @@
           </div>
           <div class="col-lg-6 offset-xl-1">
             <div class="header-image d-none d-lg-block">
-              <img src="@/assets/images/banner/screenshot.png" alt="hero" />
+              <img src="@/assets/images/banner/hero.png" alt="hero" />
             </div>
             <!-- header image -->
           </div>
@@ -125,16 +125,24 @@
               <div class="header-social-icon">
                 <ul>
                   <li>
-                    <a href="#"><i class="lni-facebook-filled"></i></a>
+                    <a href="#">
+                      <i class="lni-facebook-filled"></i>
+                    </a>
                   </li>
                   <li>
-                    <a href="#"><i class="lni-twitter-original"></i></a>
+                    <a href="#">
+                      <i class="lni-twitter-original"></i>
+                    </a>
                   </li>
                   <li>
-                    <a href="#"><i class="lni-behance-original"></i></a>
+                    <a href="#">
+                      <i class="lni-behance-original"></i>
+                    </a>
                   </li>
                   <li>
-                    <a href="#"><i class="lni-linkedin-original"></i></a>
+                    <a href="#">
+                      <i class="lni-linkedin-original"></i>
+                    </a>
                   </li>
                 </ul>
               </div>

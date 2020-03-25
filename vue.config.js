@@ -8,12 +8,10 @@ module.exports = {
 
   pluginOptions: {
     quasar: {
-      importStrategy: 'kebab',
+      importStrategy: "kebab",
       rtlSupport: false
     }
   },
 
-  transpileDependencies: [
-    'quasar'
-  ]
+  transpileDependencies: ["quasar"]
 };

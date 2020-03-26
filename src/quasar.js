@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-// import "./styles/quasar.scss";
+import "./styles/quasar.scss";
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/roboto-font/roboto-font.css";
 import {
@@ -24,7 +24,7 @@ import {
   Dialog,
   QDialog
 } from "quasar";
-
+import * as All from "quasar";
 Vue.use(Quasar, {
   config: {
     Ripple
@@ -45,10 +45,12 @@ Vue.use(Quasar, {
     QPage,
     QPageContainer,
 
-    QDialog
+    QDialog,
+    All
   },
   directives: {
-    Ripple
+    Ripple,
+    All
   },
   plugins: { Notify, BottomSheet, Dialog }
 });

@@ -6,7 +6,7 @@ module.exports = {
       {
         quasar: {
           transform: "quasar/dist/babel-transforms/imports.js",
-          preventFullImport: true
+          preventFullImport: false
         }
       }
     ]

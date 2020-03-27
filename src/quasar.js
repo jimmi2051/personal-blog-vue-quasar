@@ -5,52 +5,28 @@ import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/roboto-font/roboto-font.css";
 import {
   Quasar,
-  Ripple,
-  QBtn,
-  QIcon,
-  Notify,
-  BottomSheet,
-  QToolbar,
-  QToolbarTitle,
-  QList,
-  QItem,
-  QItemSection,
-  QItemLabel,
   QPageContainer,
   QPage,
-  QDrawer,
-  QHeader,
   QLayout,
-  Dialog,
-  QDialog
+  QHeader,
+  QFooter,
+  QToolbar,
+  QBtn,
+  QImg
 } from "quasar";
-import * as All from "quasar";
 Vue.use(Quasar, {
-  config: {
-    Ripple
-  },
+  config: {},
   components: {
     /* not needed if importStrategy is not 'manual' */
-    QBtn,
-    QIcon,
-    QLayout,
-    QToolbar,
-    QToolbarTitle,
-    QHeader,
-    QDrawer,
-    QList,
-    QItem,
-    QItemSection,
-    QItemLabel,
-    QPage,
     QPageContainer,
-
-    QDialog,
-    All
+    QPage,
+    QLayout,
+    QHeader,
+    QFooter,
+    QToolbar,
+    QBtn,
+    QImg
   },
-  directives: {
-    Ripple,
-    All
-  },
-  plugins: { Notify, BottomSheet, Dialog }
+  directives: {},
+  plugins: {}
 });

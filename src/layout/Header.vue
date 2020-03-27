@@ -1,59 +1,58 @@
 <template>
-  <header id="home" class="header-area">
-    <div class="navigation fixed-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <nav class="navbar navbar-expand-lg">
-              <router-link class="navbar-brand" to="/">
-                <img src="@/assets/logo.png" alt="Logo" />
-              </router-link>
-              <!-- Logo -->
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span class="toggler-icon"></span>
-                <span class="toggler-icon"></span>
-                <span class="toggler-icon"></span>
-              </button>
+  <q-toolbar class="bg-black text-white shadow-2">
+    <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
 
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                  <li class="nav-item active">
-                    <a class="page-scroll" href="#home">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#about">About</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#service">Services</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#work">Portfolio</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#blog">Blog</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#contact">Contact</a>
-                  </li>
-                </ul>
-              </div>
-              <!-- navbar collapse -->
-            </nav>
-            <!-- navbar -->
-          </div>
-        </div>
-        <!-- row -->
-      </div>
-      <!-- container -->
-    </div>
-    <!-- header content -->
-  </header>
+    <!-- <q-img :src="imageSrc" spinner-color="white" style="height: 140px; max-width: 150px" /> -->
+
+    <img src="statics/logo.png" alt="#" />
+    <q-separator dark vertical inset />
+    <q-btn stretch flat label="NLT" />
+
+    <q-space />
+
+    <q-btn-dropdown stretch flat label="Dropdown">
+      <q-list>
+        <q-item-label header>Folders</q-item-label>
+        <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
+          <q-item-section avatar>
+            <q-avatar icon="folder" color="secondary" text-color="white" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Photos</q-item-label>
+            <q-item-label caption>February 22, 2016</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-icon name="info" />
+          </q-item-section>
+        </q-item>
+        <q-separator inset spaced />
+        <q-item-label header>Files</q-item-label>
+        <q-item v-for="n in 3" :key="`y.${n}`" clickable v-close-popup tabindex="0">
+          <q-item-section avatar>
+            <q-avatar icon="assignment" color="primary" text-color="white" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Vacation</q-item-label>
+            <q-item-label caption>February 22, 2016</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-icon name="info" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
+    <q-separator dark vertical />
+    <q-btn stretch flat label="Link" />
+    <q-separator dark vertical />
+    <q-btn stretch flat label="Link" />
+  </q-toolbar>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      imageSrc: "statics/logo.png"
+    };
+  }
+};
+</script>

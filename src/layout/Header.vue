@@ -1,58 +1,38 @@
 <template>
   <q-toolbar class="bg-black text-white shadow-2">
     <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
+    <q-item to="/" exact>
+      <q-img
+        :src="require('@/assets/images/logo.png')"
+        spinner-color="white"
+        style="height: auto; max-width: 50px; width: 50px"
+      />
+    </q-item>
 
-    <!-- <q-img :src="imageSrc" spinner-color="white" style="height: 140px; max-width: 150px" /> -->
-
-    <img src="statics/logo.png" alt="#" />
+    <!-- <img src="~statics/logo.png" alt="#" /> -->
     <q-separator dark vertical inset />
-    <q-btn stretch flat label="NLT" />
-
+    <q-item to="/" exact>
+      <q-btn stretch flat label="NLT" />
+    </q-item>
     <q-space />
 
-    <q-btn-dropdown stretch flat label="Dropdown">
-      <q-list>
-        <q-item-label header>Folders</q-item-label>
-        <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
-          <q-item-section avatar>
-            <q-avatar icon="folder" color="secondary" text-color="white" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Photos</q-item-label>
-            <q-item-label caption>February 22, 2016</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-icon name="info" />
-          </q-item-section>
-        </q-item>
-        <q-separator inset spaced />
-        <q-item-label header>Files</q-item-label>
-        <q-item v-for="n in 3" :key="`y.${n}`" clickable v-close-popup tabindex="0">
-          <q-item-section avatar>
-            <q-avatar icon="assignment" color="primary" text-color="white" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Vacation</q-item-label>
-            <q-item-label caption>February 22, 2016</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-icon name="info" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown>
     <q-separator dark vertical />
-    <q-btn stretch flat label="Link" />
+    <q-item to="/about" exact>
+      <q-btn stretch flat label="About" />
+    </q-item>
     <q-separator dark vertical />
-    <q-btn stretch flat label="Link" />
+    <q-item to="/works" exact>
+      <q-btn stretch flat label="Works" />
+    </q-item>
+    <q-separator dark vertical />
+    <q-item to="/contact" exact>
+      <q-btn stretch flat label="Contact" />
+    </q-item>
+    <q-separator dark vertical />
+    <q-item to="https://www.facebook.com/beatboxer.mrteo" exact>
+      <i class="fab fa-facebook fa-2x" style="line-height:48px; height: 48px; text-align:center; min-width: 48px" />
+    </q-item>
   </q-toolbar>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      imageSrc: "statics/logo.png"
-    };
-  }
-};
 </script>

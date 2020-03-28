@@ -3,7 +3,7 @@
   <q-page padding>
     <div class="home">
       <ul id="example-1" v-if="!trainingList.loading">
-        <li v-bind:key="training._id" v-for="training in trainingList.data">{{ training.name }}</li>
+        <li :key="training._id" v-for="training in trainingList.data">{{ training.name }}</li>
       </ul>
       <ul v-else>
         <li>Loading ....</li>

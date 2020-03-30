@@ -16,10 +16,13 @@ import {
   QBtn,
   QImg,
   QItem,
-  QIcon
+  QIcon,
+  QAjaxBar,
+  LoadingBar,
+  QParallax
 } from "quasar";
 Vue.use(Quasar, {
-  config: {},
+  config: { LoadingBar },
   components: {
     /* not needed if importStrategy is not 'manual' */
     QPageContainer,
@@ -31,9 +34,11 @@ Vue.use(Quasar, {
     QBtn,
     QImg,
     QItem,
-    QIcon
+    QIcon,
+    QAjaxBar,
+    QParallax
   },
   directives: {},
-  plugins: {},
+  plugins: { LoadingBar },
   iconSet: iconSet
 });

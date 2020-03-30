@@ -1,6 +1,12 @@
 import FetchApi from "utils/FetchApi";
+import { LoadingBar } from "quasar";
 
 const actionMiddleware = (action, store) => {
+  LoadingBar.setDefaults({
+    color: "light-blue-3",
+    size: "3px",
+    position: "top"
+  });
   const {
     successType,
     beforeCallType,
@@ -9,6 +15,7 @@ const actionMiddleware = (action, store) => {
     afterError,
     ...rest
   } = action;
+  LoadingBar.start();
   if (beforeCallType) {
     store.commit(beforeCallType);
   }
@@ -29,8 +36,10 @@ const actionMiddleware = (action, store) => {
           afterError(response);
         }
       }
+      LoadingBar.stop();
     })
     .catch(error => {
+      LoadingBar.stop();
       if (errorType) {
         store.commit(errorType, error);
       }

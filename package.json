@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve",
+    "start": "node server.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
@@ -12,8 +12,10 @@
   "dependencies": {
     "@quasar/extras": "^1.6.0",
     "core-js": "^3.4.3",
+    "express": "^4.17.1",
     "quasar": "^1.9.11",
     "register-service-worker": "^1.6.2",
+    "serve-static": "^1.14.1",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",
     "vuex": "^3.1.2"

@@ -19,7 +19,10 @@ import {
   QIcon,
   QAjaxBar,
   LoadingBar,
-  QParallax
+  QParallax,
+  QTimeline,
+  QTimelineEntry,
+  QRating
 } from "quasar";
 Vue.use(Quasar, {
   config: { LoadingBar },
@@ -36,7 +39,10 @@ Vue.use(Quasar, {
     QItem,
     QIcon,
     QAjaxBar,
-    QParallax
+    QParallax,
+    QTimeline,
+    QTimelineEntry,
+    QRating
   },
   directives: {},
   plugins: { LoadingBar },

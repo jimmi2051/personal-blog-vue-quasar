@@ -22,10 +22,15 @@ import {
   QParallax,
   QTimeline,
   QTimelineEntry,
-  QRating
+  QRating,
+  QCard,
+  QCardSection,
+  QCardActions,
+  Loading,
+  Notify
 } from "quasar";
 Vue.use(Quasar, {
-  config: { LoadingBar },
+  config: { LoadingBar, Notify },
   components: {
     /* not needed if importStrategy is not 'manual' */
     QPageContainer,
@@ -42,9 +47,12 @@ Vue.use(Quasar, {
     QParallax,
     QTimeline,
     QTimelineEntry,
-    QRating
+    QRating,
+    QCard,
+    QCardSection,
+    QCardActions
   },
   directives: {},
-  plugins: { LoadingBar },
+  plugins: { LoadingBar, Loading, Notify },
   iconSet: iconSet
 });

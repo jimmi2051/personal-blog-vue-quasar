@@ -1,74 +1,9 @@
 
 <template>
   <q-page>
-    <q-parallax :speed="0.5">
-      <template v-slot:media>
-        <img :src="require('@/assets/images/background-index-2.jpg')" />
-      </template>
+    <Homesection1 />
+    <Homesection2 />
 
-      <template v-slot:content="scope">
-        <div
-          class="absolute column items-center"
-          :style="{
-            opacity: 0.45 + (1 - scope.percentScrolled) * 0.55,
-            top: (scope.percentScrolled * 60) + '%',
-            left: 0,
-            right: 0
-          }"
-        >
-          <!-- <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" style="width: 150px; height: 150px"> -->
-          <div class="text-h3 text-white text-center header-content">
-            Hi There, I Am Thanh.
-            <br />Software Engineer
-          </div>
-          <!-- <div class="text-h6 text-grey-3 text-center">
-            v{{ $q.version }}
-          </div>-->
-        </div>
-      </template>
-    </q-parallax>
-    <div class="q-pa-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="home" to="/" />
-        <q-breadcrumbs-el label="Docs" icon="widgets" to="/start/pick-quasar-flavour" />
-        <q-breadcrumbs-el label="Breadcrumbs" icon="navigation" to="/vue-components/breadcrumbs" />
-        <q-breadcrumbs-el label="Build" icon="build" />
-      </q-breadcrumbs>
-    </div>
-    <div class="q-px-lg q-pb-md">
-      <q-timeline color="secondary">
-        <q-timeline-entry heading>September, 2020</q-timeline-entry>
-
-        <q-timeline-entry
-          title="Event Title"
-          subtitle="September 22, 2015"
-          avatar="https://cdn.quasar.dev/img/avatar2.jpg"
-        >
-          <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-        </q-timeline-entry>
-
-        <q-timeline-entry title="Event Title" subtitle="February 22, 1986">
-          <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-        </q-timeline-entry>
-
-        <q-timeline-entry
-          title="Event Title"
-          subtitle="February 22, 1986"
-          color="orange"
-          icon="done_all"
-        >
-          <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-        </q-timeline-entry>
-
-        <q-timeline-entry title="Event Title" subtitle="February 22, 1986">
-          <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-        </q-timeline-entry>
-
-        <q-timeline-entry title="Event Title" subtitle="February 22, 1986">
-          <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-        </q-timeline-entry>
-      </q-timeline>
-    </div>
     <div class="q-pa-md">
       <div class="q-gutter-y-md row">
         <div class="text-h3 col-12">Skills</div>
@@ -245,12 +180,12 @@
         </q-item>
       </q-list>
     </div>
-    <div class="q-pa-md">
+    <!-- <div class="q-pa-md">
       <q-btn color="primary" @click="showLoading" label="Show Loading" />
     </div>
     <div class="q-pa-md">
       <q-btn color="purple" @click="showNotif" label="Show Notification" />
-    </div>
+    </div>-->
   </q-page>
 </template>
 <style lang="sass" scoped>
@@ -265,6 +200,8 @@
 // // @ is an alias to /src
 import { mapActions, mapState } from "vuex";
 import { QSpinnerGears } from "quasar";
+import Homesection1 from "sections/Homepage/Homesection1";
+import Homesection2 from "sections/Homepage/Homesection2";
 export default {
   name: "Home",
   created: function() {
@@ -325,6 +262,10 @@ export default {
       ratingModel: 3,
       slide: 1
     };
+  },
+  components: {
+    Homesection1,
+    Homesection2
   }
 };
 </script>

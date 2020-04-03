@@ -1,0 +1,13 @@
+.section {
+  &--title {
+    color: $light-blue;
+    &::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 8px;
+      background-color: $light-blue-3;
+      margin: 23px 0 0 0;
+    }
+  }
+}

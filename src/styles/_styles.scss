@@ -1,7 +1,13 @@
+// Import Quasar Style
+@import "./quasar.variables.scss";
+@import "~quasar-styl";
+@import "~quasar-addon-styl";
 // Import element
 @import "./elements/button";
 @import "./elements/padding";
 
 @import "./components/qitem";
+@import "./components/qtimeline";
+@import "./components/section";
 
 @import "./pages/home";

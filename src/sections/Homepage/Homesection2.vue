@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-xl">
+  <div>
     <div class="text-h3 section--title">My Experience</div>
     <q-timeline color="secondary">
       <q-timeline-entry heading>From 2018 to 2020</q-timeline-entry>

@@ -1,6 +1,7 @@
 .section {
   &--title {
     color: $light-blue;
+    font-size: 36px;
     &::after {
       content: "";
       display: block;
@@ -8,6 +9,9 @@
       height: 8px;
       background-color: $light-blue-3;
       margin: 23px 0 0 0;
+    }
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      font-size: 30px;
     }
   }
 }

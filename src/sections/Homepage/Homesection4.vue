@@ -1,11 +1,11 @@
 <template>
   <div class="row q-pt-md">
     <div class="col-12">
-      <div class="text-h3 section--title">My Latest Projects</div>
+      <div class="section--title">My Latest Projects</div>
       <div class="text-subtitle2 q-pb-sm q-pt-sm">Here is our latest projects. You'll love them!</div>
     </div>
 
-    <q-card class="col-4 q-pa-md">
+    <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
       <img :src="require('@/assets/images/Homepage/background-h3zoom.webp')" />
 
       <q-card-section>
@@ -25,8 +25,8 @@
       </q-card-section>-->
     </q-card>
 
-    <!-- <div classs="col-4 q-pa-md"> -->
-    <q-card class="col-4 q-pa-md">
+    <!-- <div classs="col-sm-4 q-pa-md"> -->
+    <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
       <img :src="require('@/assets/images/Homepage/background-cynopsis.png')" />
 
       <q-card-section>
@@ -49,8 +49,8 @@
       </q-card-section>-->
     </q-card>
     <!-- </div> -->
-    <!-- <div class="col-4 q-pa-md"> -->
-    <q-card class="col-4 q-pa-md">
+    <!-- <div class="col-sm-4 q-pa-md"> -->
+    <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
       <img :src="require('@/assets/images/Homepage/background-kyanon.png')" />
       <q-card-section>
         <div class="text-h6">Kyanon Digital - Company Website</div>

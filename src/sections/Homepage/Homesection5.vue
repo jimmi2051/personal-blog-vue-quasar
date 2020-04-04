@@ -1,16 +1,22 @@
 <template>
   <div class="q-pt-md">
-    <div class="text-h3 section--title">My Latest Activities</div>
+    <div class="section--title">My Latest Activities</div>
 
-    <q-carousel class="q-pt-md" arrows swipeable v-model="slide" infinite>
+    <q-carousel
+      class="q-mt-md bg-grey-1 shadow-2 rounded-borders"
+      arrows
+      swipeable
+      v-model="slide"
+      infinite
+    >
       <q-carousel-slide :name="1" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-2.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -23,11 +29,11 @@
       <q-carousel-slide :name="2" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-3.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-4.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -40,11 +46,11 @@
       <q-carousel-slide :name="3" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-5.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-6.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -56,11 +62,11 @@
       <q-carousel-slide :name="4" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/company-trip.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang-2.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -72,11 +78,11 @@
       <q-carousel-slide :name="5" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/trung-thu.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/trung-thu-2.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -88,11 +94,11 @@
       <q-carousel-slide :name="6" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/vung-tau-101.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/vung-tau-101-2.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -104,11 +110,11 @@
       <q-carousel-slide :name="7" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/vung-tau-101-3.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/vung-tau-101-4.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -120,11 +126,11 @@
       <q-carousel-slide :name="8" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/headless-vung-tau-1.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/headless-vung-tau-2.jpg')"
           />
           <div class="absolute-bottom custom-caption">
@@ -136,11 +142,11 @@
       <q-carousel-slide :name="9" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/headless-vung-tau-3.jpg')"
           />
           <q-img
-            class="rounded-borders col-6 full-height"
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/headless-vung-tau-4.jpg')"
           />
           <div class="absolute-bottom custom-caption">

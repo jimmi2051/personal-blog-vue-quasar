@@ -4,3 +4,59 @@
   font-weight: 700 !important;
   color: #ffffff;
 }
+.skill {
+  &-hard {
+    padding-right: 15px;
+    @media screen and (min-width: 320px) and (max-width: 991px) {
+      padding: 0px;
+    }
+  }
+  &-soft {
+    padding-left: 15px;
+    @media screen and (min-width: 320px) and (max-width: 991px) {
+      padding: 0px;
+    }
+  }
+  &-title {
+    font-size: 20px;
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      font-size: 14px;
+    }
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+      font-size: 18px;
+    }
+    @media screen and (min-width: 992px) and (max-width: 1200px) {
+      font-size: 18px;
+    }
+  }
+}
+.home-page {
+  padding: 15px;
+}
+.section1 {
+  &-background {
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      top: 22% !important;
+    }
+  }
+}
+.contact {
+  &-info {
+    padding-right: 15px;
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      padding: 0px;
+    }
+  }
+  &-touch {
+    padding-left: 15px;
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      padding: 0px;
+    }
+  }
+  &-title {
+    font-size: 46px;
+    @media screen and (min-width: 320px) and (max-width: 767px) {
+      font-size: 24px;
+    }
+  }
+}

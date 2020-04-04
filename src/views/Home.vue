@@ -2,7 +2,7 @@
 <template>
   <q-page>
     <Homesection1 />
-    <div class="q-pa-xl" style="padding-top: 16px;">
+    <div class="home-page">
       <Homesection2 />
 
       <Homesection3 />

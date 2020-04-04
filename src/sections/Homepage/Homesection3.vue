@@ -1,126 +1,13 @@
 <template>
   <div>
-    <div class="text-h3 section--title">My Skills</div>
-    <q-splitter v-model="splitterModel">
-      <template v-slot:before>
-        <div class="q-pa-md">
-          <div class="text-h4 q-mb-md">Hard skills</div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>ReactJS:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pReact"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Django:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pDjango"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>ASP.NET:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pNet"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>VueJS:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pVue"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>NodeJS:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pNode"
-            />
-          </div>
-        </div>
-      </template>
-
-      <template v-slot:after>
-        <div class="q-pa-md">
-          <div class="text-h4 q-mb-md">Soft Skills</div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Communication:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pCom"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Teamwork:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pTeam"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Adaptability:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pAdap"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Problem-Solving:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pSol"
-            />
-          </div>
-          <div class="row q-pt-sm q-pb-sm">
-            <div class="text-h6 col-3" style>Creativity:</div>
-            <q-linear-progress
-              class="col-9 progress"
-              stripe
-              color="light-blue-3"
-              size="10px"
-              :value="pCreate"
-            />
-          </div>
-        </div>
-      </template>
-    </q-splitter>
-    <!-- <div class="q-gutter-y-md row q-pt-md">
-      <div class="col q-pr-md">
+    <div class="section--title">My Skills</div>
+    <div class="q-gutter-y-md row q-pt-md skill">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 skill-hard">
         <div class="text-h4">Hard Skills</div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>ReactJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>ReactJS:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -128,9 +15,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Django:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Django:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -138,9 +25,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>ASP.NET:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>ASP.NET:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -148,9 +35,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>VueJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>VueJS:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -158,9 +45,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>NodeJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>NodeJS:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -168,12 +55,12 @@
           />
         </div>
       </div>
-      <div class="col q-pl-md">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 skill-soft">
         <div class="text-h4">Soft Skills</div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Communication:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Communication:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -181,9 +68,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Teamwork:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Teamwork:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -191,9 +78,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Adaptability:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Adaptability:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -201,9 +88,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Problem-Solving:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Problem-Solving:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -211,9 +98,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="text-h6 col-3" style>Creativity:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Creativity:</div>
           <q-linear-progress
-            class="col-9 progress"
+            class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
             color="light-blue-3"
             size="10px"
@@ -221,7 +108,7 @@
           />
         </div>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 <script>
@@ -238,8 +125,7 @@ export default {
       pTeam: 0.8,
       pAdap: 0.8,
       pSol: 0.8,
-      pCreate: 0.7,
-      splitterModel: 50 // start at 50%
+      pCreate: 0.7
     };
   }
 };

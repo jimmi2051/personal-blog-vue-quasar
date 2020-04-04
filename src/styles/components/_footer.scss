@@ -1,0 +1,12 @@
+.footer {
+  color: white;
+  padding: 15px;
+  &-title {
+    font-size: 15px;
+    height: auto;
+    line-height: 36px;
+    @media screen and (max-width: 321px) {
+      font-size: 13px;
+    }
+  }
+}

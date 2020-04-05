@@ -4,7 +4,7 @@
     <q-timeline color="secondary">
       <q-timeline-entry heading>From 2018 to 2020</q-timeline-entry>
       <q-timeline-entry
-        title="SAPO TECHNOLOGY JSC"
+        title="KYANON DIGITAL"
         subtitle="Aug 2, 2018 - Present"
         :avatar="require('@/assets/images/Homepage/kyanon-logo.png')"
       >

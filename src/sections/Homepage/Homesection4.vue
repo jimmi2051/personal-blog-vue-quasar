@@ -6,7 +6,7 @@
     </div>
 
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img :src="require('@/assets/images/Homepage/background-h3zoom.webp')" />
+      <img :src="require('@/assets/images/Homepage/background-h3zoom.jpg')" />
 
       <q-card-section>
         <div class="text-h6">H3Zoom - Facade Inspector</div>

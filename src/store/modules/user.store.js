@@ -1,12 +1,12 @@
+/* Example for call API using fetch */
 /* eslint-disable no-unused-vars */
 /* User.store.js */
 import actionMiddleware from "store/actionMiddleware";
-
 const initialState = {
   trainingList: {
     data: [],
-    loading: true
-  }
+    loading: true,
+  },
 };
 
 // State object
@@ -16,11 +16,12 @@ const state = initialState;
 const getters = {
   getTrainingList(state) {
     return state.trainingList;
-  }
+  },
 };
 
 // Actions
 const actions = {
+  /* Example Call API using Fetch */
   getListTraining(store, payload) {
     const { nextErr, nextSuccess } = payload;
     const action = {
@@ -29,20 +30,20 @@ const actions = {
       errorType: "GET_TRAINING_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: "trainings"
+      uri: "trainings",
     };
     actionMiddleware(action, store);
   },
   reset({ commit }) {
     commit("RESET");
-  }
+  },
 };
 
 // Mutations
 const mutations = {
   RESET(state) {
     const newState = initialState;
-    Object.keys(newState).forEach(key => {
+    Object.keys(newState).forEach((key) => {
       state[key] = newState[key];
     });
   },
@@ -55,7 +56,7 @@ const mutations = {
   },
   GET_TRAINING_ERROR(state, data) {
     state.trainingList = [];
-  }
+  },
 };
 
 export default {
@@ -63,5 +64,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

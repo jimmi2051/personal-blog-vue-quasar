@@ -1,4 +1,3 @@
-
 <template>
   <q-page>
     <Homesection1 />
@@ -11,38 +10,44 @@
     </div>
   </q-page>
 </template>
-<style lang="sass" scoped>
-.custom-caption
-  text-align: center
-  padding: 12px
-  color: white
-  background-color: rgba(0, 0, 0, .3)
-</style>
 
 <script>
 // // @ is an alias to /src
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
+import { isArray } from "lodash";
+import { findPage } from "utils/Helpers";
 import Homesection1 from "sections/Homepage/Homesection1";
 import Homesection2 from "sections/Homepage/Homesection2";
 import Homesection3 from "sections/Homepage/Homesection3";
 import Homesection4 from "sections/Homepage/Homesection4";
 import Homesection5 from "sections/Homepage/Homesection5";
 import Homesection6 from "sections/Homepage/Homesection6";
+function mapStateToProps(state) {
+  let data = {};
+  const pages = state.Page.pages.data.pages;
+  if (pages && isArray(pages)) {
+    data = findPage(pages, "Home");
+  }
+  // console.log("dataHomePage>>>>", data);
+  return {
+    loading: state.Page.pages.loading,
+    homePage: data,
+  };
+}
 export default {
   name: "Home",
-  created: function() {},
-  methods: {
-    ...mapActions("User", [
-      "getListTraining" // map `this.increment()` to `this.$store.dispatch('increment')`
-    ])
+  created: function () {
+    // console.log("this is Home>>>", this);
   },
   computed: {
-    ...mapState("User", ["trainingList"])
+    ...mapState({
+      store: mapStateToProps,
+    }),
   },
   data() {
     return {
       ratingModel: 3,
-      slide: 1
+      slide: 1,
     };
   },
   components: {
@@ -51,7 +56,7 @@ export default {
     Homesection3,
     Homesection4,
     Homesection5,
-    Homesection6
-  }
+    Homesection6,
+  },
 };
 </script>

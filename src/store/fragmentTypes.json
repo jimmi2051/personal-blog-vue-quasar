@@ -1,0 +1,381 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "SectiondetailComponentsDynamicZone",
+        "possibleTypes": [
+          {
+            "name": "ComponentQuasarQContactItem"
+          },
+          {
+            "name": "ComponentQuasarQTimeline"
+          },
+          {
+            "name": "ComponentQuasarQListLinearProgress"
+          },
+          {
+            "name": "ComponentQuasarQTimelineEntry"
+          },
+          {
+            "name": "ComponentQuasarQCardItem"
+          },
+          {
+            "name": "ComponentQuasarQSlide"
+          },
+          {
+            "name": "ComponentQuasarQLinearProgress"
+          },
+          {
+            "name": "ComponentQuasarQSlideItem"
+          },
+          {
+            "name": "ComponentQuasarQCard"
+          },
+          {
+            "name": "ComponentQuasarQParallax"
+          },
+          {
+            "name": "ComponentQuasarQContact"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Morph",
+        "possibleTypes": [
+          {
+            "name": "UsersPermissionsMe"
+          },
+          {
+            "name": "UsersPermissionsMeRole"
+          },
+          {
+            "name": "UsersPermissionsLoginPayload"
+          },
+          {
+            "name": "ForgotPassword"
+          },
+          {
+            "name": "Page"
+          },
+          {
+            "name": "PageConnection"
+          },
+          {
+            "name": "PageAggregator"
+          },
+          {
+            "name": "PageGroupBy"
+          },
+          {
+            "name": "PageConnectionId"
+          },
+          {
+            "name": "PageConnection_id"
+          },
+          {
+            "name": "PageConnectionCreatedAt"
+          },
+          {
+            "name": "PageConnectionUpdatedAt"
+          },
+          {
+            "name": "PageConnectionPageName"
+          },
+          {
+            "name": "PageConnectionPageUrl"
+          },
+          {
+            "name": "PageConnectionPageLayout"
+          },
+          {
+            "name": "createPagePayload"
+          },
+          {
+            "name": "updatePagePayload"
+          },
+          {
+            "name": "deletePagePayload"
+          },
+          {
+            "name": "Section"
+          },
+          {
+            "name": "SectionConnection"
+          },
+          {
+            "name": "SectionAggregator"
+          },
+          {
+            "name": "SectionGroupBy"
+          },
+          {
+            "name": "SectionConnectionId"
+          },
+          {
+            "name": "SectionConnection_id"
+          },
+          {
+            "name": "SectionConnectionCreatedAt"
+          },
+          {
+            "name": "SectionConnectionUpdatedAt"
+          },
+          {
+            "name": "SectionConnectionSectionName"
+          },
+          {
+            "name": "SectionConnectionSectionLayout"
+          },
+          {
+            "name": "SectionConnectionSectiondetail"
+          },
+          {
+            "name": "createSectionPayload"
+          },
+          {
+            "name": "updateSectionPayload"
+          },
+          {
+            "name": "deleteSectionPayload"
+          },
+          {
+            "name": "Sectiondetail"
+          },
+          {
+            "name": "SectiondetailConnection"
+          },
+          {
+            "name": "SectiondetailAggregator"
+          },
+          {
+            "name": "SectiondetailGroupBy"
+          },
+          {
+            "name": "SectiondetailConnectionId"
+          },
+          {
+            "name": "SectiondetailConnection_id"
+          },
+          {
+            "name": "SectiondetailConnectionCreatedAt"
+          },
+          {
+            "name": "SectiondetailConnectionUpdatedAt"
+          },
+          {
+            "name": "SectiondetailConnectionTitle"
+          },
+          {
+            "name": "SectiondetailConnectionDescription"
+          },
+          {
+            "name": "SectiondetailConnectionSectionName"
+          },
+          {
+            "name": "SectiondetailConnectionSection"
+          },
+          {
+            "name": "createSectiondetailPayload"
+          },
+          {
+            "name": "updateSectiondetailPayload"
+          },
+          {
+            "name": "deleteSectiondetailPayload"
+          },
+          {
+            "name": "UploadFile"
+          },
+          {
+            "name": "UploadFileConnection"
+          },
+          {
+            "name": "UploadFileAggregator"
+          },
+          {
+            "name": "UploadFileGroupBy"
+          },
+          {
+            "name": "UploadFileConnectionId"
+          },
+          {
+            "name": "UploadFileConnection_id"
+          },
+          {
+            "name": "UploadFileConnectionCreatedAt"
+          },
+          {
+            "name": "UploadFileConnectionUpdatedAt"
+          },
+          {
+            "name": "UploadFileConnectionName"
+          },
+          {
+            "name": "UploadFileConnectionHash"
+          },
+          {
+            "name": "UploadFileConnectionSha256"
+          },
+          {
+            "name": "UploadFileConnectionExt"
+          },
+          {
+            "name": "UploadFileConnectionMime"
+          },
+          {
+            "name": "UploadFileConnectionSize"
+          },
+          {
+            "name": "UploadFileConnectionUrl"
+          },
+          {
+            "name": "UploadFileConnectionProvider"
+          },
+          {
+            "name": "UploadFileConnectionProvider_metadata"
+          },
+          {
+            "name": "createFilePayload"
+          },
+          {
+            "name": "updateFilePayload"
+          },
+          {
+            "name": "deleteFilePayload"
+          },
+          {
+            "name": "UsersPermissionsPermission"
+          },
+          {
+            "name": "UsersPermissionsRole"
+          },
+          {
+            "name": "UsersPermissionsRoleConnection"
+          },
+          {
+            "name": "UsersPermissionsRoleAggregator"
+          },
+          {
+            "name": "UsersPermissionsRoleGroupBy"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionId"
+          },
+          {
+            "name": "UsersPermissionsRoleConnection_id"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionCreatedAt"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionUpdatedAt"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionName"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionDescription"
+          },
+          {
+            "name": "UsersPermissionsRoleConnectionType"
+          },
+          {
+            "name": "createRolePayload"
+          },
+          {
+            "name": "updateRolePayload"
+          },
+          {
+            "name": "deleteRolePayload"
+          },
+          {
+            "name": "UsersPermissionsUser"
+          },
+          {
+            "name": "UsersPermissionsUserConnection"
+          },
+          {
+            "name": "UsersPermissionsUserAggregator"
+          },
+          {
+            "name": "UsersPermissionsUserGroupBy"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionId"
+          },
+          {
+            "name": "UsersPermissionsUserConnection_id"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionCreatedAt"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionUpdatedAt"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionUsername"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionEmail"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionProvider"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionConfirmed"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionBlocked"
+          },
+          {
+            "name": "UsersPermissionsUserConnectionRole"
+          },
+          {
+            "name": "createUserPayload"
+          },
+          {
+            "name": "updateUserPayload"
+          },
+          {
+            "name": "deleteUserPayload"
+          },
+          {
+            "name": "ComponentQuasarQCardItem"
+          },
+          {
+            "name": "ComponentQuasarQCard"
+          },
+          {
+            "name": "ComponentQuasarQContactItem"
+          },
+          {
+            "name": "ComponentQuasarQContact"
+          },
+          {
+            "name": "ComponentQuasarQLinearProgress"
+          },
+          {
+            "name": "ComponentQuasarQListLinearProgress"
+          },
+          {
+            "name": "ComponentQuasarQParallax"
+          },
+          {
+            "name": "ComponentQuasarQSlideItem"
+          },
+          {
+            "name": "ComponentQuasarQSlide"
+          },
+          {
+            "name": "ComponentQuasarQTimelineEntry"
+          },
+          {
+            "name": "ComponentQuasarQTimeline"
+          }
+        ]
+      }
+    ]
+  }
+}

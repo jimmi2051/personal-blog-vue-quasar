@@ -26,8 +26,10 @@ import {
   QCardSection,
   QCardActions,
   Loading,
-  Notify
+  Notify,
+  Dialog,
 } from "quasar";
+
 Vue.use(Quasar, {
   config: { LoadingBar, Notify },
   components: {
@@ -49,9 +51,15 @@ Vue.use(Quasar, {
     QRating,
     QCard,
     QCardSection,
-    QCardActions
+    QCardActions,
   },
   directives: {},
-  plugins: { LoadingBar, Loading, Notify },
-  iconSet: iconSet
+  plugins: { LoadingBar, Loading, Notify, Dialog },
+  iconSet: iconSet,
+});
+
+LoadingBar.setDefaults({
+  color: "light-blue-3",
+  size: "3px",
+  position: "top",
 });

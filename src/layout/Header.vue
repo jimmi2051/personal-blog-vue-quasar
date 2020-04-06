@@ -18,16 +18,16 @@
       <q-space />
 
       <q-separator dark vertical />
-      <q-item to="/about" exact>
-        <q-btn stretch flat label="About" />
+      <q-item exact>
+        <q-btn stretch @click="showNotif" flat label="About" />
       </q-item>
       <q-separator dark vertical />
-      <q-item to="/works" exact>
-        <q-btn stretch flat label="Works" />
+      <q-item exact>
+        <q-btn stretch @click="showNotif" flat label="Works" />
       </q-item>
       <q-separator dark vertical />
-      <q-item to="/contact" exact>
-        <q-btn stretch flat label="Contact" />
+      <q-item exact>
+        <q-btn stretch @click="showNotif" flat label="Contact" />
       </q-item>
       <q-separator dark vertical />
       <q-btn type="a" href="https://www.facebook.com/beatboxer.mrteo" no-shadow target="__blank">
@@ -62,17 +62,35 @@
         <q-menu content-class="bg-black text-white" style="width: 280px;">
           <q-list class="text-center" dense style="min-width: 250px">
             <q-separator dark inset />
-            <q-item to="/about" clickable v-close-popup>
-              <q-btn stretch flat label="About" style="margin-left:auto;margin-right:auto;" />
+            <q-item clickable v-close-popup>
+              <q-btn
+                stretch
+                flat
+                @click="showNotif"
+                label="About"
+                style="margin-left:auto;margin-right:auto;"
+              />
             </q-item>
             <q-separator dark inset />
 
-            <q-item to="/works" exact>
-              <q-btn stretch flat label="Works" style="margin-left:auto;margin-right:auto;" />
+            <q-item exact>
+              <q-btn
+                stretch
+                @click="showNotif"
+                flat
+                label="Works"
+                style="margin-left:auto;margin-right:auto;"
+              />
             </q-item>
             <q-separator dark inset />
-            <q-item to="/contact" exact>
-              <q-btn stretch flat label="Contact" style="margin-left:auto;margin-right:auto;" />
+            <q-item exact>
+              <q-btn
+                stretch
+                @click="showNotif"
+                flat
+                label="Contact"
+                style="margin-left:auto;margin-right:auto;"
+              />
             </q-item>
             <q-separator dark inset />
             <q-btn
@@ -100,4 +118,15 @@
   </div>
 </template>
 <script>
+export default {
+  methods: {
+    showNotif() {
+      this.$q.notify({
+        message: "Oops! Sorry, The feature is comming soon. ",
+        color: "light-blue",
+        icon: "announcement"
+      });
+    }
+  }
+};
 </script>

@@ -5,7 +5,7 @@
       <q-timeline-entry heading>From 2018 to 2020</q-timeline-entry>
       <q-timeline-entry
         title="KYANON DIGITAL"
-        subtitle="Aug 2, 2019 - Present"
+        subtitle="Feb 2, 2019 - Present"
         :avatar="require('@/assets/images/Homepage/kyanon-logo.png')"
       >
         <div clas="text-body-1">

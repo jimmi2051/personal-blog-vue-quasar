@@ -5,6 +5,8 @@ import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
+
+const API_URL = process.env.VUE_APP_API_URL;
 /* Tutorial update fragmentTypes
   Step 1: Edit file codegen.yml --> Change Endpoint GraphQL
   Step 2: Run script: yarn generate
@@ -12,14 +14,14 @@ import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import introspectionQueryResultData from "./fragmentTypes.json";
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData,
+  introspectionQueryResultData
 });
 
 const actionMiddleware = (action, store) => {
   LoadingBar.setDefaults({
     color: "light-blue-3",
     size: "3px",
-    position: "top",
+    position: "top"
   });
   const {
     successType,
@@ -27,7 +29,7 @@ const actionMiddleware = (action, store) => {
     afterSuccess,
     errorType,
     afterError,
-    payload,
+    payload
   } = action;
   LoadingBar.start();
 
@@ -35,7 +37,7 @@ const actionMiddleware = (action, store) => {
   // HTTP connection to the API
   const httpLink = createHttpLink({
     // You should use an absolute URL here
-    uri: "http://localhost:1337/graphql",
+    uri: `${API_URL}graphql`
   });
 
   // Cache implementation
@@ -44,7 +46,7 @@ const actionMiddleware = (action, store) => {
   // Create the apollo client
   const apolloClient = new ApolloClient({
     link: httpLink,
-    cache,
+    cache
   });
 
   if (beforeCallType) {
@@ -56,9 +58,9 @@ const actionMiddleware = (action, store) => {
       // Query
       query: gql`
         ${query}
-      `,
+      `
     })
-    .then((response) => {
+    .then(response => {
       // Result
       if (response.data) {
         if (successType) {
@@ -70,7 +72,7 @@ const actionMiddleware = (action, store) => {
       }
       LoadingBar.stop();
     })
-    .catch((error) => {
+    .catch(error => {
       // Error
       /* 
         error: {

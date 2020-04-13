@@ -28,26 +28,23 @@ function mapStateToProps(state) {
   if (pages && isArray(pages)) {
     data = findPage(pages, "Home");
   }
-  // console.log("dataHomePage>>>>", data);
   return {
     loading: state.Page.pages.loading,
-    homePage: data,
+    homePage: data
   };
 }
 export default {
   name: "Home",
-  created: function () {
-    // console.log("this is Home>>>", this);
-  },
+  created: function() {},
   computed: {
     ...mapState({
-      store: mapStateToProps,
-    }),
+      store: mapStateToProps
+    })
   },
   data() {
     return {
       ratingModel: 3,
-      slide: 1,
+      slide: 1
     };
   },
   components: {
@@ -56,7 +53,7 @@ export default {
     Homesection3,
     Homesection4,
     Homesection5,
-    Homesection6,
-  },
+    Homesection6
+  }
 };
 </script>

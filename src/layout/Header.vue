@@ -44,7 +44,7 @@
         />
       </q-btn>
     </q-toolbar>
-    <q-toolbar class="bg-black text-white shadow-2 lt-sm">
+    <q-toolbar class="bg-black text-white shadow-2 lt-md">
       <q-item to="/" exact>
         <q-img
           :src="require('@/assets/images/logo.png')"

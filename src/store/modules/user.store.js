@@ -5,8 +5,8 @@ import actionMiddleware from "store/actionMiddleware";
 const initialState = {
   trainingList: {
     data: [],
-    loading: true,
-  },
+    loading: true
+  }
 };
 
 // State object
@@ -16,7 +16,7 @@ const state = initialState;
 const getters = {
   getTrainingList(state) {
     return state.trainingList;
-  },
+  }
 };
 
 // Actions
@@ -30,20 +30,20 @@ const actions = {
       errorType: "GET_TRAINING_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: "trainings",
+      uri: "trainings"
     };
     actionMiddleware(action, store);
   },
   reset({ commit }) {
     commit("RESET");
-  },
+  }
 };
 
 // Mutations
 const mutations = {
   RESET(state) {
     const newState = initialState;
-    Object.keys(newState).forEach((key) => {
+    Object.keys(newState).forEach(key => {
       state[key] = newState[key];
     });
   },
@@ -56,7 +56,7 @@ const mutations = {
   },
   GET_TRAINING_ERROR(state, data) {
     state.trainingList = [];
-  },
+  }
 };
 
 export default {
@@ -64,5 +64,5 @@ export default {
   state,
   getters,
   actions,
-  mutations,
+  mutations
 };

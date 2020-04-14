@@ -118,12 +118,13 @@
 </template>
 
 <script>
+import FetchApi from "utils/FetchApi";
+import { EMAIL_RECEIVE_CONTACT } from "utils/Constants";
 export default {
   data() {
     return {
       splitterModel: 50, // start at 50%,
       name: null,
-      age: null,
       email: null,
       accept: false,
       description: null
@@ -139,20 +140,44 @@ export default {
           message: "You need confirm you aren't a bot."
         });
       } else {
-        this.$q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Submitted"
+        const payload = {
+          uri: "email",
+          params: {
+            to: EMAIL_RECEIVE_CONTACT,
+            subject: `Notice: You have a contact from ${this.name} - ${this.email}`,
+            text: `Name: ${this.name} - Email: ${this.email} - Message: ${this.description}`,
+            html: `<h1>Name: ${this.name} <br/>- Email: ${this.email} <br/>- Message: ${this.description}</h1>`
+          },
+          opt: {
+            method: "POST"
+          }
+        };
+        FetchApi(payload).then(response => {
+          if (response.error) {
+            this.$q.notify({
+              color: "red-5",
+              textColor: "white",
+              icon: "warning",
+              message: response.message
+            });
+          } else {
+            this.$q.notify({
+              color: "green-4",
+              textColor: "white",
+              icon: "cloud_done",
+              message:
+                "Submitted. Thanks for your contact. I'll check it as soon as possible."
+            });
+            this.onReset();
+          }
         });
       }
     },
 
     onReset() {
-      this.name = null;
-      this.age = null;
-      this.description = null;
-      this.email = null;
+      this.name = "";
+      this.description = "";
+      this.email = "";
       this.accept = false;
     },
     isValidEmail(val) {

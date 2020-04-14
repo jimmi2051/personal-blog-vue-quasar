@@ -19,6 +19,9 @@
   }
   &-title {
     font-size: 20px;
+    @media screen and (width: 320px) {
+      font-size: 12px !important;
+    }
     @media screen and (min-width: 320px) and (max-width: 767px) {
       font-size: 14px;
     }
@@ -31,7 +34,10 @@
   }
 }
 .home-page {
-  padding: 15px;
+  padding: 15px 30px;
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    padding: 15px;
+  }
 }
 .section1 {
   &-background {

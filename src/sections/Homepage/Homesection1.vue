@@ -1,7 +1,10 @@
 <template>
   <q-parallax class="section1" :speed="0.5">
     <template v-slot:media>
-      <img v-bind:src="require('@/assets/images/'+store.componentDetail.background.name)" />
+      <img
+        :src="require('@/assets/images/'+store.componentDetail.background.name)"
+        alt="background"
+      />
     </template>
 
     <template v-slot:content="scope">
@@ -14,10 +17,10 @@
             right: 0
           }"
       >
-        <div
+        <h1
           class="text-h3 text-white text-center header-content"
           v-html="store.componentDetail.title"
-        ></div>
+        ></h1>
       </div>
     </template>
   </q-parallax>

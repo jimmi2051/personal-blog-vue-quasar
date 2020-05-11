@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="section--title">My Experience</div>
+    <h2 class="section--title">My Experience</h2>
     <q-timeline color="secondary">
       <q-timeline-entry heading>From 2018 to 2020</q-timeline-entry>
       <q-timeline-entry

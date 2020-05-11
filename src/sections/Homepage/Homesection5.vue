@@ -1,6 +1,6 @@
 <template>
   <div class="q-pt-md">
-    <div class="section--title">My Latest Activities</div>
+    <h2 class="section--title">My Latest Activities</h2>
 
     <q-carousel
       class="q-mt-md bg-grey-1 shadow-2 rounded-borders"

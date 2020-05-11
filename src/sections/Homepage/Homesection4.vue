@@ -1,12 +1,12 @@
 <template>
   <div class="row q-pt-md">
     <div class="col-12">
-      <div class="section--title">My Latest Projects</div>
+      <h2 class="section--title">My Latest Projects</h2>
       <div class="text-subtitle2 q-pb-sm q-pt-sm">Here is our latest projects. You'll love them!</div>
     </div>
 
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img :src="require('@/assets/images/Homepage/background-h3zoom.jpg')" />
+      <img :src="require('@/assets/images/Homepage/background-h3zoom.jpg')" alt="company-1" />
 
       <q-card-section>
         <div class="text-h6">H3Zoom - Facade Inspector</div>
@@ -27,7 +27,7 @@
 
     <!-- <div classs="col-sm-4 q-pa-md"> -->
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img :src="require('@/assets/images/Homepage/background-cynopsis.png')" />
+      <img :src="require('@/assets/images/Homepage/background-cynopsis.png')" alt="company-2" />
 
       <q-card-section>
         <div class="text-h6">Synopsis Solutions - ARES (FAC-OCR)</div>
@@ -51,7 +51,7 @@
     <!-- </div> -->
     <!-- <div class="col-sm-4 q-pa-md"> -->
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img :src="require('@/assets/images/Homepage/background-kyanon.png')" />
+      <img :src="require('@/assets/images/Homepage/background-kyanon.png')" alt="company-3" />
       <q-card-section>
         <div class="text-h6">Kyanon Digital - Company Website</div>
         <div

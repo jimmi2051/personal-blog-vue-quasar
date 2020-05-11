@@ -22,6 +22,7 @@ import Homesection3 from "sections/Homepage/Homesection3";
 import Homesection4 from "sections/Homepage/Homesection4";
 import Homesection5 from "sections/Homepage/Homesection5";
 import Homesection6 from "sections/Homepage/Homesection6";
+
 function mapStateToProps(state) {
   let data = {};
   const pages = state.Page.pages.data.pages;
@@ -54,6 +55,64 @@ export default {
     Homesection4,
     Homesection5,
     Homesection6
+  },
+
+  meta: {
+    // sets document title
+    title: "Home Page",
+    // optional; sets final title as "Index Page - My Website", useful for multiple level meta
+    titleTemplate: title => `${title} - DefTnt Blog`,
+
+    // meta tags
+    meta: {
+      description: {
+        name: "description",
+        content:
+          "Hi There, I'm Thanh Nguyen. Software Engineer - Full-stack develop. I have more than a year of experience working with ReactJS & Python Django. Tel: (+84) 569363575 & Email: thanhnl0697@gmail.com"
+      },
+      keywords: {
+        name: "keywords",
+        content:
+          "Deftnt Blog, Thanh Ly, Thanh Nguyen Ly, thanhnl0697@gmail.com, (+84) 569363575"
+      },
+      equiv: {
+        "http-equiv": "Content-Type",
+        content: "text/html; charset=UTF-8"
+      }
+    },
+
+    // CSS tags
+    link: {
+      material: {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/icon?family=Material+Icons"
+      }
+    },
+
+    // JS tags
+    script: {
+      ldJson: {
+        type: "application/ld+json",
+        innerHTML: `{ "@context": "http://schema.org" }`
+      }
+    },
+
+    // <html> attributes
+    htmlAttr: {
+      "xmlns:cc": "http://creativecommons.org/ns#", // generates <html xmlns:cc="http://creativecommons.org/ns#">
+      empty: undefined // generates <html empty>
+    },
+
+    // <body> attributes
+    bodyAttr: {
+      "action-scope": "xyz", // generates <body action-scope="xyz">
+      empty: undefined // generates <body empty>
+    },
+
+    // <noscript> tags
+    noscript: {
+      default: "This is content for browsers with no JS (or disabled JS)"
+    }
   }
 };
 </script>

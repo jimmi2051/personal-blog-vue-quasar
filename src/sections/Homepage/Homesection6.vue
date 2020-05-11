@@ -1,6 +1,6 @@
 <template>
   <div class="q-pt-md">
-    <div class="section--title">Contact</div>
+    <h2 class="section--title">Contact</h2>
     <div class="q-gutter-y-md row q-pt-md contact">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 contact-info">
         <div class="contact-title q-mb-md">Contact Info</div>

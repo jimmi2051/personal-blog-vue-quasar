@@ -26,37 +26,37 @@ function mapStateToProps(state) {
   // }
   return {
     loading: state.Page.pages.loading,
-    pages: data,
+    pages: data
   };
 }
 export default {
   components: {
     Header,
-    Footer,
+    Footer
   },
-  created: function () {
+  created: function() {
     // console.log("this>>>", this);
     this.$q.loading.show();
     let payload = {
-      nextErr: (err) => {
+      nextErr: err => {
         this.$q.loading.hide();
         console.log(err);
       },
-      nextSuccess: (success) => {
+      nextSuccess: success => {
         console.log("Debug ===>", success);
         this.$q.loading.hide();
-      },
+      }
     };
     // this.getListTraining(payload);
     this.getListPage(payload);
   },
   methods: {
-    ...mapActions("Page", ["getListPage"]),
+    ...mapActions("Page", ["getListPage"])
   },
   computed: {
     ...mapState({
-      store: mapStateToProps,
-    }),
-  },
+      store: mapStateToProps
+    })
+  }
 };
 </script>

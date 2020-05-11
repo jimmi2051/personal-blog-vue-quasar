@@ -5,6 +5,7 @@ import router from "./router";
 import store from "./store";
 import "./quasar";
 import "./styles/_styles.scss";
+
 Vue.config.productionTip = false;
 
 new Vue({

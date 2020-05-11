@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="section--title">My Skills</div>
+    <h2 class="section--title">My Skills</h2>
     <div class="q-gutter-y-md row q-pt-md skill">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 skill-hard">
         <div class="text-h4">Hard Skills</div>

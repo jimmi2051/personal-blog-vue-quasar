@@ -1,5 +1,4 @@
 import Vue from "vue";
-
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/fontawesome-v5/fontawesome-v5.css";
@@ -28,6 +27,7 @@ import {
   Loading,
   Notify,
   Dialog,
+  Meta
 } from "quasar";
 
 Vue.use(Quasar, {
@@ -51,15 +51,15 @@ Vue.use(Quasar, {
     QRating,
     QCard,
     QCardSection,
-    QCardActions,
+    QCardActions
   },
   directives: {},
-  plugins: { LoadingBar, Loading, Notify, Dialog },
-  iconSet: iconSet,
+  plugins: { LoadingBar, Loading, Notify, Dialog, Meta },
+  iconSet: iconSet
 });
 
 LoadingBar.setDefaults({
   color: "light-blue-3",
   size: "3px",
-  position: "top",
+  position: "top"
 });

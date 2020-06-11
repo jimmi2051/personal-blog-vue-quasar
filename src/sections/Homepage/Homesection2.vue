@@ -12,13 +12,9 @@
           <span class="text-weight-bold">Position</span>: Fresher Full-Stack
         </div>
         <div clas="text-body-1">
-          <span class="text-weight-bold">Main job</span>: Working at Hydra Squad | Project: H3Zoom & Cynopsys.
-          <span
-            class="text-weight-bold"
-          >H3Zoom</span>: Develop Front-End using ReactJS & Develop Back-End using Django.
-          <span
-            class="text-weight-bold"
-          >Cynopsys</span>: Develop a part Microservices using Django & Docker & Docker-Compose.
+          <span class="text-weight-bold">Main job</span>: Working at Hydra Squad |
+          Develop Front-End using ReactJS & Develop Back-End using Django |
+          Develop a part Microservices using Django & Docker & Docker-Compose.
           Use additional 3rd party services such as AWS, Google.
         </div>
         <div clas="text-body-1">

@@ -13,6 +13,55 @@
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-cpvh-1.jpg')"
+          />
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-cpvh-2.jpg')"
+          />
+          <div class="absolute-bottom custom-caption">
+            <div class="text-h2">Vung Tau Beach</div>
+            <div class="text-subtitle1">Hydra & "Căn phòng vô hình"</div>
+          </div>
+        </div>
+      </q-carousel-slide>
+      <q-carousel-slide :name="2" class="column no-wrap no-padding">
+        <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-cpvh-3.jpg')"
+          />
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-cpvh-4.jpg')"
+          />
+          <div class="absolute-bottom custom-caption">
+            <div class="text-h2">Vung Tau Beach</div>
+            <div class="text-subtitle1">Hydra & "Căn phòng vô hình"</div>
+          </div>
+        </div>
+      </q-carousel-slide>
+      <q-carousel-slide :name="3" class="column no-wrap no-padding">
+        <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-headless-5.jpg')"
+          />
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
+            :src="require('@/assets/images/Homepage/vung-tau-headless-6.jpg')"
+          />
+          <div class="absolute-bottom custom-caption">
+            <div class="text-h2">Vung Tau Beach</div>
+            <div class="text-subtitle1">Headless Trip</div>
+          </div>
+        </div>
+      </q-carousel-slide>
+
+      <q-carousel-slide :name="4" class="column no-wrap no-padding">
+        <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
+          <q-img
+            class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
             :src="require('@/assets/images/Homepage/bo-cap-vang.jpg')"
           />
           <q-img
@@ -26,7 +75,7 @@
         </div>
       </q-carousel-slide>
 
-      <q-carousel-slide :name="2" class="column no-wrap no-padding">
+      <q-carousel-slide :name="5" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -43,7 +92,7 @@
         </div>
       </q-carousel-slide>
 
-      <q-carousel-slide :name="3" class="column no-wrap no-padding">
+      <q-carousel-slide :name="6" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -59,7 +108,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="4" class="column no-wrap no-padding">
+      <q-carousel-slide :name="7" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -75,7 +124,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="5" class="column no-wrap no-padding">
+      <q-carousel-slide :name="8" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -91,7 +140,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="6" class="column no-wrap no-padding">
+      <q-carousel-slide :name="9" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -107,7 +156,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="7" class="column no-wrap no-padding">
+      <q-carousel-slide :name="10" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -123,7 +172,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="8" class="column no-wrap no-padding">
+      <q-carousel-slide :name="11" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"
@@ -139,7 +188,7 @@
           </div>
         </div>
       </q-carousel-slide>
-      <q-carousel-slide :name="9" class="column no-wrap no-padding">
+      <q-carousel-slide :name="12" class="column no-wrap no-padding">
         <div class="row fit justify-start items-center q-col-gutter no-wrap no-scroll">
           <q-img
             class="rounded-borders col-xs-12 col-sm-12 col-md-6 col-lg-6 full-height"

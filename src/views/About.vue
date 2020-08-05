@@ -10,7 +10,9 @@
                 I'm a
                 <span class="text-bold">full-stack developer.</span>
                 I have more than a year of experience working with
-                <span class="text-bold">ReactJS & Python DJango.</span>
+                <span
+                  class="text-bold"
+                >ReactJS & Python DJango.</span>
               </p>
 
               <p class="text-body1">
@@ -42,6 +44,11 @@ export default {
       lorem:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     };
+  },
+  meta: {
+    // sets document title
+    title: "About Us Page",
+    titleTemplate: title => `${title} - DefTnt Blog`
   }
 };
 </script>

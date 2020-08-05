@@ -1,0 +1,27 @@
+<template>
+  <div>
+    <h2 class="section--title">About me</h2>
+    <q-card class="my-card" flat>
+      <q-card-section horizontal>
+        <q-img
+          style="height: 280px; max-width: 300px"
+          class="col-5"
+          :src="require('@/assets/images/Homepage/profile.jpg')"
+        />
+
+        <q-card-section>
+          <div class="text-overline text-orange-9">Sumary</div>
+          <div
+            class="text-h5 q-mt-sm q-mb-xs"
+          >Creative, self-motivated, and independent engineer with two years of experience in the Software field in various positions fully involved in the Software Development Life Cycle.</div>
+          <q-separator />
+          <div class="text-h5 q-mt-sm q-mb-xs">Strong at NodeJS, Python, and ReactJS.</div>
+          <q-separator />
+          <div class="text-h5 q-mt-sm q-mb-xs">Experience with AWS. Familiar with Agile/Scrum.</div>
+        </q-card-section>
+      </q-card-section>
+
+      <!-- <q-separator /> -->
+    </q-card>
+  </div>
+</template>

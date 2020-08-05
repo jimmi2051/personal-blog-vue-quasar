@@ -2,6 +2,7 @@
   <q-page>
     <Homesection1 />
     <div class="home-page">
+      <Homesection12 />
       <Homesection2 />
       <Homesection3 />
       <Homesection4 />
@@ -17,6 +18,7 @@ import { mapState } from "vuex";
 import { isArray } from "lodash";
 import { findPage } from "utils/Helpers";
 import Homesection1 from "sections/Homepage/Homesection1";
+import Homesection12 from "sections/Homepage/Homesection1-2";
 import Homesection2 from "sections/Homepage/Homesection2";
 import Homesection3 from "sections/Homepage/Homesection3";
 import Homesection4 from "sections/Homepage/Homesection4";
@@ -50,6 +52,7 @@ export default {
   },
   components: {
     Homesection1,
+    Homesection12,
     Homesection2,
     Homesection3,
     Homesection4,

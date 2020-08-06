@@ -3,31 +3,60 @@
     <div class="about-us">
       <div class="section-1">
         <q-card class="my-card" flat bordered>
-          <q-card-section horizontal>
-            <q-card-section class="col-7">
-              <h3 class="text-h3">Hi, I'm Thanh Nguyen.</h3>
+          <q-card-section horizontal class="wrap">
+            <q-card-section class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+              <h4 class="text-h4">
+                <div>Software Engineer</div>Nguyen Ly Thanh
+              </h4>
+              <p class="text-subtitle1 text-bold">GET IN CONTACT</p>
               <p class="text-body1">
-                I'm a
-                <span class="text-bold">full-stack developer.</span>
-                I have more than a year of experience working with
-                <span
-                  class="text-bold"
-                >ReactJS & Python DJango.</span>
+                <span class="text-bold">Mobile:</span>
+                <a href="tel:0569363575">(+84) 569363575</a>
+                <br />
+                <span class="text-bold">Email:</span>
+                <a href="mailto:thanhnl0697@gmail.com">thanhnl0697@gmail.com</a>
+                <br />
+                <span class="text-bold">Linkedin:</span>
+                <a
+                  href="https://linkedin.com/in/thanh-nguyen-ly"
+                  target="blank"
+                >https://linkedin.com/in/thanh-nguyen-ly</a>
+                <br />
+                <span class="text-bold">Blog:</span>
+                <a
+                  href="https://deftnt-blog.herokuapp.com/"
+                  target="blank"
+                >https://deftnt-blog.herokuapp.com</a>
               </p>
 
+              <p class="text-subtitle1 text-bold">Personal Profile</p>
               <p class="text-body1">
-                I will fit your company if you need a
-                <span class="text-bold">dynamic</span> developer,
-                <span class="text-bold">creative</span> and
-                <span class="text-bold">well adapted</span> to the work
-                environment.
+                Creative, self-motivated, and independent engineer with two years of experience in the Software field in various positions fully involved in the Software Development Life Cycle.
+                <br />Strong at NodeJS, Python, and ReactJS.
+                <br />Experience with AWS. Familiar with Agile/Scrum.
+              </p>
+              <p class="text-subtitle1 text-bold">Technical Expertise</p>
+              <p class="text-body1">
+                <span class="text-bold">Programming languages:</span> Javascript, Python, C#, TypeScript
+                <br />
+                <span class="text-bold">DBMS:</span> MongoDB, PostgreSQL, SQL Server, MySQL, SQLite
+                <br />
+                <span class="text-bold">Framework / CMS:</span> NextJS, Django, Strapi, VueJS, Quasar, .NET & EF
+                <br />
+                <span class="text-bold">Library:</span>ReactJS
+                <br />
+                <span class="text-bold">Platform:</span>NodeJS
+                <br />
+                <span class="text-bold">Style sheet language:</span> CSS, SCSS, SASS
+                <br />
+                <span class="text-bold">Markup Language:</span>HTML
               </p>
             </q-card-section>
 
             <q-img
               transition="fade"
-              class="col-5"
-              :src="require('@/assets/images/Aboutuspage/avatar.jpg')"
+              class="col-xs-12 col-sm-12 col-md-5 col-lg-5"
+              :src="require('@/assets/images/Homepage/profile.jpg')"
               spinner-color="white"
             />
           </q-card-section>

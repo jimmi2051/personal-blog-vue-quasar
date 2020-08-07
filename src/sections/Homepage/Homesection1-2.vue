@@ -2,14 +2,14 @@
   <div>
     <h2 class="section--title">About me</h2>
     <q-card class="my-card" flat>
-      <q-card-section horizontal>
+      <q-card-section horizontal class="wrap justify-center">
         <q-img
           style="height: 280px; max-width: 300px"
-          class="col-5"
+          class="col-xs-12 col-sm-12 col-md-5 col-lg-5"
           :src="require('@/assets/images/Homepage/profile.jpg')"
         />
 
-        <q-card-section>
+        <q-card-section class="col-xs-12 col-sm-12 col-md-7 col-lg-7 text-summary">
           <div class="text-overline text-orange-9">Sumary</div>
           <div
             class="text-h5 q-mt-sm q-mb-xs"

@@ -11,6 +11,11 @@
 @import "./components/qtimeline";
 @import "./components/section";
 @import "./components/qprogress";
+@import "./components/body";
 
 @import "./pages/home";
 @import "./pages/about";
+
+.fixed-top-custom {
+  z-index: 99999;
+}

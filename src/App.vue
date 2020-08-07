@@ -2,7 +2,7 @@
   <div id="app">
     <q-layout>
       <q-page-container v-if="!store.loading">
-        <Header />
+        <Header :change="changeMode" />
         <router-view />
         <Footer />
       </q-page-container>
@@ -49,14 +49,25 @@ export default {
     };
     // this.getListTraining(payload);
     this.getListPage(payload);
+    this.$q.dark.set(false);
   },
   methods: {
-    ...mapActions("Page", ["getListPage"])
+    ...mapActions("Page", ["getListPage"]),
+    changeMode(value) {
+      // console.log("valie ==>", value);
+      // console.log("evt ==>", evt);
+      this.$q.dark.set(value);
+    }
   },
   computed: {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  watch: {
+    "$q.dark.isActive"(val) {
+      console.log(val ? "On dark mode" : "On light mode");
+    }
   }
 };
 </script>

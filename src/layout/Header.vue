@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fixed-top-custom fixed-top">
     <q-toolbar class="bg-black text-white shadow-2 gt-sm">
       <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
       <q-item to="/" exact>
@@ -30,29 +30,22 @@
         <q-btn stretch @click="showNotif" flat label="Contact" />
       </q-item>
       <q-separator dark vertical />
-      <q-btn
-        type="a"
-        href="https://www.facebook.com/beatboxer.mrteo"
-        no-shadow
-        target="__blank"
-      >
+      <q-btn type="a" href="https://www.facebook.com/beatboxer.mrteo" no-shadow target="__blank">
         <i
           class="fab fa-facebook fa-2x"
           style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
         />
       </q-btn>
       <q-separator dark vertical />
-      <q-btn
-        type="a"
-        href="https://www.instagram.com/deftnguyen/"
-        no-shadow
-        target="__blank"
-      >
+      <q-btn type="a" href="https://www.instagram.com/deftnguyen/" no-shadow target="__blank">
         <i
           class="fab fa-instagram-square fa-2x"
           style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
         />
       </q-btn>
+      <q-separator dark vertical />
+
+      <q-toggle v-model="value" @input="change" color="light-blue" />
     </q-toolbar>
     <q-toolbar class="bg-black text-white shadow-2 lt-md">
       <q-item to="/" exact>
@@ -115,12 +108,7 @@
               />
             </q-btn>
             <q-separator dark inset />
-            <q-btn
-              type="a"
-              href="https://www.instagram.com/deftnguyen/"
-              no-shadow
-              target="__blank"
-            >
+            <q-btn type="a" href="https://www.instagram.com/deftnguyen/" no-shadow target="__blank">
               <i
                 class="fab fa-instagram-square fa-2x"
                 style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
@@ -134,6 +122,11 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      value: false
+    };
+  },
   methods: {
     showNotif() {
       this.$q.notify({
@@ -142,6 +135,7 @@ export default {
         icon: "announcement"
       });
     }
-  }
+  },
+  props: ["change"]
 };
 </script>

@@ -76,7 +76,7 @@ export default {
   },
   meta: {
     // sets document title
-    title: "About Us Page",
+    title: "About Page",
     titleTemplate: title => `${title} - DefTnt Blog`
   }
 };

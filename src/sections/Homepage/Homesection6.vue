@@ -81,6 +81,7 @@
             hint="E-mail"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something', isValidEmail]"
+            ref="email"
           />
 
           <q-input
@@ -90,6 +91,7 @@
             hint="Name and surname"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
+            ref="name"
           />
           <q-input
             label="Description *"
@@ -99,6 +101,7 @@
             type="textarea"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"
+            ref="description"
           />
           <q-toggle v-model="accept" label="I'm not a bot" />
 
@@ -169,6 +172,9 @@ export default {
                 "Submitted. Thanks for your contact. I'll check it as soon as possible."
             });
             this.onReset();
+            this.$refs.email.resetValidation();
+            this.$refs.description.resetValidation();
+            this.$refs.name.resetValidation();
           }
         });
       }

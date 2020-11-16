@@ -7,6 +7,7 @@
         <Footer />
       </q-page-container>
     </q-layout>
+    <Chatbox />
   </div>
 </template>
 
@@ -15,8 +16,24 @@
 </style>
 
 <script>
+// import Pusher from "pusher-js"; // import Pusher
+// import { Notify } from "quasar";
+// // Enable pusher logging - don't include this in production
+// Pusher.logToConsole = true;
+// const pusher = new Pusher("1bb3ea564162ad9f320a", {
+//   cluster: "ap1"
+// });
+// const channel = pusher.subscribe("deftnt-channel");
+// channel.bind("chat-message", data => {
+//   Notify.create({
+//     message: data.message,
+//     color: "light-blue",
+//     icon: "announcement"
+//   });
+// });
 import Header from "layout/Header.vue";
 import Footer from "layout/Footer.vue";
+import Chatbox from "components/Chatbox.vue";
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Page.pages.data.pages ? state.Page.pages.data.pages : [];
@@ -32,7 +49,8 @@ function mapStateToProps(state) {
 export default {
   components: {
     Header,
-    Footer
+    Footer,
+    Chatbox
   },
   created: function() {
     // console.log("this>>>", this);

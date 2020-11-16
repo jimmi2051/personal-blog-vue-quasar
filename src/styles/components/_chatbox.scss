@@ -1,0 +1,22 @@
+.message-box {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 300px;
+  height: 400px;
+  background-color: #e2e2e2;
+  padding: 15px;
+  &__footer {
+    position: absolute;
+    bottom: 15px;
+    width: calc(100% - 30px);
+    .input-chat {
+      width: 100%;
+      position: relative;
+    }
+    .btn-send {
+      position: absolute;
+      right: 0px;
+    }
+  }
+}

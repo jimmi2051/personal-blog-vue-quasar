@@ -13,6 +13,7 @@
 </template>
 
 <script>
+
 // // @ is an alias to /src
 import { mapState } from "vuex";
 import { isArray } from "lodash";

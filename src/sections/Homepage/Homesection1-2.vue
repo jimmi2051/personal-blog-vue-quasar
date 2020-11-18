@@ -9,15 +9,23 @@
           :src="require('@/assets/images/Homepage/profile.jpg')"
         />
 
-        <q-card-section class="col-xs-12 col-sm-12 col-md-7 col-lg-7 text-summary">
-          <div class="text-overline text-orange-9">Sumary</div>
-          <div
-            class="text-h5 q-mt-sm q-mb-xs"
-          >Creative, self-motivated, and independent engineer with two years of experience in the Software field in various positions fully involved in the Software Development Life Cycle.</div>
+        <q-card-section
+          class="col-xs-12 col-sm-12 col-md-7 col-lg-7 text-summary"
+        >
+          <div class="text-overline text-orange-9">Summary</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">
+            Creative, self-motivated, and independent engineer with two years of
+            experience in the Software field in various positions fully involved
+            in the Software Development Life Cycle.
+          </div>
           <q-separator />
-          <div class="text-h5 q-mt-sm q-mb-xs">Strong at NodeJS, Python, and ReactJS.</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">
+            Strong at NodeJS, Python, and ReactJS.
+          </div>
           <q-separator />
-          <div class="text-h5 q-mt-sm q-mb-xs">Experience with AWS. Familiar with Agile/Scrum.</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">
+            Experience with AWS. Familiar with Agile/Scrum.
+          </div>
         </q-card-section>
       </q-card-section>
 

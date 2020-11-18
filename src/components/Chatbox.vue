@@ -83,11 +83,31 @@ import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
 import { v4 as uuidv4 } from "uuid";
 
+import { mapActions, mapState } from "vuex";
+function mapStateToProps(state) {
+  const data = state.Message.messageList.data;
+  // if(data.length>0)
+  // {
+
+  // }
+  return {
+    loading: state.Message.messageList.loading,
+    messageList: data
+  };
+}
+
 export default {
   created: function() {
-    // console.log("this ==>", this.$ref);
-
-    // import { Notify } from "quasar";
+    let payload = {
+      nextErr: err => {
+        console.log(err);
+      },
+      nextSuccess: success => {
+        console.log("Debug ===>", success);
+      }
+    };
+    // this.getListTraining(payload);
+    this.getMessageList(payload);
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
     const pusher = new Pusher("1bb3ea564162ad9f320a", {
@@ -117,6 +137,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("Message", ["getMessageList"]),
     onSendMessage() {
       if (this.msgToSend === "") {
         this.$q.notify({
@@ -201,9 +222,38 @@ export default {
     // This will be called when the component updates
     // try toggling a todo
     this.scrollToEnd();
+    if (this.messages.length === 0) {
+      let id = localStorage.getItem("userId");
+
+      const { messageList, loading } = this.store;
+      if (!loading && messageList.length > 0) {
+        messageList.map(message => {
+          const parseMessage = {
+            id: message.senderId,
+            user: message.senderId === id ? "Me" : message.senderName,
+            message: message.message,
+            sent: message.senderId === id
+          };
+          if (this.messages.length > 0) {
+            const lastestMsg = this.messages[this.messages.length - 1];
+            if (lastestMsg.id === parseMessage.id) {
+              delete parseMessage.user;
+            }
+          }
+          this.messages.push(parseMessage);
+        });
+      }
+      console.log("==>", this.store);
+      console.log("this ==>", this.messages);
+    }
   },
   mounted() {
     this.scrollToEnd();
+  },
+  computed: {
+    ...mapState({
+      store: mapStateToProps
+    })
   }
 };
 </script>

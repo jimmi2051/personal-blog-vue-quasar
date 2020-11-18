@@ -30,14 +30,24 @@
         <q-btn stretch @click="showNotif" flat label="Contact" />
       </q-item>
       <q-separator dark vertical />
-      <q-btn type="a" href="https://www.facebook.com/beatboxer.mrteo" no-shadow target="__blank">
+      <q-btn
+        type="a"
+        href="https://www.facebook.com/beatboxer.mrteo"
+        no-shadow
+        target="__blank"
+      >
         <i
           class="fab fa-facebook fa-2x"
           style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
         />
       </q-btn>
       <q-separator dark vertical />
-      <q-btn type="a" href="https://www.instagram.com/deftnguyen/" no-shadow target="__blank">
+      <q-btn
+        type="a"
+        href="https://www.instagram.com/deftnguyen/"
+        no-shadow
+        target="__blank"
+      >
         <i
           class="fab fa-instagram-square fa-2x"
           style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
@@ -108,7 +118,12 @@
               />
             </q-btn>
             <q-separator dark inset />
-            <q-btn type="a" href="https://www.instagram.com/deftnguyen/" no-shadow target="__blank">
+            <q-btn
+              type="a"
+              href="https://www.instagram.com/deftnguyen/"
+              no-shadow
+              target="__blank"
+            >
               <i
                 class="fab fa-instagram-square fa-2x"
                 style="line-height:48px; height: 48px; text-align:center; min-width: 48px"
@@ -136,6 +151,11 @@ export default {
       });
     }
   },
-  props: ["change"]
+  props: {
+    change: {
+      type: Function,
+      required: true
+    }
+  }
 };
 </script>

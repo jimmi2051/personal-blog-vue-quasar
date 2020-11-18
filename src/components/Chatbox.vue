@@ -180,10 +180,11 @@ export default {
           method: "POST"
         }
       };
+      this.msgToSend = "";
       FetchApi(payload).then(response => {
         // this.messages.push(response);>
         if (response.id) {
-          this.msgToSend = "";
+          console.log("success!");
         } else {
           this.$q.notify({
             message:
@@ -243,8 +244,6 @@ export default {
           this.messages.push(parseMessage);
         });
       }
-      console.log("==>", this.store);
-      console.log("this ==>", this.messages);
     }
   },
   mounted() {

@@ -79,7 +79,7 @@
               <q-btn
                 stretch
                 flat
-                @click="showNotif"
+                to="/about"
                 label="About"
                 style="margin-left:auto;margin-right:auto;"
               />

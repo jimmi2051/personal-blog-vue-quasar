@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div id="app">
+      <video id="selfview" autoplay></video>
+      <video id="remoteview" autoplay></video>
+      <button id="endCall" style="display: none;" @click="endCurrentCall">
+        End Call
+      </button>
+    </div>
     <div :class="isShow ? `show-message` : `show-message is-show`">
       <button @click="showMessage" type="button" class="show-message__btn">
         <i class="fab fa-facebook-messenger fa-2x" aria-hidden="true" />
@@ -22,13 +29,6 @@
         </q-item>
         <!-- <q-separator /> -->
       </q-list>
-      <div id="app">
-        <video id="selfview"></video>
-        <video id="remoteview"></video>
-        <button id="endCall" style="display: none;" @click="endCurrentCall">
-          End Call
-        </button>
-      </div>
     </div>
 
     <q-dialog v-model="prompt" persistent>
@@ -224,7 +224,7 @@ export default {
             this.caller.addStream(stream);
             var sessionDesc = new RTCSessionDescription(msg.sdp);
             this.caller.setRemoteDescription(sessionDesc);
-            this.caller.createAnswer().then(function(sdp) {
+            this.caller.createAnswer().then(sdp => {
               this.caller.setLocalDescription(new RTCSessionDescription(sdp));
               channel.trigger("client-answer", {
                 sdp: sdp,
@@ -237,14 +237,14 @@ export default {
           });
       }
     });
-    channel.bind("client-answer", function(answer) {
+    channel.bind("client-answer", answer => {
       if (answer.room == this.room) {
         console.log("answer received");
         this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
       }
     });
 
-    channel.bind("client-reject", function(answer) {
+    channel.bind("client-reject", answer => {
       if (answer.room == this.room) {
         console.log("Call declined");
         alert("call to " + answer.rejected + "was politely declined");
@@ -363,7 +363,7 @@ export default {
           if (window.URL) {
             document.getElementById("selfview").srcObject = stream;
           } else {
-            document.getElementById("selfview").srcObject = stream;
+            document.getElementById("selfview").src = stream;
           }
           this.toggleEndCallButton();
           console.log("this caller", this.caller);

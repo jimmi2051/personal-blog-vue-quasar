@@ -93,3 +93,15 @@ body.body--dark {
     background-color: #2e2e2e;
   }
 }
+.call-video {
+  position: fixed;
+  bottom: 25px;
+  left: 30px;
+  h6 {
+    color: red;
+  }
+  .selfviewm .remoteview {
+    width: 400px;
+    height: 200px;
+  }
+}

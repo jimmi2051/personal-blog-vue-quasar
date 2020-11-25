@@ -5,6 +5,32 @@
         <i class="fab fa-facebook-messenger fa-2x" aria-hidden="true" />
       </button>
     </div>
+    <div class="call-video">
+      <h6>{{ usersOnline }}</h6>
+      <q-list bordered v-if="users.length">
+        <q-item
+          v-for="user in users"
+          :key="user"
+          clickable
+          v-ripple
+          @click="callUser(user)"
+        >
+          <q-item-section>{{ user }}</q-item-section>
+          <q-item-section avatar>
+            <q-icon color="primary" name="bluetooth" />
+          </q-item-section>
+        </q-item>
+        <!-- <q-separator /> -->
+      </q-list>
+      <div id="app">
+        <video id="selfview"></video>
+        <video id="remoteview"></video>
+        <button id="endCall" style="display: none;" @click="endCurrentCall">
+          End Call
+        </button>
+      </div>
+    </div>
+
     <q-dialog v-model="prompt" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
@@ -82,6 +108,7 @@ import { isEmpty } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
 import { v4 as uuidv4 } from "uuid";
+// import SimplePeer from "simple-peer";
 
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
@@ -110,20 +137,118 @@ export default {
     this.getMessageList(payload);
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
-    const pusher = new Pusher("1bb3ea564162ad9f320a", {
-      cluster: "ap1"
+    // const pusher = new Pusher("1bb3ea564162ad9f320a", {
+    //   cluster: "ap1",
+    // });
+    // const channel = pusher.subscribe("deftnt-channel");
+    // channel.bind("chat-message", (data) => {
+    //   let id = localStorage.getItem("userId");
+    //   if (id !== data.id) {
+    //     if (this.messages.length > 0) {
+    //       const lastestMsg = this.messages[this.messages.length - 1];
+    //       if (lastestMsg.id === data.id) {
+    //         delete data.user;
+    //       }
+    //     }
+    //     this.messages.push(data);
+    //   }
+    // });
+    var pusher = new Pusher("1bb3ea564162ad9f320a", {
+      cluster: "ap1",
+      encrypted: true,
+      authEndpoint: "http://localhost:1337/pusher/auth"
     });
-    const channel = pusher.subscribe("deftnt-channel");
-    channel.bind("chat-message", data => {
-      let id = localStorage.getItem("userId");
-      if (id !== data.id) {
-        if (this.messages.length > 0) {
-          const lastestMsg = this.messages[this.messages.length - 1];
-          if (lastestMsg.id === data.id) {
-            delete data.user;
-          }
+    // let room;
+    // sessionDesc,
+    // currentcaller,
+    // caller,
+    // localUserMedia;
+    const channel = pusher.subscribe("presence-videocall");
+    channel.bind("pusher:subscription_succeeded", members => {
+      //set the member count
+      this.usersOnline = members.count;
+      this.id = channel.members.me.id;
+      // console.log("id ==>", id);
+      members.each(member => {
+        if (member.id != channel.members.me.id) {
+          this.users.push(member.id);
         }
-        this.messages.push(data);
+      });
+    });
+    channel.bind("pusher:member_added", member => {
+      this.users.push(member.id);
+    });
+
+    channel.bind("pusher:member_removed", member => {
+      // for remove member from list:
+      var index = this.users.indexOf(member.id);
+      this.users.splice(index, 1);
+      if (member.id == this.room) {
+        this.endCall();
+      }
+    });
+    this.channel = channel;
+    this.GetRTCIceCandidate();
+    this.GetRTCPeerConnection();
+    this.GetRTCSessionDescription();
+    this.prepareCaller();
+    channel.bind("client-candidate", function(msg) {
+      if (msg.room == this.room) {
+        console.log("candidate received");
+        this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
+      }
+    });
+    channel.bind("client-sdp", function(msg) {
+      if (msg.room == this.id) {
+        var answer = confirm(
+          "You have a call from: " + msg.from + "Would you like to answer?"
+        );
+        if (!answer) {
+          return channel.trigger("client-reject", {
+            room: msg.room,
+            rejected: this.id
+          });
+        }
+        this.room = msg.room;
+        this.getCam()
+          .then(stream => {
+            this.localUserMedia = stream;
+            this.toggleEndCallButton();
+            if (window.URL) {
+              document.getElementById(
+                "selfview"
+              ).src = window.URL.createObjectURL(stream);
+            } else {
+              document.getElementById("selfview").src = stream;
+            }
+            this.caller.addStream(stream);
+            var sessionDesc = new RTCSessionDescription(msg.sdp);
+            this.caller.setRemoteDescription(sessionDesc);
+            this.caller.createAnswer().then(function(sdp) {
+              this.caller.setLocalDescription(new RTCSessionDescription(sdp));
+              channel.trigger("client-answer", {
+                sdp: sdp,
+                room: this.room
+              });
+            });
+          })
+          .catch(error => {
+            console.log("an error occured", error);
+          });
+      }
+    });
+    channel.bind("client-answer", function(answer) {
+      if (answer.room == this.room) {
+        console.log("answer received");
+        this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
+      }
+    });
+
+    channel.bind("client-reject", function(answer) {
+      if (answer.room == this.room) {
+        console.log("Call declined");
+        alert("call to " + answer.rejected + "was politely declined");
+        this.endCall();
       }
     });
   },
@@ -133,7 +258,13 @@ export default {
       msgToSend: "",
       isShow: false,
       prompt: false,
-      name: ""
+      name: "",
+      id: "",
+      users: [],
+      usersOnline: 0,
+      channcel: "",
+      room: "",
+      localUserMedia: ""
     };
   },
   methods: {
@@ -217,6 +348,118 @@ export default {
     scrollToEnd() {
       const container = this.$el.querySelector("#message-box__body");
       container.scrollTop = container.scrollHeight - container.clientHeight;
+    },
+    getCam() {
+      //Get local audio/video feed and show it in selfview video element
+      return navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+    },
+    callUser(user) {
+      this.getCam()
+        .then(stream => {
+          // console.log("===> window", window.URL.createObjectURL(stream));
+          if (window.URL) {
+            document.getElementById("selfview").srcObject = stream;
+          } else {
+            document.getElementById("selfview").srcObject = stream;
+          }
+          this.toggleEndCallButton();
+          console.log("this caller", this.caller);
+          this.caller.addStream(stream);
+          this.localUserMedia = stream;
+          this.caller.createOffer().then(desc => {
+            this.caller.setLocalDescription(new RTCSessionDescription(desc));
+            this.channel.trigger("client-sdp", {
+              sdp: desc,
+              room: user,
+              from: this.id
+            });
+            this.room = user;
+          });
+        })
+        .catch(error => {
+          console.log("an error occured", error);
+        });
+    },
+    toggleEndCallButton() {
+      if (document.getElementById("endCall").style.display == "block") {
+        document.getElementById("endCall").style.display = "none";
+      } else {
+        document.getElementById("endCall").style.display = "block";
+      }
+    },
+    GetRTCIceCandidate() {
+      window.RTCIceCandidate =
+        window.RTCIceCandidate ||
+        window.webkitRTCIceCandidate ||
+        window.mozRTCIceCandidate ||
+        window.msRTCIceCandidate;
+
+      return window.RTCIceCandidate;
+    },
+
+    GetRTCPeerConnection() {
+      window.RTCPeerConnection =
+        window.RTCPeerConnection ||
+        window.webkitRTCPeerConnection ||
+        window.mozRTCPeerConnection ||
+        window.msRTCPeerConnection;
+      return window.RTCPeerConnection;
+    },
+
+    GetRTCSessionDescription() {
+      window.RTCSessionDescription =
+        window.RTCSessionDescription ||
+        window.webkitRTCSessionDescription ||
+        window.mozRTCSessionDescription ||
+        window.msRTCSessionDescription;
+      return window.RTCSessionDescription;
+    },
+    prepareCaller() {
+      //Initializing a peer connection
+      this.caller = new window.RTCPeerConnection();
+      //Listen for ICE Candidates and send them to remote peers
+      this.caller.onicecandidate = evt => {
+        if (!evt.candidate) return;
+        console.log("onicecandidate called");
+        this.onIceCandidate(this.caller, evt);
+      };
+      //onaddstream handler to receive remote feed and show in remoteview video element
+      this.caller.onaddstream = evt => {
+        if (window.URL) {
+          document.getElementById(
+            "remoteview"
+          ).src = window.URL.createObjectURL(evt.stream);
+        } else {
+          document.getElementById("remoteview").src = evt.stream;
+        }
+      };
+    },
+    endCall() {
+      this.room = undefined;
+      this.caller.close();
+      for (let track of this.localUserMedia.getTracks()) {
+        track.stop();
+      }
+      this.prepareCaller();
+      this.toggleEndCallButton();
+    },
+    onIceCandidate(peer, evt) {
+      if (evt.candidate) {
+        this.channel.trigger("client-candidate", {
+          candidate: evt.candidate,
+          room: this.room
+        });
+      }
+    },
+    endCurrentCall() {
+      this.channel.trigger("client-endcall", {
+        room: this.room
+      });
+
+      this.endCall();
     }
   },
   updated() {

@@ -116,6 +116,7 @@ import { isEmpty } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
 import { v4 as uuidv4 } from "uuid";
+const API_URL = process.env.VUE_APP_API_URL;
 // import SimplePeer from "simple-peer";
 
 import { mapActions, mapState } from "vuex";
@@ -127,63 +128,64 @@ function mapStateToProps(state) {
   // }
   return {
     loading: state.Message.messageList.loading,
-    messageList: data,
+    messageList: data
   };
 }
 
 export default {
-  created: function () {
+  created: function() {
     let payload = {
-      nextErr: (err) => {
+      nextErr: err => {
         console.log(err);
       },
-      nextSuccess: (success) => {
+      nextSuccess: success => {
         console.log("Debug ===>", success);
-      },
+      }
     };
     // this.getListTraining(payload);
     this.getMessageList(payload);
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
-    // const pusher = new Pusher("1bb3ea564162ad9f320a", {
-    //   cluster: "ap1",
-    // });
-    // const channel = pusher.subscribe("deftnt-channel");
-    // channel.bind("chat-message", (data) => {
-    //   let id = localStorage.getItem("userId");
-    //   if (id !== data.id) {
-    //     if (this.messages.length > 0) {
-    //       const lastestMsg = this.messages[this.messages.length - 1];
-    //       if (lastestMsg.id === data.id) {
-    //         delete data.user;
-    //       }
-    //     }
-    //     this.messages.push(data);
-    //   }
-    // });
+    const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
+      cluster: "ap1"
+    });
+    const channelMessage = pusherMessage.subscribe("deftnt-channel");
+    channelMessage.bind("chat-message", data => {
+      let id = localStorage.getItem("userId");
+      if (id !== data.id) {
+        if (this.messages.length > 0) {
+          const lastestMsg = this.messages[this.messages.length - 1];
+          if (lastestMsg.id === data.id) {
+            delete data.user;
+          }
+        }
+        this.messages.push(data);
+      }
+    });
+
     const pusher = new Pusher("1bb3ea564162ad9f320a", {
       cluster: "ap1",
       encrypted: true,
-      authEndpoint: "http://localhost:1337/pusher/auth",
+      authEndpoint: `${API_URL}pusher/auth`
     });
 
     const channel = pusher.subscribe("presence-videocall");
-    channel.bind("pusher:subscription_succeeded", (members) => {
+    channel.bind("pusher:subscription_succeeded", members => {
       //set the member count
       this.usersOnline = members.count;
       this.id = channel.members.me.id;
       // console.log("id ==>", id);
-      members.each((member) => {
+      members.each(member => {
         if (member.id != channel.members.me.id) {
           this.users.push(member.id);
         }
       });
     });
-    channel.bind("pusher:member_added", (member) => {
+    channel.bind("pusher:member_added", member => {
       this.users.push(member.id);
     });
 
-    channel.bind("pusher:member_removed", (member) => {
+    channel.bind("pusher:member_removed", member => {
       // for remove member from list:
       var index = this.users.indexOf(member.id);
       this.users.splice(index, 1);
@@ -196,13 +198,13 @@ export default {
     this.GetRTCPeerConnection();
     this.GetRTCSessionDescription();
     this.prepareCaller();
-    channel.bind("client-candidate", (msg) => {
+    channel.bind("client-candidate", msg => {
       if (msg.room == this.room) {
         console.log("candidate received");
         this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
       }
     });
-    channel.bind("client-sdp", (msg) => {
+    channel.bind("client-sdp", msg => {
       if (msg.room == this.id) {
         const answer = confirm(
           "You have a call from: " + msg.from + "Would you like to answer?"
@@ -210,13 +212,13 @@ export default {
         if (!answer) {
           return channel.trigger("client-reject", {
             room: msg.room,
-            rejected: this.id,
+            rejected: this.id
           });
         }
         this.isCalling = true;
         this.room = msg.room;
         this.getCam()
-          .then((stream) => {
+          .then(stream => {
             this.localUserMedia = stream;
             if (window.URL) {
               document.getElementById("selfview").srcObject = stream;
@@ -226,27 +228,27 @@ export default {
             this.caller.addStream(stream);
             var sessionDesc = new RTCSessionDescription(msg.sdp);
             this.caller.setRemoteDescription(sessionDesc);
-            this.caller.createAnswer().then((sdp) => {
+            this.caller.createAnswer().then(sdp => {
               this.caller.setLocalDescription(new RTCSessionDescription(sdp));
               channel.trigger("client-answer", {
                 sdp: sdp,
-                room: this.room,
+                room: this.room
               });
             });
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("an error occured", error);
           });
       }
     });
-    channel.bind("client-answer", (answer) => {
+    channel.bind("client-answer", answer => {
       if (answer.room == this.room) {
         console.log("answer received");
         this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
       }
     });
 
-    channel.bind("client-reject", (answer) => {
+    channel.bind("client-reject", answer => {
       if (answer.room == this.room) {
         console.log("Call declined");
         alert("call to " + answer.rejected + "was politely declined");
@@ -267,7 +269,7 @@ export default {
       channcel: "",
       room: "",
       localUserMedia: "",
-      isCalling: false,
+      isCalling: false
     };
   },
   methods: {
@@ -277,7 +279,7 @@ export default {
         this.$q.notify({
           message: "Oops! Sorry, please enter your message.",
           color: "light-blue",
-          icon: "announcement",
+          icon: "announcement"
         });
         return;
       }
@@ -292,7 +294,7 @@ export default {
         id,
         user: "Me",
         message: this.msgToSend,
-        sent: true,
+        sent: true
       };
       if (this.messages.length > 0) {
         const lastestMsg = this.messages[this.messages.length - 1];
@@ -308,14 +310,14 @@ export default {
           id,
           user: this.name,
           message: this.msgToSend,
-          channel: CHANNEL,
+          channel: CHANNEL
         },
         opt: {
-          method: "POST",
-        },
+          method: "POST"
+        }
       };
       this.msgToSend = "";
-      FetchApi(payload).then((response) => {
+      FetchApi(payload).then(response => {
         // this.messages.push(response);>
         if (response.id) {
           console.log("success!");
@@ -324,7 +326,7 @@ export default {
             message:
               "Oops! Sorry, can't send message now. Please wait a few minutes and try again. Thanks",
             color: "light-blue",
-            icon: "announcement",
+            icon: "announcement"
           });
         }
       });
@@ -356,13 +358,13 @@ export default {
       //Get local audio/video feed and show it in selfview video element
       return navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        audio: true
       });
     },
     callUser(user) {
       this.isCalling = true;
       this.getCam()
-        .then((stream) => {
+        .then(stream => {
           // console.log("===> window", window.URL.createObjectURL(stream));
           if (window.URL) {
             document.getElementById("selfview").srcObject = stream;
@@ -371,17 +373,17 @@ export default {
           }
           this.caller.addStream(stream);
           this.localUserMedia = stream;
-          this.caller.createOffer().then((desc) => {
+          this.caller.createOffer().then(desc => {
             this.caller.setLocalDescription(new RTCSessionDescription(desc));
             this.channel.trigger("client-sdp", {
               sdp: desc,
               room: user,
-              from: this.id,
+              from: this.id
             });
             this.room = user;
           });
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("an error occured", error);
         });
     },
@@ -416,13 +418,13 @@ export default {
       //Initializing a peer connection
       this.caller = new window.RTCPeerConnection();
       //Listen for ICE Candidates and send them to remote peers
-      this.caller.onicecandidate = (evt) => {
+      this.caller.onicecandidate = evt => {
         if (!evt.candidate) return;
         console.log("onicecandidate called");
         this.onIceCandidate(this.caller, evt);
       };
       //onaddstream handler to receive remote feed and show in remoteview video element
-      this.caller.onaddstream = (evt) => {
+      this.caller.onaddstream = evt => {
         if (window.URL) {
           document.getElementById("remoteview").srcObject = evt.stream;
         } else {
@@ -443,17 +445,17 @@ export default {
       if (evt.candidate) {
         this.channel.trigger("client-candidate", {
           candidate: evt.candidate,
-          room: this.room,
+          room: this.room
         });
       }
     },
     endCurrentCall() {
       this.channel.trigger("client-endcall", {
-        room: this.room,
+        room: this.room
       });
 
       this.endCall();
-    },
+    }
   },
   updated() {
     // This will be called when the component updates
@@ -464,12 +466,12 @@ export default {
 
       const { messageList, loading } = this.store;
       if (!loading && messageList.length > 0) {
-        messageList.map((message) => {
+        messageList.map(message => {
           const parseMessage = {
             id: message.senderId,
             user: message.senderId === id ? "Me" : message.senderName,
             message: message.message,
-            sent: message.senderId === id,
+            sent: message.senderId === id
           };
           if (this.messages.length > 0) {
             const lastestMsg = this.messages[this.messages.length - 1];
@@ -487,8 +489,8 @@ export default {
   },
   computed: {
     ...mapState({
-      store: mapStateToProps,
-    }),
-  },
+      store: mapStateToProps
+    })
+  }
 };
 </script>

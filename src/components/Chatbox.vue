@@ -22,13 +22,14 @@
     </div>
     <div class="call-video">
       <!-- <h6>{{ usersOnline }}</h6> -->
-      <q-list bordered v-if="users.length">
+      <q-list bordered v-if="users.length" style="border-radius: 15px;">
         <q-item
           v-for="user in users"
           :key="user.id"
           clickable
           v-ripple
           @click="callUser(user.id)"
+          style="padding-left:15px; padding-right: 15px;border-radius: 15px;"
         >
           <q-item-section>{{ user.info.name }}</q-item-section>
           <q-item-section avatar>
@@ -50,18 +51,16 @@
             dense
             v-model="name"
             autofocus
-            @keyup.enter="prompt = false"
+            @keyup.enter="
+              prompt = false;
+              submitName();
+            "
           />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup />
-          <q-btn
-            flat
-            label="Submit name"
-            @click="isShow = true"
-            v-close-popup
-          />
+          <q-btn flat label="Submit name" @click="submitName" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -134,135 +133,16 @@ function mapStateToProps(state) {
 
 export default {
   created: function() {
-    let userId = localStorage.getItem("userId");
-    let userName = localStorage.getItem("userName");
-    let payload = {
-      nextErr: err => {
-        console.log(err);
-      },
-      nextSuccess: success => {
-        console.log("Debug ===>", success);
-      }
-    };
-    // this.getListTraining(payload);
-    this.getMessageList(payload);
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-    const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
-      cluster: "ap1"
-    });
-    const channelMessage = pusherMessage.subscribe("deftnt-channel");
-    channelMessage.bind("chat-message", data => {
-      let id = localStorage.getItem("userId");
-      if (id !== data.id) {
-        if (this.messages.length > 0) {
-          const lastestMsg = this.messages[this.messages.length - 1];
-          if (lastestMsg.id === data.id) {
-            delete data.user;
-          }
-        }
-        this.messages.push(data);
-      }
-    });
+    this.initMessageBox();
 
-    const pusher = new Pusher("1bb3ea564162ad9f320a", {
-      cluster: "ap1",
-      encrypted: true,
-      authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
-    });
-
-    const channel = pusher.subscribe("presence-videocall");
-    channel.bind("pusher:subscription_succeeded", members => {
-      //set the member count
-      this.usersOnline = members.count;
-      this.id = channel.members.me.id;
-
-      members.each(member => {
-        if (member.id != channel.members.me.id) {
-          this.users.push(member);
-        }
-      });
-    });
-    channel.bind("pusher:member_added", member => {
-      this.users.push(member);
-    });
-
-    channel.bind("pusher:member_removed", member => {
-      // for remove member from list:
-      const index = this.users.findIndex(user => user.id === member.id);
-      this.users.splice(index, 1);
-      if (member.id == this.room) {
-        this.endCall();
-      }
-    });
-    this.channel = channel;
-    this.GetRTCIceCandidate();
-    this.GetRTCPeerConnection();
-    this.GetRTCSessionDescription();
-    this.prepareCaller();
-    channel.bind("client-candidate", msg => {
-      if (msg.room == this.room) {
-        console.log("candidate received");
-        this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
-      }
-    });
-    channel.bind("client-sdp", msg => {
-      if (msg.room == this.id) {
-        const answer = confirm(
-          "You have a call from: " + msg.from + "Would you like to answer?"
-        );
-        if (!answer) {
-          return channel.trigger("client-reject", {
-            room: msg.room,
-            rejected: this.id
-          });
-        }
-        this.isCalling = true;
-        this.room = msg.room;
-        this.getCam()
-          .then(stream => {
-            this.localUserMedia = stream;
-            if (window.URL) {
-              document.getElementById("selfview").srcObject = stream;
-            } else {
-              document.getElementById("selfview").src = stream;
-            }
-            this.caller.addStream(stream);
-            var sessionDesc = new RTCSessionDescription(msg.sdp);
-            this.caller.setRemoteDescription(sessionDesc);
-            this.caller.createAnswer().then(sdp => {
-              this.caller.setLocalDescription(new RTCSessionDescription(sdp));
-              channel.trigger("client-answer", {
-                sdp: sdp,
-                room: this.room
-              });
-            });
-          })
-          .catch(error => {
-            this.$q.notify({
-              message: error,
-              color: "light-blue",
-              icon: "announcement"
-            });
-            this.isCalling = false;
-            this.endCall();
-          });
-      }
-    });
-    channel.bind("client-answer", answer => {
-      if (answer.room == this.room) {
-        console.log("answer received");
-        this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
-      }
-    });
-
-    channel.bind("client-reject", answer => {
-      if (answer.room == this.room) {
-        console.log("Call declined");
-        alert("call to " + answer.rejected + "was politely declined");
-        this.endCall();
-      }
-    });
+    let id = localStorage.getItem("userId");
+    let name = localStorage.getItem("userName");
+    if (isEmpty(id)) {
+      this.prompt = true;
+    } else {
+      this.name = name;
+      this.initCallBox(id, name);
+    }
   },
   data() {
     return {
@@ -277,7 +157,8 @@ export default {
       channcel: "",
       room: "",
       localUserMedia: "",
-      isCalling: false
+      isCalling: false,
+      typeInit: 1
     };
   },
   methods: {
@@ -339,6 +220,14 @@ export default {
         }
       });
     },
+
+    submitName() {
+      const id = uuidv4();
+      localStorage.setItem("userId", id);
+      localStorage.setItem("userName", this.name);
+      this.initCallBox(id, this.name);
+    },
+
     showMessage() {
       if (isEmpty(this.name)) {
         let id = localStorage.getItem("userId");
@@ -353,10 +242,12 @@ export default {
         this.isShow = true;
       }
     },
+
     scrollToEnd() {
       const container = this.$el.querySelector("#message-box__body");
       container.scrollTop = container.scrollHeight - container.clientHeight;
     },
+
     getCam() {
       //Get local audio/video feed and show it in selfview video element
       return navigator.mediaDevices.getUserMedia({
@@ -364,6 +255,7 @@ export default {
         audio: true
       });
     },
+
     callUser(user) {
       this.isCalling = true;
       this.getCam()
@@ -396,6 +288,7 @@ export default {
           this.endCall();
         });
     },
+
     GetRTCIceCandidate() {
       window.RTCIceCandidate =
         window.RTCIceCandidate ||
@@ -423,6 +316,7 @@ export default {
         window.msRTCSessionDescription;
       return window.RTCSessionDescription;
     },
+
     prepareCaller() {
       //Initializing a peer connection
       this.caller = new window.RTCPeerConnection();
@@ -441,6 +335,7 @@ export default {
         }
       };
     },
+
     endCall() {
       this.isCalling = false;
       this.room = undefined;
@@ -450,6 +345,7 @@ export default {
       }
       this.prepareCaller();
     },
+
     onIceCandidate(peer, evt) {
       if (evt.candidate) {
         this.channel.trigger("client-candidate", {
@@ -458,12 +354,147 @@ export default {
         });
       }
     },
+
     endCurrentCall() {
       this.channel.trigger("client-endcall", {
         room: this.room
       });
 
       this.endCall();
+    },
+
+    initMessageBox() {
+      let payload = {
+        nextErr: err => {
+          console.log(err);
+        },
+        nextSuccess: success => {
+          console.log("Debug ===>", success);
+        }
+      };
+      // this.getListTraining(payload);
+      this.getMessageList(payload);
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+      const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
+        cluster: "ap1"
+      });
+      const channelMessage = pusherMessage.subscribe("deftnt-channel");
+      channelMessage.bind("chat-message", data => {
+        let id = localStorage.getItem("userId");
+        if (id !== data.id) {
+          if (this.messages.length > 0) {
+            const lastestMsg = this.messages[this.messages.length - 1];
+            if (lastestMsg.id === data.id) {
+              delete data.user;
+            }
+          }
+          this.messages.push(data);
+        }
+      });
+    },
+
+    initCallBox(userId, userName) {
+      const pusher = new Pusher("1bb3ea564162ad9f320a", {
+        cluster: "ap1",
+        encrypted: true,
+        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
+      });
+
+      const channel = pusher.subscribe("presence-videocall");
+      channel.bind("pusher:subscription_succeeded", members => {
+        //set the member count
+        this.usersOnline = members.count;
+        this.id = channel.members.me.id;
+
+        members.each(member => {
+          if (member.id != channel.members.me.id) {
+            this.users.push(member);
+          }
+        });
+      });
+
+      channel.bind("pusher:member_added", member => {
+        this.users.push(member);
+      });
+
+      channel.bind("pusher:member_removed", member => {
+        // for remove member from list:
+        const index = this.users.findIndex(user => user.id === member.id);
+        this.users.splice(index, 1);
+        if (member.id == this.room) {
+          this.endCall();
+        }
+      });
+      this.channel = channel;
+      this.GetRTCIceCandidate();
+      this.GetRTCPeerConnection();
+      this.GetRTCSessionDescription();
+      this.prepareCaller();
+      channel.bind("client-candidate", msg => {
+        if (msg.room == this.room) {
+          this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
+        }
+      });
+      channel.bind("client-sdp", msg => {
+        if (msg.room == this.id) {
+          const answer = confirm(
+            "You have a call from: " + msg.from + "Would you like to answer?"
+          );
+          if (!answer) {
+            return channel.trigger("client-reject", {
+              room: msg.room,
+              rejected: this.id
+            });
+          }
+          this.isCalling = true;
+          this.room = msg.room;
+          this.getCam()
+            .then(stream => {
+              this.localUserMedia = stream;
+              if (window.URL) {
+                document.getElementById("selfview").srcObject = stream;
+              } else {
+                document.getElementById("selfview").src = stream;
+              }
+              this.caller.addStream(stream);
+              var sessionDesc = new RTCSessionDescription(msg.sdp);
+              this.caller.setRemoteDescription(sessionDesc);
+              this.caller.createAnswer().then(sdp => {
+                this.caller.setLocalDescription(new RTCSessionDescription(sdp));
+                channel.trigger("client-answer", {
+                  sdp: sdp,
+                  room: this.room
+                });
+              });
+            })
+            .catch(error => {
+              this.$q.notify({
+                message: error,
+                color: "light-blue",
+                icon: "announcement"
+              });
+              this.isCalling = false;
+              this.endCall();
+            });
+        }
+      });
+      channel.bind("client-answer", answer => {
+        if (answer.room == this.room) {
+          console.log("answer received");
+          this.caller.setRemoteDescription(
+            new RTCSessionDescription(answer.sdp)
+          );
+        }
+      });
+
+      channel.bind("client-reject", answer => {
+        if (answer.room == this.room) {
+          console.log("Call declined");
+          alert("call to " + answer.rejected + "was politely declined");
+          this.endCall();
+        }
+      });
     }
   },
   updated() {

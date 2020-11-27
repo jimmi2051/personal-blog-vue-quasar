@@ -25,12 +25,12 @@
       <q-list bordered v-if="users.length">
         <q-item
           v-for="user in users"
-          :key="user"
+          :key="user.id"
           clickable
           v-ripple
-          @click="callUser(user)"
+          @click="callUser(user.id)"
         >
-          <q-item-section>{{ user }}</q-item-section>
+          <q-item-section>{{ user.info.name }}</q-item-section>
           <q-item-section avatar>
             <q-icon color="primary" name="phone" />
           </q-item-section>
@@ -134,6 +134,8 @@ function mapStateToProps(state) {
 
 export default {
   created: function() {
+    let userId = localStorage.getItem("userId");
+    let userName = localStorage.getItem("userName");
     let payload = {
       nextErr: err => {
         console.log(err);
@@ -166,7 +168,7 @@ export default {
     const pusher = new Pusher("1bb3ea564162ad9f320a", {
       cluster: "ap1",
       encrypted: true,
-      authEndpoint: `${API_URL}pusher/auth`
+      authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
     });
 
     const channel = pusher.subscribe("presence-videocall");
@@ -174,20 +176,20 @@ export default {
       //set the member count
       this.usersOnline = members.count;
       this.id = channel.members.me.id;
-      // console.log("id ==>", id);
+
       members.each(member => {
         if (member.id != channel.members.me.id) {
-          this.users.push(member.id);
+          this.users.push(member);
         }
       });
     });
     channel.bind("pusher:member_added", member => {
-      this.users.push(member.id);
+      this.users.push(member);
     });
 
     channel.bind("pusher:member_removed", member => {
       // for remove member from list:
-      var index = this.users.indexOf(member.id);
+      const index = this.users.findIndex(user => user.id === member.id);
       this.users.splice(index, 1);
       if (member.id == this.room) {
         this.endCall();
@@ -237,7 +239,13 @@ export default {
             });
           })
           .catch(error => {
-            console.log("an error occured", error);
+            this.$q.notify({
+              message: error,
+              color: "light-blue",
+              icon: "announcement"
+            });
+            this.isCalling = false;
+            this.endCall();
           });
       }
     });
@@ -336,11 +344,6 @@ export default {
         let id = localStorage.getItem("userId");
         let name = localStorage.getItem("userName");
         if (isEmpty(id)) {
-          // const index = Math.floor(Math.random() * 3);
-          // id = uuidv4();
-          // name = names[index];
-          // localStorage.setItem("userId", id);
-          // localStorage.setItem("userName", name);
           this.prompt = true;
         } else {
           this.name = name;
@@ -384,7 +387,13 @@ export default {
           });
         })
         .catch(error => {
-          console.log("an error occured", error);
+          this.$q.notify({
+            message: error,
+            color: "light-blue",
+            icon: "announcement"
+          });
+          this.isCalling = false;
+          this.endCall();
         });
     },
     GetRTCIceCandidate() {

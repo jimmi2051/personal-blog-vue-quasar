@@ -4,9 +4,8 @@
       :class="isCalling ? `popup-calling is-show` : `popup-calling`"
       id="app"
     >
-      <video id="selfview" autoplay></video>
-      <video id="remoteview" autoplay></video>
-      <!-- <button id="endCall" style="display: none" @click="endCurrentCall"> -->
+      <video muted playsinline id="selfview" autoplay></video>
+      <video id="remoteview" playsinline autoplay></video>
       <q-icon
         color="danger"
         class="endcall"
@@ -21,7 +20,6 @@
       </button>
     </div>
     <div class="call-video">
-      <!-- <h6>{{ usersOnline }}</h6> -->
       <q-list bordered v-if="users.length" style="border-radius: 15px;">
         <q-item
           v-for="user in users"
@@ -158,7 +156,8 @@ export default {
       room: "",
       localUserMedia: "",
       isCalling: false,
-      typeInit: 1
+      typeInit: 1,
+      caller: null
     };
   },
   methods: {
@@ -260,10 +259,11 @@ export default {
       this.isCalling = true;
       this.getCam()
         .then(stream => {
-          // console.log("===> window", window.URL.createObjectURL(stream));
           if (window.URL) {
+            // document.getElementById("selfview").srcObject = {};
             document.getElementById("selfview").srcObject = stream;
           } else {
+            // document.getElementById("selfview").src = "";
             document.getElementById("selfview").src = stream;
           }
           this.caller.addStream(stream);
@@ -329,8 +329,10 @@ export default {
       //onaddstream handler to receive remote feed and show in remoteview video element
       this.caller.onaddstream = evt => {
         if (window.URL) {
+          // document.getElementById("remoteview").srcObject = {};
           document.getElementById("remoteview").srcObject = evt.stream;
         } else {
+          // document.getElementById("remoteview").src = "";
           document.getElementById("remoteview").src = evt.stream;
         }
       };
@@ -431,9 +433,16 @@ export default {
       this.GetRTCPeerConnection();
       this.GetRTCSessionDescription();
       this.prepareCaller();
-      channel.bind("client-candidate", msg => {
+
+      channel.bind("client-candidate", async msg => {
         if (msg.room == this.room) {
-          this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
+          await this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
+        }
+      });
+      channel.bind("client-endcall", msg => {
+        if (msg.room == this.room) {
+          this.endCall();
+          this.isCalling = false;
         }
       });
       channel.bind("client-sdp", msg => {
@@ -453,8 +462,10 @@ export default {
             .then(stream => {
               this.localUserMedia = stream;
               if (window.URL) {
+                // document.getElementById("selfview").srcObject = {};
                 document.getElementById("selfview").srcObject = stream;
               } else {
+                // document.getElementById("selfview").src = "";
                 document.getElementById("selfview").src = stream;
               }
               this.caller.addStream(stream);
@@ -475,7 +486,6 @@ export default {
                 icon: "announcement"
               });
               this.isCalling = false;
-              this.endCall();
             });
         }
       });

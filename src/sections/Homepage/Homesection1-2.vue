@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="about-me">
     <h2 class="section--title">About me</h2>
     <q-card class="my-card" flat>
       <q-card-section horizontal class="wrap justify-center">

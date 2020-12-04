@@ -18,16 +18,16 @@
       <q-space />
 
       <q-separator dark vertical />
-      <q-item exact to="/about">
-        <q-btn stretch flat label="About" />
+      <q-item exact>
+        <q-btn stretch flat @click="scrollToDiv('about-me')" label="About" />
       </q-item>
       <q-separator dark vertical />
       <q-item exact>
-        <q-btn stretch @click="showNotif" flat label="Works" />
+        <q-btn stretch @click="scrollToDiv('work')" flat label="Works" />
       </q-item>
       <q-separator dark vertical />
       <q-item exact>
-        <q-btn stretch @click="showNotif" flat label="Contact" />
+        <q-btn stretch @click="scrollToDiv('contact')" flat label="Contact" />
       </q-item>
       <q-separator dark vertical />
       <q-btn
@@ -75,11 +75,11 @@
         <q-menu content-class="bg-black text-white" style="width: 280px;">
           <q-list class="text-center" dense style="min-width: 250px">
             <q-separator dark inset />
-            <q-item clickable v-close-popup>
+            <q-item exact>
               <q-btn
                 stretch
+                @click="scrollToDiv('about-me')"
                 flat
-                to="/about"
                 label="About"
                 style="margin-left:auto;margin-right:auto;"
               />
@@ -89,7 +89,7 @@
             <q-item exact>
               <q-btn
                 stretch
-                @click="showNotif"
+                @click="scrollToDiv('work')"
                 flat
                 label="Works"
                 style="margin-left:auto;margin-right:auto;"
@@ -99,7 +99,7 @@
             <q-item exact>
               <q-btn
                 stretch
-                @click="showNotif"
+                @click="scrollToDiv('contact')"
                 flat
                 label="Contact"
                 style="margin-left:auto;margin-right:auto;"
@@ -149,6 +149,16 @@ export default {
         color: "light-blue",
         icon: "announcement"
       });
+    },
+    scrollToDiv(div) {
+      const elem = document.getElementById(div);
+      if (elem) {
+        elem.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "start"
+        });
+      }
     }
   },
   props: {

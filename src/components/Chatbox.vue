@@ -119,10 +119,6 @@ const API_URL = process.env.VUE_APP_API_URL;
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Message.messageList.data;
-  // if(data.length>0)
-  // {
-
-  // }
   return {
     loading: state.Message.messageList.loading,
     messageList: data
@@ -206,7 +202,6 @@ export default {
       };
       this.msgToSend = "";
       FetchApi(payload).then(response => {
-        // this.messages.push(response);>
         if (response.id) {
           console.log("success!");
         } else {

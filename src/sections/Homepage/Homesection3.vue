@@ -5,7 +5,9 @@
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 skill-hard">
         <div class="text-h4">Hard Skills</div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>ReactJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            ReactJS:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -15,7 +17,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Django:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Django:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -25,7 +29,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>ASP.NET:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            ASP.NET:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -35,7 +41,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>VueJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            VueJS:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -45,7 +53,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>NodeJS:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            NodeJS:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -58,7 +68,9 @@
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 skill-soft">
         <div class="text-h4">Soft Skills</div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Communication:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Communication:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -68,7 +80,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Teamwork:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Teamwork:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -78,7 +92,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Adaptability:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Adaptability:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -88,7 +104,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Problem-Solving:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Problem-Solving:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe
@@ -98,7 +116,9 @@
           />
         </div>
         <div class="row q-pt-sm q-pb-sm">
-          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>Creativity:</div>
+          <div class="skill-title col-xs-4 col-sm-4 col-md-4 col-lg-3" style>
+            Creativity:
+          </div>
           <q-linear-progress
             class="col-xs-8 col-sm-8 col-md-8 col-lg-9 progress"
             stripe

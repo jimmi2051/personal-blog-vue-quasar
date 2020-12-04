@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pt-md">
+  <div class="q-pt-md" id="contact">
     <h2 class="section--title">Contact</h2>
     <div class="q-gutter-y-md row q-pt-md contact">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 contact-info">
@@ -18,7 +18,8 @@
                 href="https://www.facebook.com/beatboxer.mrteo"
                 no-shadow
                 target="__blank"
-              >[Thành Lý] jimmi2051@gmail.com</q-btn>
+                >[Thành Lý] jimmi2051@gmail.com
+              </q-btn>
             </q-item-section>
           </q-item>
           <q-item clickable v-ripple>
@@ -34,7 +35,8 @@
                 href="https://www.instagram.com/deftnguyen/"
                 no-shadow
                 target="__blank"
-              >[Thành Lý] jimmi2051@gmail.com</q-btn>
+                >[Thành Lý] jimmi2051@gmail.com
+              </q-btn>
             </q-item-section>
           </q-item>
           <q-item clickable v-ripple>
@@ -50,7 +52,8 @@
                 href="mailto:thanhnl0697@gmail.com"
                 no-shadow
                 target="__blank"
-              >[Thành Nguyễn Lý] thanhnl0697@gmail.com</q-btn>
+                >[Thành Nguyễn Lý] thanhnl0697@gmail.com
+              </q-btn>
             </q-item-section>
           </q-item>
           <q-item clickable v-ripple>
@@ -61,12 +64,9 @@
             </q-item-section>
 
             <q-item-section>
-              <q-btn
-                type="a"
-                href="tel:0569363575"
-                no-shadow
-                target="__blank"
-              >[Thành Nguyễn Lý] (+84) 569363575</q-btn>
+              <q-btn type="a" href="tel:0569363575" no-shadow target="__blank"
+                >[Thành Nguyễn Lý] (+84) 569363575
+              </q-btn>
             </q-item-section>
           </q-item>
         </div>
@@ -80,7 +80,10 @@
             label="Your mail *"
             hint="E-mail"
             lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something', isValidEmail]"
+            :rules="[
+              val => (val && val.length > 0) || 'Please type something',
+              isValidEmail
+            ]"
             ref="email"
           />
 
@@ -90,7 +93,7 @@
             label="Your name *"
             hint="Name and surname"
             lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :rules="[val => (val && val.length > 0) || 'Please type something']"
             ref="name"
           />
           <q-input
@@ -100,14 +103,20 @@
             filled
             type="textarea"
             lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"
+            :rules="[val => (val && val.length > 0) || 'Please type something']"
             ref="description"
           />
           <q-toggle v-model="accept" label="I'm not a bot" />
 
           <div>
             <q-btn label="Submit" type="submit" color="primary" />
-            <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+            <q-btn
+              label="Reset"
+              type="reset"
+              color="primary"
+              flat
+              class="q-ml-sm"
+            />
           </div>
         </q-form>
       </div>

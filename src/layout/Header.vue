@@ -18,8 +18,8 @@
       <q-space />
 
       <q-separator dark vertical />
-      <q-item exact>
-        <q-btn stretch flat @click="scrollToDiv('about-me')" label="About" />
+      <q-item exact to="/about">
+        <q-btn stretch flat label="About" />
       </q-item>
       <q-separator dark vertical />
       <q-item exact>
@@ -75,11 +75,11 @@
         <q-menu content-class="bg-black text-white" style="width: 280px;">
           <q-list class="text-center" dense style="min-width: 250px">
             <q-separator dark inset />
-            <q-item exact>
+            <q-item clickable v-close-popup>
               <q-btn
                 stretch
-                @click="scrollToDiv('about-me')"
                 flat
+                to="/about"
                 label="About"
                 style="margin-left:auto;margin-right:auto;"
               />
@@ -158,6 +158,8 @@ export default {
           block: "start",
           inline: "start"
         });
+      } else {
+        this.$router.push({ path: `/#${div}` });
       }
     }
   },

@@ -13,7 +13,6 @@
 </template>
 
 <script>
-
 // // @ is an alias to /src
 import { mapState } from "vuex";
 import { isArray } from "lodash";
@@ -40,6 +39,21 @@ function mapStateToProps(state) {
 export default {
   name: "Home",
   created: function() {},
+  mounted() {
+    const { current } = this.$router.history;
+    if (current.hash && current.hash !== "") {
+      let { hash } = current;
+      const div = hash.substring(1);
+      const elem = document.getElementById(div);
+      if (elem) {
+        elem.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "start"
+        });
+      }
+    }
+  },
   computed: {
     ...mapState({
       store: mapStateToProps

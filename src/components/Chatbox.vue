@@ -194,7 +194,8 @@ export default {
           id,
           user: this.name,
           message: this.msgToSend,
-          channel: CHANNEL
+          channel: CHANNEL,
+          activeBot: true
         },
         opt: {
           method: "POST"

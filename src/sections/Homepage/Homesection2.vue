@@ -9,7 +9,7 @@
         :avatar="require('@/assets/images/Homepage/kyanon-logo.png')"
       >
         <div clas="text-body-1">
-          <span class="text-weight-bold">Position</span>: Fresher Full-Stack
+          <span class="text-weight-bold">Position</span>: Junior Full-Stack
         </div>
         <div clas="text-body-1">
           <span class="text-weight-bold">Main job</span>: Working at Hydra Squad

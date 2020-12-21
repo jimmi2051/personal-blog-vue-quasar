@@ -26,6 +26,7 @@
           <div class="text-h5 q-mt-sm q-mb-xs">
             Experience with AWS. Familiar with Agile/Scrum.
           </div>
+          <q-separator />
         </q-card-section>
       </q-card-section>
 

@@ -6,7 +6,8 @@
           <q-card-section horizontal class="wrap">
             <q-card-section class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
               <h4 class="text-h4">
-                <div>Software Engineer</div>Nguyen Ly Thanh
+                <div>Software Engineer</div>
+                Nguyen Ly Thanh
               </h4>
               <p class="text-subtitle1 text-bold">GET IN CONTACT</p>
               <p class="text-body1">
@@ -17,37 +18,46 @@
                 <a href="mailto:thanhnl0697@gmail.com">thanhnl0697@gmail.com</a>
                 <br />
                 <span class="text-bold">Linkedin:</span>
-                <a
-                  href="https://linkedin.com/in/thanh-nguyen-ly"
-                  target="blank"
-                >https://linkedin.com/in/thanh-nguyen-ly</a>
+                <a href="https://linkedin.com/in/thanh-nguyen-ly" target="blank"
+                  >https://linkedin.com/in/thanh-nguyen-ly</a
+                >
                 <br />
                 <span class="text-bold">Blog:</span>
-                <a
-                  href="https://deftnt-blog.herokuapp.com/"
-                  target="blank"
-                >https://deftnt-blog.herokuapp.com</a>
+                <a href="https://deftnt-blog.herokuapp.com/" target="blank"
+                  >https://deftnt-blog.herokuapp.com</a
+                >
+                <br />
+                <span class="text-bold">Github:</span>
+                <a href="https://deftnt-blog.herokuapp.com/" target="blank"
+                  >https://github.com/jimmi2051</a
+                >
               </p>
 
               <p class="text-subtitle1 text-bold">Personal Profile</p>
               <p class="text-body1">
-                Creative, self-motivated, and independent engineer with two years of experience in the Software field in various positions fully involved in the Software Development Life Cycle.
-                <br />Strong at NodeJS, Python, and ReactJS.
-                <br />Experience with AWS. Familiar with Agile/Scrum.
+                Creative, self-motivated, and independent engineer with two
+                years of experience in the Software field in various positions
+                fully involved in the Software Development Life Cycle.
+                <br />Strong at NodeJS, Python, and ReactJS. <br />Experience
+                with AWS. Familiar with Agile/Scrum.
               </p>
               <p class="text-subtitle1 text-bold">Technical Expertise</p>
               <p class="text-body1">
-                <span class="text-bold">Programming languages:</span> Javascript, Python, C#, TypeScript
+                <span class="text-bold">Programming languages:</span>
+                Javascript, Python, C#, TypeScript
                 <br />
-                <span class="text-bold">DBMS:</span> MongoDB, PostgreSQL, SQL Server, MySQL, SQLite
+                <span class="text-bold">DBMS:</span> MongoDB, PostgreSQL, SQL
+                Server, MySQL, SQLite
                 <br />
-                <span class="text-bold">Framework / CMS:</span> NextJS, Django, Strapi, VueJS, Quasar, .NET & EF
+                <span class="text-bold">Framework / CMS:</span> NextJS, Django,
+                Strapi, VueJS, Quasar, .NET & EF
                 <br />
                 <span class="text-bold">Library:</span>ReactJS
                 <br />
                 <span class="text-bold">Platform:</span>NodeJS
                 <br />
-                <span class="text-bold">Style sheet language:</span> CSS, SCSS, SASS
+                <span class="text-bold">Style sheet language:</span> CSS, SCSS,
+                SASS
                 <br />
                 <span class="text-bold">Markup Language:</span>HTML
               </p>

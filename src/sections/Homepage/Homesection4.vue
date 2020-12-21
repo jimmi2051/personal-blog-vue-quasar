@@ -26,8 +26,8 @@
         no-shadow
         target="__blank"
         class="q-mt-md"
-        >References</q-btn
-      >
+        >References
+      </q-btn>
     </q-card>
 
     <!-- <div classs="col-sm-4 q-pa-md"> -->
@@ -48,8 +48,8 @@
           no-shadow
           target="__blank"
           class="q-mt-md"
-          >References</q-btn
-        >
+          >References
+        </q-btn>
       </q-card-section>
 
       <!-- <q-card-section class="q-pt-none">
@@ -74,8 +74,8 @@
           no-shadow
           target="__blank"
           class="q-mt-md"
-          >References</q-btn
-        >
+          >References
+        </q-btn>
       </q-card-section>
 
       <!-- <q-card-section class="q-pt-none">

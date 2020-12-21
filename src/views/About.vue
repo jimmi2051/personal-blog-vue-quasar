@@ -18,19 +18,22 @@
                 <a href="mailto:thanhnl0697@gmail.com">thanhnl0697@gmail.com</a>
                 <br />
                 <span class="text-bold">Linkedin:</span>
-                <a href="https://linkedin.com/in/thanh-nguyen-ly" target="blank"
-                  >https://linkedin.com/in/thanh-nguyen-ly</a
+                <a
+                  href="https://linkedin.com/in/thanh-nguyen-ly"
+                  target="blank"
                 >
+                  https://linkedin.com/in/thanh-nguyen-ly
+                </a>
                 <br />
                 <span class="text-bold">Blog:</span>
-                <a href="https://deftnt-blog.herokuapp.com/" target="blank"
-                  >https://deftnt-blog.herokuapp.com</a
-                >
+                <a href="https://deftnt-blog.herokuapp.com/" target="blank">
+                  https://deftnt-blog.herokuapp.com
+                </a>
                 <br />
                 <span class="text-bold">Github:</span>
-                <a href="https://deftnt-blog.herokuapp.com/" target="blank"
-                  >https://github.com/jimmi2051</a
-                >
+                <a href="https://deftnt-blog.herokuapp.com/" target="blank">
+                  https://github.com/jimmi2051
+                </a>
               </p>
 
               <p class="text-subtitle1 text-bold">Personal Profile</p>

@@ -64,8 +64,8 @@
             </q-item-section>
 
             <q-item-section>
-              <q-btn type="a" href="tel:0569363575" no-shadow target="__blank"
-                >[Thành Nguyễn Lý] (+84) 569363575
+              <q-btn type="a" href="tel:0569363575" no-shadow target="__blank">
+                [Thành Nguyễn Lý] (+84) 569363575
               </q-btn>
             </q-item-section>
           </q-item>

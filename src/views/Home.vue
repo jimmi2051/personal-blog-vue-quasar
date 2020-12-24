@@ -15,8 +15,8 @@
 <script>
 // // @ is an alias to /src
 import { mapState } from "vuex";
-import { isArray } from "lodash";
-import { findPage } from "utils/Helpers";
+// import { isArray } from "lodash";
+// import { findPage } from "utils/Helpers";
 import Homesection1 from "sections/Homepage/Homesection1";
 import Homesection12 from "sections/Homepage/Homesection1-2";
 import Homesection2 from "sections/Homepage/Homesection2";
@@ -25,17 +25,17 @@ import Homesection4 from "sections/Homepage/Homesection4";
 import Homesection5 from "sections/Homepage/Homesection5";
 import Homesection6 from "sections/Homepage/Homesection6";
 
-function mapStateToProps(state) {
-  let data = {};
-  const pages = state.Page.pages.data.pages;
-  if (pages && isArray(pages)) {
-    data = findPage(pages, "Home");
-  }
-  return {
-    loading: state.Page.pages.loading,
-    homePage: data
-  };
-}
+// function mapStateToProps(state) {
+//   let data = {};
+//   const pages = state.Page.pages.data.pages;
+//   if (pages && isArray(pages)) {
+//     data = findPage(pages, "Home");
+//   }
+//   return {
+//     loading: state.Page.pages.loading,
+//     homePage: data
+//   };
+// }
 export default {
   name: "Home",
   created: function() {},
@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     ...mapState({
-      store: mapStateToProps
+      // store: mapStateToProps
     })
   },
   data() {

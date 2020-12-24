@@ -121,12 +121,12 @@ function mapStateToProps(state) {
   const data = state.Message.messageList.data;
   return {
     loading: state.Message.messageList.loading,
-    messageList: data,
+    messageList: data
   };
 }
 
 export default {
-  created: function () {
+  created: function() {
     this.initMessageBox();
 
     let id = localStorage.getItem("userId");
@@ -154,7 +154,7 @@ export default {
       isCalling: false,
       typeInit: 1,
       caller: null,
-      activeBot: true,
+      activeBot: true
     };
   },
   methods: {
@@ -182,7 +182,7 @@ export default {
         this.$q.notify({
           message: "Oops! Sorry, please enter your message.",
           color: "light-blue",
-          icon: "announcement",
+          icon: "announcement"
         });
         return;
       }
@@ -192,13 +192,13 @@ export default {
           id,
           user: "Me",
           message: "/bot on # Enable bot",
-          sent: true,
+          sent: true
         };
         const messageDisableBot = {
           id,
           user: "Me",
           message: "/bot off # Disable bot",
-          sent: true,
+          sent: true
         };
         this.handlePushMessage(messageEnableBot);
         this.handlePushMessage(messageDisableBot);
@@ -211,7 +211,7 @@ export default {
           id,
           user: "Me",
           message: "Bot have been enabled.",
-          sent: true,
+          sent: true
         };
         this.handlePushMessage(messageEnableBot);
         return;
@@ -223,7 +223,7 @@ export default {
           id,
           user: "Me",
           message: "Bot have been disabled.",
-          sent: true,
+          sent: true
         };
         this.handlePushMessage(messageDisableBot);
         return;
@@ -233,7 +233,7 @@ export default {
         id,
         user: "Me",
         message: this.msgToSend,
-        sent: true,
+        sent: true
       };
       this.handlePushMessage(message);
 
@@ -244,13 +244,13 @@ export default {
           user: this.name,
           message: message.message,
           channel: CHANNEL,
-          activeBot: this.activeBot,
+          activeBot: this.activeBot
         },
         opt: {
-          method: "POST",
-        },
+          method: "POST"
+        }
       };
-      FetchApi(payload).then((response) => {
+      FetchApi(payload).then(response => {
         if (response.id) {
           console.log("success!");
         } else {
@@ -258,7 +258,7 @@ export default {
             message:
               "Oops! Sorry, can't send message now. Please wait a few minutes and try again. Thanks",
             color: "light-blue",
-            icon: "announcement",
+            icon: "announcement"
           });
         }
       });
@@ -295,14 +295,14 @@ export default {
       //Get local audio/video feed and show it in selfview video element
       return navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        audio: true
       });
     },
 
     callUser(user) {
       this.isCalling = true;
       this.getCam()
-        .then((stream) => {
+        .then(stream => {
           if (window.URL) {
             // document.getElementById("selfview").srcObject = {};
             document.getElementById("selfview").srcObject = stream;
@@ -312,21 +312,21 @@ export default {
           }
           this.caller.addStream(stream);
           this.localUserMedia = stream;
-          this.caller.createOffer().then((desc) => {
+          this.caller.createOffer().then(desc => {
             this.caller.setLocalDescription(new RTCSessionDescription(desc));
             this.channel.trigger("client-sdp", {
               sdp: desc,
               room: user,
-              from: this.id,
+              from: this.id
             });
             this.room = user;
           });
         })
-        .catch((error) => {
+        .catch(error => {
           this.$q.notify({
             message: error,
             color: "light-blue",
-            icon: "announcement",
+            icon: "announcement"
           });
           this.isCalling = false;
           this.endCall();
@@ -365,13 +365,13 @@ export default {
       //Initializing a peer connection
       this.caller = new window.RTCPeerConnection();
       //Listen for ICE Candidates and send them to remote peers
-      this.caller.onicecandidate = (evt) => {
+      this.caller.onicecandidate = evt => {
         if (!evt.candidate) return;
         console.log("onicecandidate called");
         this.onIceCandidate(this.caller, evt);
       };
       //onaddstream handler to receive remote feed and show in remoteview video element
-      this.caller.onaddstream = (evt) => {
+      this.caller.onaddstream = evt => {
         if (window.URL) {
           // document.getElementById("remoteview").srcObject = {};
           document.getElementById("remoteview").srcObject = evt.stream;
@@ -396,14 +396,14 @@ export default {
       if (evt.candidate) {
         this.channel.trigger("client-candidate", {
           candidate: evt.candidate,
-          room: this.room,
+          room: this.room
         });
       }
     },
 
     endCurrentCall() {
       this.channel.trigger("client-endcall", {
-        room: this.room,
+        room: this.room
       });
 
       this.endCall();
@@ -411,22 +411,22 @@ export default {
 
     initMessageBox() {
       let payload = {
-        nextErr: (err) => {
-          console.log(err);
+        nextErr: err => {
+          console.log("[ERROR] " + err);
         },
-        nextSuccess: (success) => {
-          console.log("Debug ===>", success);
-        },
+        nextSuccess: () => {
+          // console.log("Debug ===>", success);
+        }
       };
       // this.getListTraining(payload);
       this.getMessageList(payload);
       // Enable pusher logging - don't include this in production
       Pusher.logToConsole = true;
       const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
-        cluster: "ap1",
+        cluster: "ap1"
       });
       const channelMessage = pusherMessage.subscribe("deftnt-channel");
-      channelMessage.bind("chat-message", (data) => {
+      channelMessage.bind("chat-message", data => {
         let id = localStorage.getItem("userId");
         if (id !== data.id) {
           this.handlePushMessage(data);
@@ -438,29 +438,29 @@ export default {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
         encrypted: true,
-        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`,
+        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
       });
 
       const channel = pusher.subscribe("presence-videocall");
-      channel.bind("pusher:subscription_succeeded", (members) => {
+      channel.bind("pusher:subscription_succeeded", members => {
         //set the member count
         this.usersOnline = members.count;
         this.id = channel.members.me.id;
 
-        members.each((member) => {
+        members.each(member => {
           if (member.id != channel.members.me.id) {
             this.users.push(member);
           }
         });
       });
 
-      channel.bind("pusher:member_added", (member) => {
+      channel.bind("pusher:member_added", member => {
         this.users.push(member);
       });
 
-      channel.bind("pusher:member_removed", (member) => {
+      channel.bind("pusher:member_removed", member => {
         // for remove member from list:
-        const index = this.users.findIndex((user) => user.id === member.id);
+        const index = this.users.findIndex(user => user.id === member.id);
         this.users.splice(index, 1);
         if (member.id == this.room) {
           this.endCall();
@@ -472,18 +472,18 @@ export default {
       this.GetRTCSessionDescription();
       this.prepareCaller();
 
-      channel.bind("client-candidate", async (msg) => {
+      channel.bind("client-candidate", async msg => {
         if (msg.room == this.room) {
           await this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
         }
       });
-      channel.bind("client-endcall", (msg) => {
+      channel.bind("client-endcall", msg => {
         if (msg.room == this.room) {
           this.endCall();
           this.isCalling = false;
         }
       });
-      channel.bind("client-sdp", (msg) => {
+      channel.bind("client-sdp", msg => {
         if (msg.room == this.id) {
           const answer = confirm(
             "You have a call from: " + msg.from + "Would you like to answer?"
@@ -491,13 +491,13 @@ export default {
           if (!answer) {
             return channel.trigger("client-reject", {
               room: msg.room,
-              rejected: this.id,
+              rejected: this.id
             });
           }
           this.isCalling = true;
           this.room = msg.room;
           this.getCam()
-            .then((stream) => {
+            .then(stream => {
               this.localUserMedia = stream;
               if (window.URL) {
                 // document.getElementById("selfview").srcObject = {};
@@ -509,25 +509,25 @@ export default {
               this.caller.addStream(stream);
               var sessionDesc = new RTCSessionDescription(msg.sdp);
               this.caller.setRemoteDescription(sessionDesc);
-              this.caller.createAnswer().then((sdp) => {
+              this.caller.createAnswer().then(sdp => {
                 this.caller.setLocalDescription(new RTCSessionDescription(sdp));
                 channel.trigger("client-answer", {
                   sdp: sdp,
-                  room: this.room,
+                  room: this.room
                 });
               });
             })
-            .catch((error) => {
+            .catch(error => {
               this.$q.notify({
                 message: error,
                 color: "light-blue",
-                icon: "announcement",
+                icon: "announcement"
               });
               this.isCalling = false;
             });
         }
       });
-      channel.bind("client-answer", (answer) => {
+      channel.bind("client-answer", answer => {
         if (answer.room == this.room) {
           console.log("answer received");
           this.caller.setRemoteDescription(
@@ -536,14 +536,14 @@ export default {
         }
       });
 
-      channel.bind("client-reject", (answer) => {
+      channel.bind("client-reject", answer => {
         if (answer.room == this.room) {
           console.log("Call declined");
           alert("call to " + answer.rejected + "was politely declined");
           this.endCall();
         }
       });
-    },
+    }
   },
   updated() {
     // This will be called when the component updates
@@ -554,12 +554,12 @@ export default {
 
       const { messageList, loading } = this.store;
       if (!loading && messageList.length > 0) {
-        messageList.map((message) => {
+        messageList.map(message => {
           const parseMessage = {
             id: message.senderId,
             user: message.senderId === id ? "Me" : message.senderName,
             message: message.message,
-            sent: message.senderId === id,
+            sent: message.senderId === id
           };
           this.handlePushMessage(parseMessage);
         });
@@ -571,8 +571,8 @@ export default {
   },
   computed: {
     ...mapState({
-      store: mapStateToProps,
-    }),
-  },
+      store: mapStateToProps
+    })
+  }
 };
 </script>

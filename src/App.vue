@@ -11,36 +11,15 @@
   </div>
 </template>
 
-<style lang="scss">
-// @import "styles/styles.scss";
-</style>
+<style lang="scss"></style>
 
 <script>
-// import Pusher from "pusher-js"; // import Pusher
-// import { Notify } from "quasar";
-// // Enable pusher logging - don't include this in production
-// Pusher.logToConsole = true;
-// const pusher = new Pusher("1bb3ea564162ad9f320a", {
-//   cluster: "ap1"
-// });
-// const channel = pusher.subscribe("deftnt-channel");
-// channel.bind("chat-message", data => {
-//   Notify.create({
-//     message: data.message,
-//     color: "light-blue",
-//     icon: "announcement"
-//   });
-// });
 import Header from "layout/Header.vue";
 import Footer from "layout/Footer.vue";
 import Chatbox from "components/Chatbox.vue";
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Page.pages.data.pages ? state.Page.pages.data.pages : [];
-  // if(data.length>0)
-  // {
-
-  // }
   return {
     loading: state.Page.pages.loading,
     pages: data
@@ -53,27 +32,22 @@ export default {
     Chatbox
   },
   created: function() {
-    // console.log("this>>>", this);
     this.$q.loading.show();
     let payload = {
       nextErr: err => {
         this.$q.loading.hide();
         console.log(err);
       },
-      nextSuccess: success => {
-        console.log("Debug ===>", success);
+      nextSuccess: () => {
         this.$q.loading.hide();
       }
     };
-    // this.getListTraining(payload);
     this.getListPage(payload);
     this.$q.dark.set(false);
   },
   methods: {
     ...mapActions("Page", ["getListPage"]),
     changeMode(value) {
-      // console.log("valie ==>", value);
-      // console.log("evt ==>", evt);
       this.$q.dark.set(value);
     }
   },

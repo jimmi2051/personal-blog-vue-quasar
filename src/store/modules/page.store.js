@@ -4,8 +4,8 @@ import graphQLMiddleware from "store/graphQLMiddleware";
 const initialState = {
   pages: {
     data: [],
-    loading: true,
-  },
+    loading: true
+  }
 };
 
 // State object
@@ -15,7 +15,7 @@ const state = initialState;
 const getters = {
   getPages(state) {
     return state.pages;
-  },
+  }
 };
 
 // Actions
@@ -100,21 +100,21 @@ const actions = {
               }
             }
           }
-         `,
-      },
+         `
+      }
     };
     graphQLMiddleware(action, store);
   },
   reset({ commit }) {
     commit("RESET");
-  },
+  }
 };
 
 // Mutations
 const mutations = {
   RESET(state) {
     const newState = initialState;
-    Object.keys(newState).forEach((key) => {
+    Object.keys(newState).forEach(key => {
       state[key] = newState[key];
     });
   },
@@ -126,8 +126,9 @@ const mutations = {
     state.pages.loading = false;
   },
   GET_PAGES_ERROR(state, data) {
-    state.pages = [];
-  },
+    state.pages.data = [];
+    state.pages.loading = false;
+  }
 };
 
 export default {
@@ -135,5 +136,5 @@ export default {
   state,
   getters,
   actions,
-  mutations,
+  mutations
 };

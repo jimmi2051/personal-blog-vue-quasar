@@ -42,7 +42,8 @@
                 years of experience in the Software field in various positions
                 fully involved in the Software Development Life Cycle.
                 <br />Strong at NodeJS, Python, and ReactJS. <br />Experience
-                with AWS. Familiar with Agile/Scrum.
+                with AWS. Familiar with Agile/Scrum. <br />Good at Docker,
+                CI/CD, Unit Testing & Coverage Testing
               </p>
               <p class="text-subtitle1 text-bold">Technical Expertise</p>
               <p class="text-body1">

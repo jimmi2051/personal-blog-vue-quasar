@@ -17,6 +17,14 @@
     <div :class="isShow ? `show-message` : `show-message is-show`">
       <button @click="showMessage" type="button" class="show-message__btn">
         <i class="fab fa-facebook-messenger fa-2x" aria-hidden="true" />
+        <q-tooltip
+          anchor="center left"
+          content-class="bg-indigo"
+          self="center right"
+          :offset="[10, 10]"
+        >
+          Join the chat room
+        </q-tooltip>
       </button>
     </div>
     <div class="call-video">

@@ -20,13 +20,16 @@
           </div>
           <q-separator />
           <div class="text-h5 q-mt-sm q-mb-xs">
-            Strong at NodeJS, Python, and ReactJS.
+            Strong at Django, ReactJS and NodeJS.
           </div>
           <q-separator />
           <div class="text-h5 q-mt-sm q-mb-xs">
             Experience with AWS. Familiar with Agile/Scrum.
           </div>
           <q-separator />
+          <div class="text-h5 q-mt-sm q-mb-xs">
+            Good at Docker, CI/CD, Unit Testing & Coverage Testing
+          </div>
         </q-card-section>
       </q-card-section>
 

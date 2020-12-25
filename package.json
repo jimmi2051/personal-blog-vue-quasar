@@ -17,6 +17,7 @@
     "apollo-client": "^2.6.8",
     "apollo-link": "^1.2.13",
     "apollo-link-http": "^1.5.16",
+    "compression": "^1.7.4",
     "core-js": "^3.4.3",
     "express": "^4.17.1",
     "graphql": "^15.0.0",

@@ -41,9 +41,9 @@
                 Creative, self-motivated, and independent engineer with two
                 years of experience in the Software field in various positions
                 fully involved in the Software Development Life Cycle.
-                <br />Strong at NodeJS, Python, and ReactJS. <br />Experience
-                with AWS. Familiar with Agile/Scrum. <br />Good at Docker,
-                CI/CD, Unit Testing & Coverage Testing
+                <br />Strong at Django, ReactJS, and NodeJS. <br />Experience
+                with Docker, AWS, CI/CD, Unit & Coverage Testing. <br />
+                Familiar with Agile/Scrum.
               </p>
               <p class="text-subtitle1 text-bold">Technical Expertise</p>
               <p class="text-body1">

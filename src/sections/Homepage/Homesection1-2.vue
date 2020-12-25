@@ -24,11 +24,11 @@
           </div>
           <q-separator />
           <div class="text-h5 q-mt-sm q-mb-xs">
-            Experience with AWS. Familiar with Agile/Scrum.
+            Experience with Docker, AWS, CI/CD, Unit & Coverage Testing.
           </div>
           <q-separator />
           <div class="text-h5 q-mt-sm q-mb-xs">
-            Good at Docker, CI/CD, Unit Testing & Coverage Testing
+            Familiar with Agile/Scrum.
           </div>
         </q-card-section>
       </q-card-section>

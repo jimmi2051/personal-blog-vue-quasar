@@ -16,7 +16,10 @@
         <q-btn stretch flat label="NLT" />
       </q-item>
       <q-space />
-
+      <q-separator dark vertical />
+      <q-item exact to="/movie">
+        <q-btn stretch flat label="Movie" />
+      </q-item>
       <q-separator dark vertical />
       <q-item exact to="/about">
         <q-btn stretch flat label="About" />

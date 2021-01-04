@@ -1,17 +1,19 @@
 <template>
   <div class="row q-pt-md">
     <div class="col-12">
-      <h2 class="section--title">My Latest Projects</h2>
       <div class="text-subtitle2 q-pb-sm q-pt-sm">
         Here is our latest projects. You'll love them!
       </div>
     </div>
 
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img
-        :src="require('@/assets/images/Homepage/background-athena.png')"
-        alt="company-3"
-      />
+      <div class="thumbnail-video">
+        <img
+          :src="require('@/assets/images/Homepage/background-athena.png')"
+          alt="company-3"
+          class="thumbnail-video-image"
+        />
+      </div>
       <q-card-section>
         <div class="text-h6">
           Synopsis Solutions - ATHENA <br />(BE-Developer)
@@ -32,11 +34,13 @@
 
     <!-- <div classs="col-sm-4 q-pa-md"> -->
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img
-        :src="require('@/assets/images/Homepage/background-ares.png')"
-        alt="company-2"
-      />
-
+      <div class="thumbnail-video">
+        <img
+          :src="require('@/assets/images/Homepage/background-ares.png')"
+          alt="company-2"
+          class="thumbnail-video-image"
+        />
+      </div>
       <q-card-section>
         <div class="text-h6">Synopsis Solutions - ARES <br />(FAC-OCR)</div>
         <div class="text-subtitle2">
@@ -58,11 +62,13 @@
     <!-- </div> -->
     <!-- <div class="col-sm-4 q-pa-md"> -->
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <img
-        :src="require('@/assets/images/Homepage/background-h3zoom.jpg')"
-        alt="company-1"
-      />
-
+      <div class="thumbnail-video">
+        <img
+          :src="require('@/assets/images/Homepage/background-h3zoom.jpg')"
+          alt="company-1"
+          class="thumbnail-video-image"
+        />
+      </div>
       <q-card-section>
         <div class="text-h6">H3Zoom - Facade Inspector</div>
         <div class="text-subtitle2">
@@ -79,7 +85,6 @@
       </q-card-section>
 
       <!-- <q-card-section class="q-pt-none">
-        
       </q-card-section>-->
     </q-card>
     <!-- </div> -->

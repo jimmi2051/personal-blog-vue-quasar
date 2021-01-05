@@ -199,6 +199,95 @@
         </q-drawer>
 
         <q-page-container>
+          <div class="row pmovie-content">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+              <q-card class="q-pa-md q-ml-md q-mr-sm">
+                <div class="thumbnail-video">
+                  <img
+                    :src="
+                      require('@/assets/images/Homepage/background-athena.png')
+                    "
+                    alt="company-3"
+                    class="thumbnail-video-image"
+                  />
+                </div>
+                <q-card-section>
+                  <div class="text-h6">
+                    Synopsis Solutions - ATHENA
+                  </div>
+                  <div class="text-subtitle2">
+                    Transaction Monitoring AML / CTF Compliance
+                  </div>
+                </q-card-section>
+              </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+              <q-card class="q-pa-md q-ml-md q-mr-sm">
+                <div class="thumbnail-video">
+                  <img
+                    :src="
+                      require('@/assets/images/Homepage/background-ares.png')
+                    "
+                    alt="company-2"
+                    class="thumbnail-video-image"
+                  />
+                </div>
+                <q-card-section>
+                  <div class="text-h6">
+                    Synopsis Solutions - ARES
+                  </div>
+                  <div class="text-subtitle2">
+                    Identity Verification with Ease and Efficiency
+                  </div>
+                </q-card-section>
+              </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+              <q-card class="q-pa-md q-mr-md q-ml-sm">
+                <div class="thumbnail-video">
+                  <img
+                    :src="
+                      require('@/assets/images/Homepage/background-h3zoom.jpg')
+                    "
+                    alt="company-1"
+                    class="thumbnail-video-image"
+                  />
+                </div>
+                <q-card-section>
+                  <div class="text-h6">H3Zoom - Facade Inspector</div>
+                  <div class="text-subtitle2">
+                    Automating and Digitizing Building Facade Inspections
+                  </div>
+                </q-card-section>
+
+                <!-- <q-card-section class="q-pt-none">
+                </q-card-section>-->
+              </q-card>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+              <q-card class="q-pa-md q-mr-md q-ml-sm">
+                <div class="thumbnail-video">
+                  <img
+                    :src="
+                      require('@/assets/images/Homepage/background-h3zoom.jpg')
+                    "
+                    alt="company-1"
+                    class="thumbnail-video-image"
+                  />
+                </div>
+                <q-card-section>
+                  <div class="text-h6">H3Zoom - Facade Inspector</div>
+                  <div class="text-subtitle2">
+                    Automating and Digitizing Building Facade Inspections
+                  </div>
+                </q-card-section>
+
+                <!-- <q-card-section class="q-pt-none">
+                </q-card-section>-->
+              </q-card>
+            </div>
+            <!-- </div> -->
+          </div>
           <router-view />
         </q-page-container>
       </q-layout>

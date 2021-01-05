@@ -5,4 +5,10 @@
   .q-item {
     padding: 8px 16px;
   }
+  &-content {
+    padding: 20px 30px;
+    .thumbnail-video {
+      height: 200px;
+    }
+  }
 }

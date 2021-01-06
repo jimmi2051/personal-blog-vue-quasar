@@ -1,4 +1,14 @@
-.pmovie {
+.q-card {
+  &__section {
+    .text-h6 {
+      height: 4rem;
+    }
+    .text-subtitle2 {
+      height: 2.75rem;
+    }
+  }
+}
+.blogs {
   .q-card {
     &__section {
       .text-h6 {
@@ -8,18 +18,18 @@
         height: 3rem;
       }
       .text-subtitle2 {
-        height: 1.5rem;
+        height: 2rem;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        &:hover {
-          // overflow: none;
-          white-space: unset;
-          text-overflow: unset;
-          // height: 3rem;
-          overflow: unset;
-          cursor: grab;
-        }
+        // &:hover {
+        //   // overflow: none;
+        //   white-space: unset;
+        //   text-overflow: unset;
+        //   // height: 3rem;
+        //   overflow: unset;
+        //   // cursor: grab;
+        // }
       }
     }
   }

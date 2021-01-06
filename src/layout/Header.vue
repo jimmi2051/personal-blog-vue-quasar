@@ -17,8 +17,8 @@
       </q-item>
       <q-space />
       <q-separator dark vertical />
-      <q-item exact to="/movie">
-        <q-btn stretch flat label="Movie" />
+      <q-item exact to="/blogs">
+        <q-btn stretch flat label="Blogs" />
       </q-item>
       <q-separator dark vertical />
       <q-item exact to="/about">
@@ -77,6 +77,16 @@
       <q-btn flat round dense icon="menu" class="q-mr-sm">
         <q-menu content-class="bg-black text-white" style="width: 280px;">
           <q-list class="text-center" dense style="min-width: 250px">
+            <q-separator dark inset />
+            <q-item clickable v-close-popup>
+              <q-btn
+                stretch
+                flat
+                to="/blogs"
+                label="Blogs"
+                style="margin-left:auto;margin-right:auto;"
+              />
+            </q-item>
             <q-separator dark inset />
             <q-item clickable v-close-popup>
               <q-btn

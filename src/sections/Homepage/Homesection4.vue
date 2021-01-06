@@ -27,7 +27,6 @@
         href="https://www.cynopsis-solutions.com/athena"
         no-shadow
         target="__blank"
-        class="q-mt-md"
         >References
       </q-btn>
     </q-card>

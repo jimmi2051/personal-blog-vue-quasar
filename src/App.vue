@@ -19,10 +19,10 @@ import Footer from "layout/Footer.vue";
 import Chatbox from "components/Chatbox.vue";
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
-  const data = state.Page.pages.data.pages ? state.Page.pages.data.pages : [];
+  const data = state.Page.healthCheck.description;
   return {
-    loading: state.Page.pages.loading,
-    pages: data
+    loading: state.Page.healthCheck.loading,
+    description: data
   };
 }
 export default {
@@ -38,15 +38,17 @@ export default {
         this.$q.loading.hide();
         console.log(err);
       },
-      nextSuccess: () => {
+      nextSuccess: success => {
+        console.log("====>", success.description);
         this.$q.loading.hide();
       }
     };
-    this.getListPage(payload);
+    this.healthCheck(payload);
+
     this.$q.dark.set(false);
   },
   methods: {
-    ...mapActions("Page", ["getListPage"]),
+    ...mapActions("Page", ["healthCheck"]),
     changeMode(value) {
       this.$q.dark.set(value);
     }

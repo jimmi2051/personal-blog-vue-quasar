@@ -2,12 +2,7 @@
   <q-page>
     <div class="blogs row">
       <div class="col-lg-3 blogs-menu">
-        <q-input
-          ref="filter"
-          filled
-          v-model="filter"
-          label="Search - only filters labels that have also '(*)'"
-        >
+        <q-input ref="filter" filled v-model="filter" label="Search by title">
           <template v-slot:append>
             <q-icon
               v-if="filter !== ''"
@@ -19,12 +14,13 @@
         </q-input>
 
         <q-tree
-          :nodes="simple"
+          :nodes="store.categories"
           node-key="label"
           :filter="filter"
           :filter-method="myFilterMethod"
           :expanded.sync="expanded"
           default-expand-all
+          :handler="handleClick"
         />
       </div>
       <div class="col-lg-9">
@@ -117,62 +113,68 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+function mapStateToProps(state) {
+  const data = state.Blog.categories.data;
+  let categories = [];
+  data.forEach(category => {
+    let item = {};
+    item.label = category.title;
+    item.children = [];
+    category.blogs.forEach(blog => {
+      item.children.push({
+        label: blog.title,
+        children: []
+      });
+    });
+    categories.push(item);
+  });
+  return {
+    loading: state.Blog.categories.loading,
+    categories
+  };
+}
 export default {
   meta: {
     // sets document title
     title: "Blogs Page",
     titleTemplate: title => `${title} - DefTnt Blog`
   },
+  created: function() {
+    let payload = {
+      nextErr: err => {
+        console.log(err);
+      },
+      nextSuccess: () => {
+        // console.log(this.store.categories);
+      }
+    };
+    this.getCategories(payload);
+  },
   data() {
     return {
-      simple: [
-        {
-          label: "Satisfied customers",
-          children: [
-            {
-              label: "Good food",
-              children: [
-                { label: "Quality ingredients" },
-                { label: "Good recipe" }
-              ]
-            },
-            {
-              label: "Good service (disabled node) (*)",
-              disabled: true,
-              children: [
-                { label: "Prompt attention" },
-                { label: "Professional waiter" }
-              ]
-            },
-            {
-              label: "Pleasant surroundings",
-              children: [
-                { label: "Happy atmosphere (*)" },
-                { label: "Good table presentation" },
-                { label: "Pleasing decor (*)" }
-              ]
-            }
-          ]
-        }
-      ],
       filter: "",
-      expanded: ["Good service (disabled node) (*)"]
+      expanded: []
     };
   },
   methods: {
+    ...mapActions("Blog", ["getCategories"]),
     myFilterMethod(node, filter) {
       const filt = filter.toLowerCase();
-      return (
-        node.label &&
-        node.label.toLowerCase().indexOf(filt) > -1 &&
-        node.label.toLowerCase().indexOf("(*)") > -1
-      );
+      return node.label && node.label.toLowerCase().indexOf(filt) > -1;
     },
-
+    handleClick(node) {
+      console.log("Node ==>", node);
+    },
     resetFilter() {
       this.filter = "";
       this.$refs.filter.focus();
     }
+  },
+  computed: {
+    ...mapState({
+      store: mapStateToProps
+    })
   }
 };
 </script>

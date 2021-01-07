@@ -12,6 +12,12 @@ const paths = [
     lastmod: new Date().toISOString().slice(0, 10),
     priority: 0.7,
     changefreq: "hourly"
+  },
+  {
+    path: "/blogs",
+    lastmod: new Date().toISOString().slice(0, 10),
+    priority: 0.9,
+    changefreq: "hourly"
   }
 ];
 

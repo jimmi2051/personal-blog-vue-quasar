@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* Page.store.js */
 import graphQLMiddleware from "store/graphQLMiddleware";
+import actionMiddleware from "store/actionMiddleware";
 const initialState = {
   pages: {
     data: [],
     loading: true
+  },
+  healthCheck: {
+    loading: true,
+    description: ""
   }
 };
 
@@ -105,6 +110,18 @@ const actions = {
     };
     graphQLMiddleware(action, store);
   },
+  healthCheck(store, payload) {
+    const { nextErr, nextSuccess } = payload;
+    const action = {
+      beforeCallType: "GET_HEALTH_REQUEST",
+      successType: "GET_HEALTH_SUCCESS",
+      errorType: "GET_HEALTH_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: "healthCheck"
+    };
+    actionMiddleware(action, store);
+  },
   reset({ commit }) {
     commit("RESET");
   }
@@ -118,6 +135,7 @@ const mutations = {
       state[key] = newState[key];
     });
   },
+
   GET_PAGES_REQUEST(state) {
     state.pages = initialState.pages;
   },
@@ -128,6 +146,18 @@ const mutations = {
   GET_PAGES_ERROR(state, data) {
     state.pages.data = [];
     state.pages.loading = false;
+  },
+
+  GET_HEALTH_REQUEST(state) {
+    state.healthCheck = initialState.healthCheck;
+  },
+  GET_HEALTH_SUCCESS(state, data) {
+    state.healthCheck.description = data?.description ?? "";
+    state.healthCheck.loading = false;
+  },
+  GET_HEALTH_ERROR(state, data) {
+    state.healthCheck.description = "";
+    state.healthCheck.loading = false;
   }
 };
 

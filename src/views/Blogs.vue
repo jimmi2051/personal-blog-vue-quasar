@@ -44,13 +44,7 @@
                 <div class="text-subtitle2">
                   Transaction Monitoring AML / CTF Compliance
                 </div>
-                <q-btn
-                  type="a"
-                  href="https://www.cynopsis-solutions.com/athena"
-                  no-shadow
-                  target="__blank"
-                  >Read more
-                </q-btn>
+                <q-btn type="a" href="/blog/" no-shadow>Read more </q-btn>
               </q-card-section>
             </q-card>
           </div>

@@ -39,25 +39,9 @@ import Homesection6 from "sections/Homepage/Homesection6";
 export default {
   name: "Home",
   created: function() {},
-  mounted() {
-    const { current } = this.$router.history;
-    if (current.hash && current.hash !== "") {
-      let { hash } = current;
-      const div = hash.substring(1);
-      const elem = document.getElementById(div);
-      if (elem) {
-        elem.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "start"
-        });
-      }
-    }
-  },
+  mounted() {},
   computed: {
-    ...mapState({
-      // store: mapStateToProps
-    })
+    ...mapState({})
   },
   data() {
     return {

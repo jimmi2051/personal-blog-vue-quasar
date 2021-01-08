@@ -20,7 +20,8 @@
           :filter-method="myFilterMethod"
           :expanded.sync="expanded"
           default-expand-all
-          :handler="handleClick"
+          selected-color="primary"
+          :selected.sync="selected"
         />
       </div>
       <div class="col-lg-9">
@@ -114,17 +115,26 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+
 function mapStateToProps(state) {
   const data = state.Blog.categories.data;
   let categories = [];
   data.forEach(category => {
     let item = {};
+    item.id = category._id;
     item.label = category.title;
     item.children = [];
+    item.handler = e => {
+      console.log("On click Category ==>", e);
+    };
     category.blogs.forEach(blog => {
       item.children.push({
+        id: blog._id,
         label: blog.title,
-        children: []
+        handler(e) {
+          console.log(e);
+          // Toast.create("Tapped on item 1.3");
+        }
       });
     });
     categories.push(item);
@@ -141,20 +151,13 @@ export default {
     titleTemplate: title => `${title} - DefTnt Blog`
   },
   created: function() {
-    let payload = {
-      nextErr: err => {
-        console.log(err);
-      },
-      nextSuccess: () => {
-        // console.log(this.store.categories);
-      }
-    };
-    this.getCategories(payload);
+    this.handleGetCategoris({});
   },
   data() {
     return {
       filter: "",
-      expanded: []
+      expanded: [],
+      selected: ""
     };
   },
   methods: {
@@ -163,12 +166,22 @@ export default {
       const filt = filter.toLowerCase();
       return node.label && node.label.toLowerCase().indexOf(filt) > -1;
     },
-    handleClick(node) {
-      console.log("Node ==>", node);
-    },
+
     resetFilter() {
       this.filter = "";
       this.$refs.filter.focus();
+    },
+    handleGetCategoris(params) {
+      let payload = {
+        nextErr: err => {
+          console.log(err);
+        },
+        nextSuccess: () => {
+          // console.log(this.store.categories);
+        },
+        params
+      };
+      this.getCategories(payload);
     }
   },
   computed: {

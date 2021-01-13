@@ -86,8 +86,8 @@ const actions = {
     };
     actionMiddleware(action, store);
   },
-  logOut(store, payload) {
-    store.commit("LOGOUT_REQUEST");
+  signOut(store, payload) {
+    store.commit("SIGNOUT_REQUEST");
   },
   reset({ commit }) {
     commit("RESET");
@@ -130,7 +130,7 @@ const mutations = {
   SIGNIN_ERROR(state, data) {
     state.userProfile.error = data;
   },
-  LOGOUT_REQUEST(state) {
+  SIGNOUT_REQUEST(state) {
     state.userProfile = {
       token: "",
       user: {},

@@ -67,7 +67,7 @@
         <q-btn stretch flat label="Sign Up" />
       </q-item>
       <q-item v-if="store.userProfile.isLogin">
-        <q-btn stretch @click="logOut" flat label="Logout" />
+        <q-btn stretch @click="signOut" flat label="Sign Out" />
       </q-item>
       <q-separator dark vertical />
       <q-toggle v-model="value" @input="change" color="light-blue" />
@@ -199,7 +199,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("User", ["logOut"]),
+    ...mapActions("User", ["signOut"]),
     showNotif() {
       this.$q.notify({
         message: "Oops! Sorry, The feature is comming soon. ",

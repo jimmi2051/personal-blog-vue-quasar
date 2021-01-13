@@ -1,5 +1,6 @@
 <template>
   <div class="fixed-top-custom fixed-top">
+    <!-- Menu desktop -->
     <q-toolbar class="bg-black text-white shadow-2 gt-sm">
       <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
       <q-item to="/" exact>
@@ -9,13 +10,11 @@
           style="height: auto; max-width: 50px; width: 50px"
         />
       </q-item>
-
-      <!-- <img src="~statics/logo.png" alt="#" /> -->
       <q-separator dark vertical inset />
       <q-item to="/" exact>
         <q-btn stretch flat label="NLT" />
       </q-item>
-      <q-space />
+
       <q-separator dark vertical />
       <q-item exact to="/blogs">
         <q-btn stretch flat label="Blogs" />
@@ -57,9 +56,23 @@
         />
       </q-btn>
       <q-separator dark vertical />
+      <q-space />
+      <q-separator dark vertical />
 
+      <q-item exact to="/signin" v-if="!store.userProfile.isLogin">
+        <q-btn stretch flat label="Sign In" />
+      </q-item>
+      <q-separator dark vertical v-if="!store.userProfile.isLogin" />
+      <q-item exact to="/signup" v-if="!store.userProfile.isLogin">
+        <q-btn stretch flat label="Sign Up" />
+      </q-item>
+      <q-item v-if="store.userProfile.isLogin">
+        <q-btn stretch @click="logOut" flat label="Logout" />
+      </q-item>
+      <q-separator dark vertical />
       <q-toggle v-model="value" @input="change" color="light-blue" />
     </q-toolbar>
+    <!-- Menu Mobile -->
     <q-toolbar class="bg-black text-white shadow-2 lt-md">
       <q-item to="/" exact>
         <q-img
@@ -119,6 +132,26 @@
               />
             </q-item>
             <q-separator dark inset />
+            <q-item clickable v-close-popup>
+              <q-btn
+                stretch
+                flat
+                to="/signin"
+                label="Sign In"
+                style="margin-left:auto;margin-right:auto;"
+              />
+            </q-item>
+            <q-separator dark inset />
+            <q-item clickable v-close-popup>
+              <q-btn
+                stretch
+                flat
+                to="/signup"
+                label="Sign Up"
+                style="margin-left:auto;margin-right:auto;"
+              />
+            </q-item>
+            <q-separator dark inset />
             <q-btn
               type="a"
               href="https://www.facebook.com/beatboxer.mrteo"
@@ -149,13 +182,24 @@
   </div>
 </template>
 <script>
+import AuthStorage from "utils/AuthStorage";
+import { mapActions, mapState } from "vuex";
+
+function mapStateToProps(state) {
+  const data = state.User.userProfile;
+  return {
+    userProfile: data
+  };
+}
 export default {
   data() {
     return {
-      value: false
+      value: false,
+      AuthStorage
     };
   },
   methods: {
+    ...mapActions("User", ["logOut"]),
     showNotif() {
       this.$q.notify({
         message: "Oops! Sorry, The feature is comming soon. ",
@@ -181,6 +225,11 @@ export default {
       type: Function,
       required: true
     }
+  },
+  computed: {
+    ...mapState({
+      store: mapStateToProps
+    })
   }
 };
 </script>

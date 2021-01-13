@@ -8,6 +8,7 @@
 @import "./elements/thumbnail";
 
 @import "./components/qitem";
+@import "./components/header";
 @import "./components/footer";
 @import "./components/qtimeline";
 @import "./components/section";
@@ -19,6 +20,8 @@
 @import "./pages/home";
 @import "./pages/about";
 @import "./pages/blogs";
+@import "./pages/signup";
+@import "./pages/signin";
 
 .fixed-top-custom {
   z-index: 99999;

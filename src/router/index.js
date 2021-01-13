@@ -14,32 +14,35 @@ const routes = [
   {
     path: "/about",
     name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
     path: "/blogs",
     name: "blogs",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Blogs.vue")
+      import(/* webpackChunkName: "blogs" */ "../views/Blogs.vue")
   },
   {
     path: "/blog/:id",
     name: "blog",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/Blog.vue")
+    component: () => import(/* webpackChunkName: "blog" */ "../views/Blog.vue")
+  },
+  {
+    path: "/signin",
+    name: "signin",
+    component: () =>
+      import(/* webpackChunkName: "signin" */ "../views/SignIn.vue")
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: () =>
+      import(/* webpackChunkName: "signup" */ "../views/SignUp.vue")
   },
   {
     path: "*",
-    name: "home",
+    name: "homeRedirect",
     component: Home
   }
 ];

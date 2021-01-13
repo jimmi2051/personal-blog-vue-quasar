@@ -2,10 +2,17 @@
 /* eslint-disable no-unused-vars */
 /* User.store.js */
 import actionMiddleware from "store/actionMiddleware";
+import AuthStorage from "utils/AuthStorage";
+console.log("AuthStorage Storage", AuthStorage);
 const initialState = {
-  trainingList: {
-    data: [],
+  signup: {
+    data: { jwt: "", user: {} },
     loading: true
+  },
+  userProfile: {
+    token: AuthStorage?.token ?? "",
+    user: AuthStorage?.user ?? {},
+    isLogin: AuthStorage?.isLogin ?? false
   }
 };
 
@@ -14,25 +21,72 @@ const state = initialState;
 
 // Getter functions
 const getters = {
-  getTrainingList(state) {
-    return state.trainingList;
+  getSignUp(state) {
+    return state.signup;
+  },
+  getUserProfile(state) {
+    return state.userProfile;
   }
 };
 
 // Actions
 const actions = {
   /* Example Call API using Fetch */
-  getListTraining(store, payload) {
-    const { nextErr, nextSuccess } = payload;
+  signUp(store, payload) {
+    const {
+      nextErr,
+      nextSuccess,
+      username,
+      email,
+      password,
+      fullname = ""
+    } = payload;
     const action = {
-      beforeCallType: "GET_TRAINING_REQUEST",
-      successType: "GET_TRAINING_SUCCESS",
-      errorType: "GET_TRAINING_ERROR",
+      beforeCallType: "SIGNUP_REQUEST",
+      successType: "SIGNUP_SUCCESS",
+      errorType: "SIGNUP_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: "trainings"
+      uri: "auth/local/register",
+      opt: {
+        method: "POST"
+      },
+      params: {
+        username,
+        email,
+        password,
+        fullname
+      }
     };
     actionMiddleware(action, store);
+  },
+  signIn(store, payload) {
+    const {
+      nextErr,
+      nextSuccess,
+
+      identifier,
+      password
+    } = payload;
+    const action = {
+      beforeCallType: "SIGNIN_REQUEST",
+      successType: "SIGNIN_SUCCESS",
+      errorType: "SIGNIN_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: "auth/local",
+      opt: {
+        method: "POST"
+      },
+      params: {
+        identifier,
+        password
+      }
+    };
+    actionMiddleware(action, store);
+  },
+  logOut(store, payload) {
+    store.commit("LOGOUT_REQUEST");
   },
   reset({ commit }) {
     commit("RESET");
@@ -47,15 +101,43 @@ const mutations = {
       state[key] = newState[key];
     });
   },
-  GET_TRAINING_REQUEST(state) {
-    state.trainingList = initialState.trainingList;
+  SIGNUP_REQUEST(state) {
+    state.signup = initialState.signup;
   },
-  GET_TRAINING_SUCCESS(state, data) {
-    state.trainingList.data = data;
-    state.trainingList.loading = false;
+  SIGNUP_SUCCESS(state, data) {
+    state.signup.data = data;
+    state.signup.loading = false;
   },
-  GET_TRAINING_ERROR(state, data) {
-    state.trainingList = [];
+  SIGNUP_ERROR(state, data) {
+    state.signup.data = data;
+    state.signup.loading = false;
+  },
+  SIGNIN_REQUEST(state) {
+    state.userProfile = initialState.userProfile;
+  },
+  SIGNIN_SUCCESS(state, data) {
+    AuthStorage.value = {
+      token: data.jwt,
+      user: data.user
+    };
+    state.userProfile.token = data.jwt;
+    state.userProfile.user = data.user;
+    state.userProfile.isLogin = true;
+  },
+  SIGNIN_ERROR(state, data) {
+    state.userProfile.error = data;
+  },
+  LOGOUT_REQUEST(state) {
+    state.userProfile = {
+      token: "",
+      user: {},
+      isLogin: false
+    };
+    AuthStorage.value = {
+      token: "",
+      user: {},
+      isLogin: false
+    };
   }
 };
 

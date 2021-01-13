@@ -269,9 +269,10 @@ export default {
           icon: "warning",
           message: "Must sign in to join the chat room."
         });
-        this.$router.push("/signin");
+        if (this.$route.path !== "/signin") {
+          this.$router.push("/signin");
+        }
       } else {
-        console.log("this.==>", this.store.userProfile);
         this.initMessageBox();
         const id = this.store.userProfile.id;
         const name = this.store.userProfile.fullname;

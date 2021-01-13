@@ -3,7 +3,6 @@
 /* User.store.js */
 import actionMiddleware from "store/actionMiddleware";
 import AuthStorage from "utils/AuthStorage";
-console.log("AuthStorage Storage", AuthStorage);
 const initialState = {
   signup: {
     data: { jwt: "", user: {} },
@@ -12,7 +11,9 @@ const initialState = {
   userProfile: {
     token: AuthStorage?.token ?? "",
     user: AuthStorage?.user ?? {},
-    isLogin: AuthStorage?.isLogin ?? false
+    isLogin: AuthStorage?.isLogin ?? false,
+    id: AuthStorage?.id ?? "",
+    fullname: AuthStorage?.fullname ?? ""
   }
 };
 
@@ -122,6 +123,8 @@ const mutations = {
     };
     state.userProfile.token = data.jwt;
     state.userProfile.user = data.user;
+    state.userProfile.id = data?.user?.id ?? "";
+    state.userProfile.fullname = data?.user?.fullname ?? "";
     state.userProfile.isLogin = true;
   },
   SIGNIN_ERROR(state, data) {
@@ -131,12 +134,16 @@ const mutations = {
     state.userProfile = {
       token: "",
       user: {},
-      isLogin: false
+      isLogin: false,
+      id: "",
+      fullname: ""
     };
     AuthStorage.value = {
       token: "",
       user: {},
-      isLogin: false
+      isLogin: false,
+      id: "",
+      fullname: ""
     };
   }
 };

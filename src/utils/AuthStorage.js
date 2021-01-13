@@ -12,6 +12,12 @@ class AuthStorage extends Storage {
   get user() {
     return this.value && this.value.user;
   }
+  get id() {
+    return this.value && this.value.user && this.value.user.id;
+  }
+  get fullname() {
+    return this.value && this.value.user && this.value.user.fullname;
+  }
 }
 
 export default new AuthStorage("AUTH");

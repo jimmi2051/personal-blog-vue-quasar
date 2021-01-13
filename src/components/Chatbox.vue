@@ -14,7 +14,10 @@
       />
       <!-- </button> -->
     </div>
-    <div :class="isShow ? `show-message` : `show-message is-show`">
+    <div
+      v-if="!isShow || !store.userProfile.isLogin"
+      class="show-message is-show"
+    >
       <button @click="showMessage" type="button" class="show-message__btn">
         <i class="fab fa-facebook-messenger fa-2x" aria-hidden="true" />
         <q-tooltip
@@ -27,50 +30,7 @@
         </q-tooltip>
       </button>
     </div>
-    <div class="call-video">
-      <q-list bordered v-if="users.length" style="border-radius: 15px">
-        <q-item
-          v-for="user in users"
-          :key="user.id"
-          clickable
-          v-ripple
-          @click="callUser(user.id)"
-          style="padding-left: 15px; padding-right: 15px; border-radius: 15px"
-        >
-          <q-item-section>{{ user.info.name }}</q-item-section>
-          <q-item-section avatar>
-            <q-icon color="primary" name="phone" />
-          </q-item-section>
-        </q-item>
-        <!-- <q-separator /> -->
-      </q-list>
-    </div>
-
-    <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Your name</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input
-            dense
-            v-model="name"
-            autofocus
-            @keyup.enter="
-              prompt = false;
-              submitName();
-            "
-          />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Submit name" @click="submitName" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <div :class="isShow ? `message-box is-show` : `message-box`">
+    <div v-else class="message-box is-show">
       <div class="message-box__header">
         <q-avatar>
           <img
@@ -113,39 +73,72 @@
         </button>
       </div>
     </div>
+    <div class="call-video">
+      <q-list bordered v-if="users.length" style="border-radius: 15px">
+        <q-item
+          v-for="user in users"
+          :key="user.id"
+          clickable
+          v-ripple
+          @click="callUser(user.id)"
+          style="padding-left: 15px; padding-right: 15px; border-radius: 15px"
+        >
+          <q-item-section>{{ user.info.name }}</q-item-section>
+          <q-item-section avatar>
+            <q-icon color="primary" name="phone" />
+          </q-item-section>
+        </q-item>
+        <!-- <q-separator /> -->
+      </q-list>
+    </div>
+    <!-- 
+    <q-dialog v-model="prompt" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Your name</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-input
+            dense
+            v-model="name"
+            autofocus
+            @keyup.enter="
+              prompt = false;
+              submitName();
+            "
+          />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat label="Submit name" @click="submitName" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog> -->
   </div>
 </template>
 <script>
 import Pusher from "pusher-js"; // import Pusher
-import { isEmpty } from "lodash";
+import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
-import { v4 as uuidv4 } from "uuid";
 const API_URL = process.env.VUE_APP_API_URL;
-// import SimplePeer from "simple-peer";
 
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Message.messageList.data;
+  const userProfile = state.User.userProfile;
+
   return {
     loading: state.Message.messageList.loading,
-    messageList: data
+    messageList: data,
+    userProfile
   };
 }
 
 export default {
-  created: function() {
-    this.initMessageBox();
-
-    let id = localStorage.getItem("userId");
-    let name = localStorage.getItem("userName");
-    if (isEmpty(id)) {
-      this.prompt = true;
-    } else {
-      this.name = name;
-      this.initCallBox(id, name);
-    }
-  },
+  created: function() {},
   data() {
     return {
       messages: [],
@@ -179,12 +172,8 @@ export default {
     },
     onSendMessage() {
       // Get ID if empty will init with name & save to local storage
-      let id = localStorage.getItem("userId");
-      if (isEmpty(id)) {
-        id = uuidv4();
-        localStorage.setItem("userId", id);
-        localStorage.setItem("userName", this.name);
-      }
+      const id = this.store.userProfile.id;
+
       // Case Msg Empty Return
       if (this.msgToSend === "") {
         this.$q.notify({
@@ -272,24 +261,23 @@ export default {
       });
     },
 
-    submitName() {
-      const id = uuidv4();
-      localStorage.setItem("userId", id);
-      localStorage.setItem("userName", this.name);
-      this.initCallBox(id, this.name);
-    },
-
     showMessage() {
-      if (isEmpty(this.name)) {
-        let id = localStorage.getItem("userId");
-        let name = localStorage.getItem("userName");
-        if (isEmpty(id)) {
-          this.prompt = true;
-        } else {
-          this.name = name;
-          this.isShow = true;
-        }
+      if (!this.store.userProfile.isLogin) {
+        this.$q.notify({
+          color: "red-5",
+          textColor: "white",
+          icon: "warning",
+          message: "Must sign in to join the chat room."
+        });
+        this.$router.push("/signin");
       } else {
+        console.log("this.==>", this.store.userProfile);
+        this.initMessageBox();
+        const id = this.store.userProfile.id;
+        const name = this.store.userProfile.fullname;
+        this.id = id;
+        this.name = name;
+        this.initCallBox(id, name);
         this.isShow = true;
       }
     },
@@ -422,12 +410,21 @@ export default {
         nextErr: err => {
           console.log("[ERROR] " + err);
         },
-        nextSuccess: () => {
-          // console.log("Debug ===>", success);
+        nextSuccess: response => {
+          if (response && isArray(response)) {
+            const id = this.store.userProfile.id;
+            response.map(message => {
+              const parseMessage = {
+                id: message.senderId,
+                user: message.senderId === id ? "Me" : message.senderName,
+                message: message.message,
+                sent: message.senderId === id
+              };
+              this.handlePushMessage(parseMessage);
+            });
+          }
         }
       };
-      // this.getListTraining(payload);
-      this.getMessageList(payload);
       // Enable pusher logging - don't include this in production
       Pusher.logToConsole = true;
       const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
@@ -435,11 +432,12 @@ export default {
       });
       const channelMessage = pusherMessage.subscribe("deftnt-channel");
       channelMessage.bind("chat-message", data => {
-        let id = localStorage.getItem("userId");
+        const id = this.store.userProfile.id;
         if (id !== data.id) {
           this.handlePushMessage(data);
         }
       });
+      this.getMessageList(payload);
     },
 
     initCallBox(userId, userName) {
@@ -556,26 +554,14 @@ export default {
   updated() {
     // This will be called when the component updates
     // try toggling a todo
-    this.scrollToEnd();
-    if (this.messages.length === 0) {
-      let id = localStorage.getItem("userId");
-
-      const { messageList, loading } = this.store;
-      if (!loading && messageList.length > 0) {
-        messageList.map(message => {
-          const parseMessage = {
-            id: message.senderId,
-            user: message.senderId === id ? "Me" : message.senderName,
-            message: message.message,
-            sent: message.senderId === id
-          };
-          this.handlePushMessage(parseMessage);
-        });
-      }
+    if (this.isShow) {
+      this.scrollToEnd();
     }
   },
   mounted() {
-    this.scrollToEnd();
+    if (this.isShow) {
+      this.scrollToEnd();
+    }
   },
   computed: {
     ...mapState({

@@ -117,15 +117,17 @@ const mutations = {
     state.userProfile = initialState.userProfile;
   },
   SIGNIN_SUCCESS(state, data) {
-    AuthStorage.value = {
-      token: data.jwt,
-      user: data.user
-    };
-    state.userProfile.token = data.jwt;
-    state.userProfile.user = data.user;
-    state.userProfile.id = data?.user?.id ?? "";
-    state.userProfile.fullname = data?.user?.fullname ?? "";
-    state.userProfile.isLogin = true;
+    if (data.jwt) {
+      AuthStorage.value = {
+        token: data.jwt,
+        user: data.user
+      };
+      state.userProfile.token = data.jwt;
+      state.userProfile.user = data.user;
+      state.userProfile.id = data?.user?.id ?? "";
+      state.userProfile.fullname = data?.user?.fullname ?? "";
+      state.userProfile.isLogin = true;
+    }
   },
   SIGNIN_ERROR(state, data) {
     state.userProfile.error = data;

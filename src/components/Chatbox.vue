@@ -38,7 +38,7 @@
             class="avatar-img"
           />
         </q-avatar>
-        <p class="name-user">{{ name }}</p>
+        <p class="name-user">{{ store.userProfile.fullname }}</p>
         <button @click="isShow = false" type="button" class="btn-remove">
           <i class="fa fa-times" />
         </button>
@@ -83,7 +83,7 @@
           @click="callUser(user.id)"
           style="padding-left: 15px; padding-right: 15px; border-radius: 15px"
         >
-          <q-item-section>{{ user.info.name }}</q-item-section>
+          <q-item-section>{{ store.userProfile.fullname }}</q-item-section>
           <q-item-section avatar>
             <q-icon color="primary" name="phone" />
           </q-item-section>
@@ -138,7 +138,16 @@ function mapStateToProps(state) {
 }
 
 export default {
-  created: function() {},
+  created: function() {
+    if (this.store.userProfile.isLogin) {
+      this.initMessageBox();
+      const id = this.store.userProfile.id;
+      const name = this.store.userProfile.fullname;
+      this.id = id;
+      this.name = name;
+      this.initCallBox(id, name);
+    }
+  },
   data() {
     return {
       messages: [],
@@ -273,13 +282,10 @@ export default {
           this.$router.push("/signin");
         }
       } else {
-        this.initMessageBox();
-        const id = this.store.userProfile.id;
-        const name = this.store.userProfile.fullname;
-        this.id = id;
-        this.name = name;
-        this.initCallBox(id, name);
         this.isShow = true;
+        if (this.messages.length === 0) {
+          this.handleGetMessages();
+        }
       }
     },
 
@@ -405,8 +411,7 @@ export default {
 
       this.endCall();
     },
-
-    initMessageBox() {
+    handleGetMessages() {
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
@@ -426,6 +431,10 @@ export default {
           }
         }
       };
+      this.getMessageList(payload);
+    },
+
+    initMessageBox() {
       // Enable pusher logging - don't include this in production
       Pusher.logToConsole = true;
       const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
@@ -438,7 +447,9 @@ export default {
           this.handlePushMessage(data);
         }
       });
-      this.getMessageList(payload);
+      if (this.messages.length === 0) {
+        this.handleGetMessages();
+      }
     },
 
     initCallBox(userId, userName) {

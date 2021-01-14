@@ -39,7 +39,7 @@ export default {
         console.log(err);
       },
       nextSuccess: success => {
-        console.log("====>", success.description);
+        console.log("[DEBUG] ====>", success.description);
         this.$q.loading.hide();
       }
     };

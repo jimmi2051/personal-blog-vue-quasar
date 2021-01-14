@@ -7,10 +7,8 @@
 <script>
 export default {
   created: function() {
-    console.log("this", this);
     const { params } = this.$route;
     if (!params.id) {
-      console.log(this.$route);
       this.$router.push("/");
     }
   },

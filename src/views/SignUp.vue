@@ -11,6 +11,7 @@
           lazy-rules
           :rules="[val => (val && val.length > 0) || 'Username is required.']"
           ref="username"
+          name="username"
         />
         <q-input
           filled
@@ -23,6 +24,7 @@
             isValidEmail
           ]"
           ref="email"
+          name="email"
         />
 
         <q-input
@@ -73,6 +75,7 @@
           label="Name display"
           hint="Your full name"
           ref="fullname"
+          name="fullname"
         />
 
         <q-toggle v-model="accept" label="I'm not a bot" />

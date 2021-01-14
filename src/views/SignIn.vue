@@ -11,6 +11,7 @@
           lazy-rules
           :rules="[val => (val && val.length > 0) || 'Identifier is required.']"
           ref="identifier"
+          name="email"
         />
 
         <q-input
@@ -22,6 +23,7 @@
           lazy-rules
           :rules="[val => (val && val.length > 0) || 'Password is required.']"
           ref="password"
+          name="password"
         >
           <template v-slot:append>
             <q-icon

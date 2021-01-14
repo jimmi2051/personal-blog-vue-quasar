@@ -85,6 +85,7 @@
               isValidEmail
             ]"
             ref="email"
+            name="email"
           />
 
           <q-input
@@ -95,6 +96,7 @@
             lazy-rules
             :rules="[val => (val && val.length > 0) || 'Please type something']"
             ref="name"
+            name="fullname"
           />
           <q-input
             label="Description *"

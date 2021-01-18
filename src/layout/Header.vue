@@ -132,7 +132,7 @@
               />
             </q-item>
             <q-separator dark inset />
-            <q-item clickable v-close-popup>
+            <q-item clickable v-close-popup v-if="!store.userProfile.isLogin">
               <q-btn
                 stretch
                 flat
@@ -141,8 +141,8 @@
                 style="margin-left:auto;margin-right:auto;"
               />
             </q-item>
-            <q-separator dark inset />
-            <q-item clickable v-close-popup>
+            <q-separator dark inset v-if="!store.userProfile.isLogin" />
+            <q-item clickable v-close-popup v-if="!store.userProfile.isLogin">
               <q-btn
                 stretch
                 flat
@@ -151,6 +151,17 @@
                 style="margin-left:auto;margin-right:auto;"
               />
             </q-item>
+
+            <q-item clickable v-close-popup v-if="store.userProfile.isLogin">
+              <q-btn
+                stretch
+                flat
+                @click="signOut"
+                label="Sign Out"
+                style="margin-left:auto;margin-right:auto;"
+              />
+            </q-item>
+
             <q-separator dark inset />
             <q-btn
               type="a"

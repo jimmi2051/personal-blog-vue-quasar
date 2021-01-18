@@ -164,7 +164,8 @@ export default {
       isCalling: false,
       typeInit: 1,
       caller: null,
-      activeBot: true
+      activeBot: true,
+      isInit: false
     };
   },
   methods: {
@@ -182,7 +183,7 @@ export default {
     onSendMessage() {
       // Get ID if empty will init with name & save to local storage
       const id = this.store.userProfile.id;
-
+      const name = this.store.userProfile.fullname;
       // Case Msg Empty Return
       if (this.msgToSend === "") {
         this.$q.notify({
@@ -247,7 +248,7 @@ export default {
         uri: "send-message",
         params: {
           id,
-          user: this.name,
+          user: name,
           message: message.message,
           channel: CHANNEL,
           activeBot: this.activeBot
@@ -286,12 +287,22 @@ export default {
         if (this.messages.length === 0) {
           this.handleGetMessages();
         }
+        if (!this.isInit) {
+          this.initMessageBox();
+          const id = this.store.userProfile.id;
+          const name = this.store.userProfile.fullname;
+          this.id = id;
+          this.name = name;
+          this.initCallBox(id, name);
+        }
       }
     },
 
     scrollToEnd() {
       const container = this.$el.querySelector("#message-box__body");
-      container.scrollTop = container.scrollHeight - container.clientHeight;
+      if (container) {
+        container.scrollTop = container.scrollHeight - container.clientHeight;
+      }
     },
 
     getCam() {
@@ -561,6 +572,7 @@ export default {
           this.endCall();
         }
       });
+      this.isInit = true;
     }
   },
   updated() {

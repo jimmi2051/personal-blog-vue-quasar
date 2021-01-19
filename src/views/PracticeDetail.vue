@@ -4,9 +4,9 @@
     <div class="practice">
       <q-card class="practice-card">
         <q-card-section>
-          <div class="text-h6">Practice Test</div>
+          <div class="text-h6">Practice Test Detail</div>
           <div class="text-subtitle2">
-            by {{ store.userProfile.fullname || "Quest" }}
+            {{ store.data.title || "Unkown" }}
           </div>
         </q-card-section>
 
@@ -16,23 +16,17 @@
           <q-item
             clickable
             v-ripple
-            v-for="practice in store.data"
-            :key="practice.id"
-            :to="`/practice/${practice.id}`"
+            v-for="module in store.data.modules"
+            :key="module.id"
           >
             <q-item-section avatar>
-              <q-avatar
-                rounded
-                color="primary"
-                text-color="white"
-                icon="style"
-              />
+              <q-avatar rounded color="info" text-color="white" icon="book" />
             </q-item-section>
             <q-item-section>
-              {{ practice.title }}
+              {{ module.title }}
             </q-item-section>
             <q-item-section class="total-point">
-              {{ practice.totalPoint }}
+              {{ module.point }}
               <q-icon name="star_border" color="yellow" />
             </q-item-section>
           </q-item>
@@ -42,6 +36,16 @@
             <q-inner-loading :showing="true">
               <q-spinner-gears size="50px" color="primary" />
             </q-inner-loading>
+          </q-item>
+        </q-card-actions>
+        <q-card-actions style="width: 100%;">
+          <q-item style="width: 100%;">
+            <q-btn
+              color="red"
+              icon-right="send"
+              label="Take The Test"
+              style="width:100%"
+            />
           </q-item>
         </q-card-actions>
       </q-card>
@@ -54,11 +58,16 @@ import { mapActions, mapState } from "vuex";
 import PageTitle from "components/PageTitle.vue";
 function mapStateToProps(state) {
   const userProfile = state.User.userProfile;
-  const data = state.Practice.practices.data;
+  const data = state.Practice.practice.data;
+  if (data.modules) {
+    data.modules.sort((moduleA, moduleB) => {
+      return moduleA.position - moduleB.position;
+    });
+  }
   return {
     userProfile,
     data,
-    loading: state.Practice.practices.loading
+    loading: state.Practice.practice.loading
   };
 }
 export default {
@@ -66,25 +75,39 @@ export default {
     PageTitle
   },
   created: function() {
-    this.handleGetPractices();
+    const { params } = this.$route;
+    if (!params.id) {
+      this.$router.push("/");
+    }
+    this.handleGetPractice(params.id);
   },
   methods: {
-    ...mapActions("Practice", ["getPractices"]),
-    handleGetPractices() {
+    ...mapActions("Practice", ["getPractice"]),
+    handleGetPractice(id) {
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
         },
-        nextSuccess: () => {
-          // console.log("response", response);
-        }
+        nextSuccess: response => {
+          if (response.error) {
+            this.$q.notify({
+              color: "red-5",
+              textColor: "white",
+              icon: "warning",
+              message: response.message
+            });
+            this.$router.push("/");
+          }
+          console.log("response", response);
+        },
+        id
       };
-      this.getPractices(payload);
+      this.getPractice(payload);
     }
   },
   meta: {
     // sets document title
-    title: "Practice Page",
+    title: "Practice Detail Page",
     titleTemplate: title => `${title} - DefTnt Blog`
   },
   computed: {

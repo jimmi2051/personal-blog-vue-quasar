@@ -11,41 +11,39 @@
         </q-card-section>
 
         <q-separator />
-
-        <q-card-actions vertical v-if="!store.loading">
-          <q-item
-            clickable
-            v-ripple
-            v-for="module in store.data.modules"
-            :key="module.id"
-          >
-            <q-item-section avatar>
-              <q-avatar rounded color="info" text-color="white" icon="book" />
-            </q-item-section>
-            <q-item-section>
-              {{ module.title }}
-            </q-item-section>
-            <q-item-section class="total-point">
-              {{ module.point }}
-              <q-icon name="star_border" color="yellow" />
-            </q-item-section>
-          </q-item>
-        </q-card-actions>
+        <q-tabs
+          v-model="tab"
+          inline-label
+          outside-arrows
+          mobile-arrows
+          class="bg-primary text-white shadow-2"
+          v-if="!store.loading"
+        >
+          <q-tab
+            :name="content.id"
+            :label="' Part ' + (index + 1)"
+            v-for="(content, index) in store.data.contents"
+            :key="content.id"
+          />
+        </q-tabs>
+        <q-tab-panels
+          v-model="tab"
+          animated
+          v-for="(content, index) in store.data.contents"
+          :key="index"
+        >
+          <q-tab-panel :name="content.id">
+            <div v-for="(data, indexData) in content.data" :key="indexData">
+              {{ indexData }}
+              {{ data.question }}
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
         <q-card-actions vertical v-if="store.loading">
           <q-item>
             <q-inner-loading :showing="true">
               <q-spinner-gears size="50px" color="primary" />
             </q-inner-loading>
-          </q-item>
-        </q-card-actions>
-        <q-card-actions style="width: 100%;">
-          <q-item style="width: 100%;">
-            <q-btn
-              color="red"
-              icon-right="send"
-              label="Take The Test"
-              style="width:100%"
-            />
           </q-item>
         </q-card-actions>
       </q-card>
@@ -109,6 +107,12 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  data() {
+    return {
+      tab: "",
+      subTab: ""
+    };
   }
 };
 </script>

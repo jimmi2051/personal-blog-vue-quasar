@@ -18,6 +18,7 @@
             v-ripple
             v-for="module in store.data.modules"
             :key="module.id"
+            :to="`/module/${module.id}`"
           >
             <q-item-section avatar>
               <q-avatar rounded color="info" text-color="white" icon="book" />

@@ -4,9 +4,9 @@
     <div class="practice">
       <q-card class="practice-card">
         <q-card-section>
-          <div class="text-h6">Practice Test Detail</div>
+          <div class="text-h6">Take The Test</div>
           <div class="text-subtitle2">
-            {{ store.data.title || "Unkown" }}
+            Module: {{ store.data.title || "Unkown" }}
           </div>
         </q-card-section>
 
@@ -58,12 +58,12 @@ import { mapActions, mapState } from "vuex";
 import PageTitle from "components/PageTitle.vue";
 function mapStateToProps(state) {
   const userProfile = state.User.userProfile;
-  const data = state.Practice.practice.data;
+  const data = state.Practice.module.data;
 
   return {
     userProfile,
     data,
-    loading: state.Practice.practice.loading
+    loading: state.Practice.module.loading
   };
 }
 export default {
@@ -75,11 +75,11 @@ export default {
     if (!params.id) {
       this.$router.push("/");
     }
-    this.handleGetPractice(params.id);
+    this.handleGetModule(params.id);
   },
   methods: {
-    ...mapActions("Practice", ["getPractice"]),
-    handleGetPractice(id) {
+    ...mapActions("Practice", ["getModule"]),
+    handleGetModule(id) {
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
@@ -94,11 +94,10 @@ export default {
             });
             this.$router.push("/");
           }
-          console.log("response", response);
         },
         id
       };
-      this.getPractice(payload);
+      this.getModule(payload);
     }
   },
   meta: {

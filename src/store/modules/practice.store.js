@@ -10,6 +10,10 @@ const initialState = {
   practice: {
     data: {},
     loading: true
+  },
+  module: {
+    data: {},
+    loading: true
   }
 };
 
@@ -23,6 +27,9 @@ const getters = {
   },
   _getPractice(state) {
     return state.practice;
+  },
+  _getModule(state) {
+    return state.module;
   }
 };
 
@@ -52,6 +59,18 @@ const actions = {
       uri: `practices/${id}`
     };
     actionMiddleware(action, store);
+  },
+  getModule(store, payload) {
+    const { nextErr, nextSuccess, id } = payload;
+    const action = {
+      beforeCallType: "GET_MODULE_SINGLE_REQUEST",
+      successType: "GET_MODULE_SINGLE_SUCCESS",
+      errorType: "GET_MODULE_SINGLE_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: `modules/${id}`
+    };
+    actionMiddleware(action, store);
   }
 };
 
@@ -77,11 +96,27 @@ const mutations = {
     state.practices = initialState.practice;
   },
   GET_PRACTICE_SINGLE_SUCCESS(state, data) {
+    if (data.modules) {
+      data.modules.sort((moduleA, moduleB) => {
+        return moduleA.position - moduleB.position;
+      });
+    }
     state.practice.data = data;
     state.practice.loading = false;
   },
   GET_PRACTICE_SINGLE_ERROR(state, data) {
     state.practice = initialState.practice;
+  },
+  GET_MODULE_SINGLE_REQUEST(state) {
+    state.module = initialState.module;
+  },
+  GET_MODULE_SINGLE_SUCCESS(state, data) {
+    state.module.data = data;
+    state.module.loading = false;
+  },
+  GET_MODULE_SINGLE_ERROR(state, data) {
+    console.log("error ", data);
+    state.module = initialState.module;
   }
 };
 

@@ -51,6 +51,9 @@ export default function({ uri, params = {}, opt = {} }) {
       // console.log("==========> call " + url, ", options= ", options);
     }
     return fetch(url, options).then(response => {
+      if (response.status === 404) {
+        return { error: "Not found", message: "Not found" };
+      }
       return response.json();
     });
   } catch (error) {

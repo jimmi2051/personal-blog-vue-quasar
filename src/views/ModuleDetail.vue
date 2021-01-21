@@ -336,8 +336,12 @@ export default {
             idxModule
           ].contents.filter(content => content.result === true).length;
           const point =
-            (totalAnswerCorrect / this.makerResult[idxModule].contents.length) *
-            module.point;
+            Math.round(
+              (totalAnswerCorrect /
+                this.makerResult[idxModule].contents.length) *
+                module.point *
+                100
+            ) / 100;
           this.makerResult[idxModule].point = point;
         }
         this.totalPointGot += this.makerResult[idxModule].point;

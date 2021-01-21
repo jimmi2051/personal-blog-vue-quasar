@@ -297,6 +297,7 @@ export default {
       }
     },
     handleSubmitAnswer() {
+      this.totalPointGot = 0;
       const { data } = this.store;
       data.forEach((module, idxModule) => {
         module.contents.forEach((content, idxContent) => {

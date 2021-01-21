@@ -18,7 +18,7 @@
             v-ripple
             v-for="module in store.data.modules"
             :key="module.id"
-            :to="`/module/${module.id}`"
+            :to="`/module/${practiceId}#${module.id}`"
           >
             <q-item-section avatar>
               <q-avatar rounded color="info" text-color="white" icon="book" />
@@ -76,6 +76,7 @@ export default {
     if (!params.id) {
       this.$router.push("/");
     }
+    this.practiceId = params.id;
     this.handleGetPractice(params.id);
   },
   methods: {
@@ -111,6 +112,9 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  data() {
+    return { practiceId: "" };
   }
 };
 </script>

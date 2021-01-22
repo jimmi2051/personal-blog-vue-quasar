@@ -86,6 +86,7 @@
         text-align: center;
         padding: 10px 20px;
         margin-bottom: 10px;
+        position: relative;
         &:hover {
           background-color: $light-blue;
           color: white;
@@ -94,6 +95,28 @@
         &.active {
           background-color: $light-blue;
           color: white;
+        }
+        &.result-false {
+          background-color: $negative !important;
+          color: white;
+          &::before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            content: "\f00d";
+            position: absolute;
+            right: 20px;
+          }
+        }
+        &.result-true {
+          background-color: $positive !important;
+          color: white;
+          &::before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            content: "\f058";
+            position: absolute;
+            right: 20px;
+          }
         }
       }
     }

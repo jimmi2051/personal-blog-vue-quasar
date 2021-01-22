@@ -93,7 +93,10 @@
                   </q-tab>
                 </q-tabs>
 
-                <div v-if="current - 1 < content.data.length" class="question">
+                <div
+                  v-if="content.data && current - 1 < content.data.length"
+                  class="question"
+                >
                   <p class="question-help">
                     Choose the option the best completes each of the following
                     sentences
@@ -112,6 +115,26 @@
                           ].answer === ans
                             ? 'active'
                             : ''
+                        } ${
+                          isSubmitted &&
+                          makerResult[idxModule].contents[idxContent].data[
+                            current - 1
+                          ].result === false &&
+                          makerResult[idxModule].contents[idxContent].data[
+                            current - 1
+                          ].answer === ans
+                            ? 'result-false'
+                            : ''
+                        } ${
+                          isSubmitted &&
+                          makerResult[idxModule].contents[idxContent].data[
+                            current - 1
+                          ].result &&
+                          makerResult[idxModule].contents[idxContent].data[
+                            current - 1
+                          ].answer === ans
+                            ? 'result-true'
+                            : ''
                         }`
                       "
                       @click="
@@ -129,7 +152,7 @@
                 </div>
                 <div
                   class="question-arrow"
-                  v-if="current - 1 < content.data.length"
+                  v-if="content.data && current - 1 < content.data.length"
                 >
                   <q-btn
                     class="btn-submit"
@@ -144,7 +167,8 @@
                   />
                   <i
                     :class="
-                      `${current === content.data.length &&
+                      `${content.data &&
+                        current === content.data.length &&
                         'disabled'} fas fa-arrow-right`
                     "
                     @click="current += 1"
@@ -162,7 +186,7 @@
           </q-item>
         </q-card-actions>
       </q-card>
-      <q-dialog v-model="isSubmitted">
+      <q-dialog v-model="isShowResult">
         <q-card class="result">
           <q-card-section>
             <h4 class="result-title">Test Complete</h4>
@@ -198,33 +222,43 @@ function mapStateToProps(state) {
   const data = state.Practice.modules.data;
   let makerResult = [];
   let totalPoint = 0;
+
   data.forEach(module => {
     let makerModule = {
       isDone: false,
       contents: []
     };
     totalPoint += module.point;
-    module.contents.forEach(content => {
-      let makerContent = {
-        isDone: false,
-        data: []
-      };
-      content.data.forEach(() => {
-        let makerQuest = {
+    if (module.contents) {
+      module.contents.forEach(content => {
+        let makerContent = {
           isDone: false,
-          answer: ""
+          data: []
         };
-        makerContent.data.push(makerQuest);
+        if (content.data) {
+          content.data.forEach(() => {
+            let makerQuest = {
+              isDone: false,
+              answer: ""
+            };
+            makerContent.data.push(makerQuest);
+          });
+        } else {
+          makerContent.isDone = true;
+        }
+        makerModule.contents.push(makerContent);
       });
-      makerModule.contents.push(makerContent);
-    });
+    } else {
+      makerModule.isDone = true;
+    }
     makerResult.push(makerModule);
   });
+
   this.makerResult = makerResult;
   this.totalPoint = totalPoint;
   const { params } = this.$route;
   let title = "";
-  if (params.id && data.length > 0) {
+  if (params.id && data && data.length > 0) {
     const insModule = data[0];
     title =
       insModule.practices.find(practice => practice.id === params.id)?.title ??
@@ -271,6 +305,15 @@ export default {
       this.getModulesByPracticeId(payload);
     },
     handleChooseAnswer(idxModule, idxContent, idxData, answer) {
+      if (this.isSubmitted) {
+        this.$q.notify({
+          color: "red-5",
+          textColor: "white",
+          icon: "warning",
+          message: "You can not change the answer after submit"
+        });
+        return;
+      }
       this.makerResult[idxModule].contents[idxContent].data[
         idxData
       ].answer = answer;
@@ -300,53 +343,60 @@ export default {
       this.totalPointGot = 0;
       const { data } = this.store;
       data.forEach((module, idxModule) => {
-        module.contents.forEach((content, idxContent) => {
-          content.data.forEach((data, idxData) => {
-            if (
-              this.makerResult[idxModule].contents[idxContent].data[idxData]
-                .answer === data.result
-            ) {
-              this.makerResult[idxModule].contents[idxContent].data[
-                idxData
-              ].result = true;
+        if (module.contents) {
+          module.contents.forEach((content, idxContent) => {
+            if (content.data) {
+              content.data.forEach((data, idxData) => {
+                if (
+                  this.makerResult[idxModule].contents[idxContent].data[idxData]
+                    .answer === data.result
+                ) {
+                  this.makerResult[idxModule].contents[idxContent].data[
+                    idxData
+                  ].result = true;
+                } else {
+                  this.makerResult[idxModule].contents[idxContent].data[
+                    idxData
+                  ].result = false;
+                }
+              });
+            }
+
+            const checkAnswerFailed = this.makerResult[idxModule].contents[
+              idxContent
+            ].data.findIndex(data => data.result === false);
+            if (checkAnswerFailed === -1) {
+              this.makerResult[idxModule].contents[idxContent].result = true;
             } else {
-              this.makerResult[idxModule].contents[idxContent].data[
-                idxData
-              ].result = false;
+              this.makerResult[idxModule].contents[idxContent].result = false;
             }
           });
-          const checkAnswerFailed = this.makerResult[idxModule].contents[
-            idxContent
-          ].data.findIndex(data => data.result === false);
-          if (checkAnswerFailed === -1) {
-            this.makerResult[idxModule].contents[idxContent].result = true;
-          } else {
-            this.makerResult[idxModule].contents[idxContent].result = false;
-          }
-        });
-        const checkAnswerFailed = this.makerResult[
-          idxModule
-        ].contents.findIndex(content => content.result === false);
-        if (checkAnswerFailed === -1) {
-          this.makerResult[idxModule].result = true;
-          this.makerResult[idxModule].point = module.point;
-        } else {
-          this.makerResult[idxModule].result = false;
-          const totalAnswerCorrect = this.makerResult[
+          const checkAnswerFailed = this.makerResult[
             idxModule
-          ].contents.filter(content => content.result === true).length;
-          const point =
-            Math.round(
-              (totalAnswerCorrect /
-                this.makerResult[idxModule].contents.length) *
-                module.point *
-                100
-            ) / 100;
-          this.makerResult[idxModule].point = point;
+          ].contents.findIndex(content => content.result === false);
+          if (checkAnswerFailed === -1) {
+            this.makerResult[idxModule].result = true;
+            this.makerResult[idxModule].point = module.point;
+          } else {
+            this.makerResult[idxModule].result = false;
+            const totalAnswerCorrect = this.makerResult[
+              idxModule
+            ].contents.filter(content => content.result === true).length;
+            const point =
+              Math.round(
+                (totalAnswerCorrect /
+                  this.makerResult[idxModule].contents.length) *
+                  module.point *
+                  100
+              ) / 100;
+            this.makerResult[idxModule].point = point;
+          }
         }
+
         this.totalPointGot += this.makerResult[idxModule].point;
       });
       this.isSubmitted = true;
+      this.isShowResult = true;
     }
   },
   meta: {
@@ -367,6 +417,7 @@ export default {
       makerResult: [],
       enableSubmit: false,
       isSubmitted: false,
+      isShowResult: false,
       totalPoint: 0,
       totalPointGot: 0
     };

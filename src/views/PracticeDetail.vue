@@ -46,6 +46,7 @@
               icon-right="send"
               label="Take The Test"
               style="width:100%"
+              :to="`/module/${practiceId}`"
             />
           </q-item>
         </q-card-actions>

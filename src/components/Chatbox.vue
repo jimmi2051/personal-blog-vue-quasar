@@ -456,6 +456,19 @@ export default {
         const id = this.store.userProfile.id;
         if (id !== data.id) {
           this.handlePushMessage(data);
+          if (Notification.permission === "granted") {
+            navigator.serviceWorker.getRegistration().then(reg => {
+              const options = {
+                body: `${data.user}: ${data.message}`,
+                vibrate: [100, 50, 100],
+                data: {
+                  dateOfArrival: Date.now(),
+                  primaryKey: 1
+                }
+              };
+              reg.showNotification("Notification", options);
+            });
+          }
         }
       });
       if (this.messages.length === 0) {

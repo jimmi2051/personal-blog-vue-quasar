@@ -30,7 +30,7 @@ const actions = {
       errorType: "GET_MESSAGE_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: "messages?_sort=createdAt:ASC"
+      uri: "messages?_sort=createdAt:ASC&_limit=-1"
     };
     actionMiddleware(action, store);
   }

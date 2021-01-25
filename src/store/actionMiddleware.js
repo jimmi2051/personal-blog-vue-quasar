@@ -5,7 +5,7 @@ const actionMiddleware = (action, store) => {
   LoadingBar.setDefaults({
     color: "light-blue-3",
     size: "3px",
-    position: "top",
+    position: "top"
   });
   const {
     successType,
@@ -20,7 +20,7 @@ const actionMiddleware = (action, store) => {
     store.commit(beforeCallType);
   }
   FetchApi(rest)
-    .then((response) => {
+    .then(response => {
       if (response) {
         if (successType) {
           store.commit(successType, response);
@@ -38,10 +38,13 @@ const actionMiddleware = (action, store) => {
       }
       LoadingBar.stop();
     })
-    .catch((error) => {
+    .catch(error => {
       LoadingBar.stop();
       if (errorType) {
         store.commit(errorType, error);
+        if (typeof afterError === "function") {
+          afterError(error);
+        }
       }
     });
 };

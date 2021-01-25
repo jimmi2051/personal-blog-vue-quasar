@@ -71,7 +71,8 @@ const router = new VueRouter({
       return savedPosition;
     } else if (to.hash) {
       return {
-        selector: to.hash
+        selector: to.hash,
+        behavior: "smooth"
       };
     } else {
       return { x: 0, y: 0 };

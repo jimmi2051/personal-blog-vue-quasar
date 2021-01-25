@@ -35,8 +35,8 @@ export default {
     this.$q.loading.show();
     let payload = {
       nextErr: err => {
+        console.log("[ERROR] ====>", err);
         this.$q.loading.hide();
-        console.log(err);
       },
       nextSuccess: success => {
         console.log("[DEBUG] ====>", success.description);

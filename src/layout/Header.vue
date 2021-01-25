@@ -24,12 +24,12 @@
         <q-btn stretch flat label="About" />
       </q-item>
       <q-separator dark vertical />
-      <q-item exact>
-        <q-btn stretch @click="scrollToDiv('work')" flat label="Works" />
+      <q-item exact to="/#work">
+        <q-btn stretch flat label="Works" />
       </q-item>
       <q-separator dark vertical />
-      <q-item exact>
-        <q-btn stretch @click="scrollToDiv('contact')" flat label="Contact" />
+      <q-item exact to="/#contact">
+        <q-btn stretch flat label="Contact" />
       </q-item>
       <q-separator dark vertical />
       <q-btn
@@ -112,20 +112,20 @@
             </q-item>
             <q-separator dark inset />
 
-            <q-item exact>
+            <q-item exact clickable>
               <q-btn
                 stretch
-                @click="scrollToDiv('work')"
+                to="/#work"
                 flat
                 label="Works"
                 style="margin-left:auto;margin-right:auto;"
               />
             </q-item>
             <q-separator dark inset />
-            <q-item exact>
+            <q-item exact clickable>
               <q-btn
                 stretch
-                @click="scrollToDiv('contact')"
+                to="/#contact"
                 flat
                 label="Contact"
                 style="margin-left:auto;margin-right:auto;"
@@ -217,18 +217,6 @@ export default {
         color: "light-blue",
         icon: "announcement"
       });
-    },
-    scrollToDiv(div) {
-      const elem = document.getElementById(div);
-      if (elem) {
-        elem.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "start"
-        });
-      } else {
-        this.$router.push({ path: `/#${div}` });
-      }
     }
   },
   props: {

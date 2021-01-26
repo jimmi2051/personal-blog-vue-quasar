@@ -18,18 +18,11 @@
         height: 3rem;
       }
       .text-subtitle2 {
-        height: 2rem;
+        height: 2.75;
         overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        // &:hover {
-        //   // overflow: none;
-        //   white-space: unset;
-        //   text-overflow: unset;
-        //   // height: 3rem;
-        //   overflow: unset;
-        //   // cursor: grab;
-        // }
+      }
+      .btn-readmore {
+        margin-top: 20px;
       }
     }
   }

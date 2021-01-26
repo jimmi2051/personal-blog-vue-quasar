@@ -26,77 +26,34 @@
       </div>
       <div class="col-lg-9">
         <div class="row blogs-content">
-          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div
+            class="col-xs-12 col-sm-12 col-md-4 col-lg-4"
+            v-for="(blog, index) in store.blogs"
+            :key="index"
+          >
             <q-card class="q-pa-md q-ml-md q-mr-sm">
               <div class="thumbnail-video">
                 <img
-                  :src="
-                    require('@/assets/images/Homepage/background-athena.png')
-                  "
+                  :src="require(`@/assets/images${blog.thumbnail}`)"
                   alt="company-3"
                   class="thumbnail-video-image"
                 />
               </div>
               <q-card-section>
                 <div class="text-h6">
-                  Synopsis Solutions - ATHENA
+                  {{ blog.title }}
                 </div>
                 <div class="text-subtitle2">
-                  Transaction Monitoring AML / CTF Compliance
+                  {{ blog.description }}
                 </div>
-                <q-btn type="a" href="/blog/" no-shadow>Read more </q-btn>
-              </q-card-section>
-            </q-card>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <q-card class="q-pa-md q-ml-md q-mr-sm">
-              <div class="thumbnail-video">
-                <img
-                  :src="require('@/assets/images/Homepage/background-ares.png')"
-                  alt="company-2"
-                  class="thumbnail-video-image"
-                />
-              </div>
-              <q-card-section>
-                <div class="text-h6">
-                  Synopsis Solutions - ARES
-                </div>
-                <div class="text-subtitle2">
-                  Identity Verification with Ease and Efficiency
-                </div>
-                <q-btn
-                  type="a"
-                  href="https://www.cynopsis-solutions.com/athena"
-                  no-shadow
-                  target="__blank"
-                  >Read more
-                </q-btn>
-              </q-card-section>
-            </q-card>
-          </div>
 
-          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <q-card class="q-pa-md q-mr-md q-ml-sm">
-              <div class="thumbnail-video">
-                <img
-                  :src="
-                    require('@/assets/images/Homepage/background-h3zoom.jpg')
-                  "
-                  alt="company-1"
-                  class="thumbnail-video-image"
-                />
-              </div>
-              <q-card-section>
-                <div class="text-h6">H3Zoom - Facade Inspector</div>
-                <div class="text-subtitle2">
-                  Automating and Digitizing Building Facade Inspections
-                </div>
                 <q-btn
-                  type="a"
-                  href="https://www.cynopsis-solutions.com/athena"
+                  class="btn-readmore"
+                  :to="`/blog/${blog.id}`"
+                  exact
                   no-shadow
-                  target="__blank"
-                  >Read more
+                >
+                  Read more
                 </q-btn>
               </q-card-section>
             </q-card>
@@ -133,9 +90,11 @@ function mapStateToProps(state) {
     });
     categories.push(item);
   });
+  const blogs = state.Blog.blogs.data;
   return {
     loading: state.Blog.categories.loading,
-    categories
+    categories,
+    blogs
   };
 }
 export default {
@@ -146,6 +105,7 @@ export default {
   },
   created: function() {
     this.handleGetCategoris({});
+    this.handleGetBlogs({});
   },
   data() {
     return {
@@ -155,7 +115,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("Blog", ["getCategories"]),
+    ...mapActions("Blog", ["getCategories", "getBlogs"]),
     myFilterMethod(node, filter) {
       const filt = filter.toLowerCase();
       return node.label && node.label.toLowerCase().indexOf(filt) > -1;
@@ -172,10 +132,24 @@ export default {
         },
         nextSuccess: () => {
           // console.log(this.store.categories);
+          // console.log(res);
         },
         params
       };
       this.getCategories(payload);
+    },
+    handleGetBlogs(params) {
+      let payload = {
+        nextErr: err => {
+          console.log(err);
+        },
+        nextSuccess: () => {
+          // console.log(this.store.categories);
+          // console.log(res);
+        },
+        params
+      };
+      this.getBlogs(payload);
     }
   },
   computed: {

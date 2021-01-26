@@ -7,6 +7,10 @@ const initialState = {
   categories: {
     data: [],
     loading: true
+  },
+  blogs: {
+    data: [],
+    loading: true
   }
 };
 
@@ -17,6 +21,9 @@ const state = initialState;
 const getters = {
   getCategories(state) {
     return state.categories;
+  },
+  getBlogs(state) {
+    return state.blogs;
   }
 };
 
@@ -32,6 +39,18 @@ const actions = {
       afterSuccess: nextSuccess,
       afterError: nextErr,
       uri: `categories?_sort=createdAt:ASC&${queryString.stringify(params)}`
+    };
+    actionMiddleware(action, store);
+  },
+  getBlogs(store, payload) {
+    const { nextErr, nextSuccess, params = {} } = payload;
+    const action = {
+      beforeCallType: "GET_BLOGS_REQUEST",
+      successType: "GET_BLOGS_SUCCESS",
+      errorType: "GET_BLOGS_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: `blogs?_sort=createdAt:ASC&${queryString.stringify(params)}`
     };
     actionMiddleware(action, store);
   }
@@ -54,6 +73,17 @@ const mutations = {
   },
   GET_CATEGORIES_ERROR(state, data) {
     state.categories = initialState.categories;
+  },
+  GET_BLOGS_REQUEST(state) {
+    state.blogs = initialState.blogs;
+  },
+  GET_BLOGS_SUCCESS(state, data) {
+    state.blogs.data = data;
+    state.blogs.loading = false;
+  },
+  GET_BLOGS_ERROR(state, data) {
+    state.blogs.data = [];
+    state.blogs.loading = false;
   }
 };
 

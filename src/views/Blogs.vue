@@ -31,7 +31,7 @@
             v-for="(blog, index) in store.blogs"
             :key="index"
           >
-            <q-card class="q-pa-md q-ml-md q-mr-sm">
+            <q-card class="q-pa-md q-ml-md q-mr-sm q-mb-lg">
               <div class="thumbnail-video">
                 <img
                   :src="require(`@/assets/images${blog.thumbnail}`)"

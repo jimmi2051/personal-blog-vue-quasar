@@ -5,8 +5,10 @@ import router from "./router";
 import store from "./store";
 import "./quasar";
 import "./styles/_styles.scss";
+import VueMarkdown from "vue-markdown";
 
 Vue.config.productionTip = false;
+Vue.use(VueMarkdown);
 
 new Vue({
   router,

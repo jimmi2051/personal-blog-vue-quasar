@@ -11,6 +11,10 @@ const initialState = {
   blogs: {
     data: [],
     loading: true
+  },
+  blog: {
+    data: {},
+    loading: true
   }
 };
 
@@ -24,6 +28,9 @@ const getters = {
   },
   getBlogs(state) {
     return state.blogs;
+  },
+  getBlog(state) {
+    return state.blog;
   }
 };
 
@@ -51,6 +58,18 @@ const actions = {
       afterSuccess: nextSuccess,
       afterError: nextErr,
       uri: `blogs?_sort=createdAt:ASC&${queryString.stringify(params)}`
+    };
+    actionMiddleware(action, store);
+  },
+  getBlog(store, payload) {
+    const { nextErr, nextSuccess, id } = payload;
+    const action = {
+      beforeCallType: "GET_BLOG_REQUEST",
+      successType: "GET_BLOG_SUCCESS",
+      errorType: "GET_BLOG_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: `blogs/${id}`
     };
     actionMiddleware(action, store);
   }
@@ -84,6 +103,17 @@ const mutations = {
   GET_BLOGS_ERROR(state, data) {
     state.blogs.data = [];
     state.blogs.loading = false;
+  },
+  GET_BLOG_REQUEST(state) {
+    state.blog = initialState.blog;
+  },
+  GET_BLOG_SUCCESS(state, data) {
+    state.blog.data = data;
+    state.blog.loading = false;
+  },
+  GET_BLOG_ERROR(state, data) {
+    state.blog.data = {};
+    state.blog.loading = false;
   }
 };
 

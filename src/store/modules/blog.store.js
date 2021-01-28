@@ -108,7 +108,7 @@ const mutations = {
     state.blog = initialState.blog;
   },
   GET_BLOG_SUCCESS(state, data) {
-    state.blog.data = data;
+    state.blog.data = { ...data };
     state.blog.loading = false;
   },
   GET_BLOG_ERROR(state, data) {

@@ -32,9 +32,11 @@
       </template>
     </q-parallax>
     <q-skeleton height="300px" square v-else />
-
-    <div class="blog-detail" v-if="!store.loading">
-      <VueMarkdown>{{ store.blog.content || "" }} </VueMarkdown>
+    <!-- {{ store.blog.content || "" }} -->
+    <div class="blog-detail" v-if="!isLoading">
+      <VueMarkdown v-if="!store.loading">
+        {{ store.blog.content }}
+      </VueMarkdown>
     </div>
   </q-page>
 </template>
@@ -68,13 +70,15 @@ export default {
   methods: {
     ...mapActions("Blog", ["getBlog"]),
     handleGetBlog(id) {
+      this.isLoading = true;
       const payload = {
         nextErr: err => {
           console.log(err);
         },
-        nextSuccess: () => {
+        nextSuccess: res => {
           // console.log(this.store.categories);
-          // console.log(res);
+          console.log(res);
+          this.isLoading = false;
         },
         id
       };
@@ -85,6 +89,11 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  data() {
+    return {
+      isLoading: true
+    };
   }
 };
 </script>

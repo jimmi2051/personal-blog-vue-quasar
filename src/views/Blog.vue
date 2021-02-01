@@ -33,8 +33,15 @@
     </q-parallax>
     <q-skeleton height="300px" square v-else />
     <!-- {{ store.blog.content || "" }} -->
-    <div class="blog-detail" v-if="!isLoading">
-      <VueMarkdown v-if="!store.loading">
+    <div class="blog-detail">
+      <div class="q-pt-md q-pb-md q-gutter-sm">
+        <q-breadcrumbs>
+          <q-breadcrumbs-el icon="home" to="/" />
+          <q-breadcrumbs-el label="Blogs" icon="widgets" to="/blogs" />
+          <q-breadcrumbs-el :label="store.blog.title" icon="book" />
+        </q-breadcrumbs>
+      </div>
+      <VueMarkdown v-if="!isLoading">
         {{ store.blog.content }}
       </VueMarkdown>
     </div>
@@ -75,9 +82,8 @@ export default {
         nextErr: err => {
           console.log(err);
         },
-        nextSuccess: res => {
+        nextSuccess: () => {
           // console.log(this.store.categories);
-          console.log(res);
           this.isLoading = false;
         },
         id

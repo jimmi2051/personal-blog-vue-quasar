@@ -10,7 +10,8 @@ const initialState = {
   },
   blogs: {
     data: [],
-    loading: true
+    loading: true,
+    count: 0
   },
   blog: {
     data: {},
@@ -97,12 +98,14 @@ const mutations = {
     state.blogs = initialState.blogs;
   },
   GET_BLOGS_SUCCESS(state, data) {
-    state.blogs.data = data;
+    state.blogs.data = data.data;
+    state.blogs.count = data.count;
     state.blogs.loading = false;
   },
   GET_BLOGS_ERROR(state, data) {
     state.blogs.data = [];
     state.blogs.loading = false;
+    state.blogs.count = 0;
   },
   GET_BLOG_REQUEST(state) {
     state.blog = initialState.blog;

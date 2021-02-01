@@ -59,6 +59,21 @@
             </q-card>
           </div>
         </div>
+        <div class="row blogs-pagination">
+          <div class="col-xl-12">
+            <q-pagination
+              v-model="page"
+              :max="pageSize"
+              :direction-links="true"
+              :boundary-links="true"
+              icon-first="skip_previous"
+              icon-last="skip_next"
+              icon-prev="fast_rewind"
+              icon-next="fast_forward"
+            >
+            </q-pagination>
+          </div>
+        </div>
       </div>
     </div>
   </q-page>
@@ -76,21 +91,30 @@ function mapStateToProps(state) {
     item.label = category.title;
     item.children = [];
     item.handler = e => {
-      console.log("On click Category ==>", e);
+      this.category = e.id;
     };
     category.blogs.forEach(blog => {
       item.children.push({
         id: blog._id,
         label: blog.title,
-        handler(e) {
-          console.log(e);
-          // Toast.create("Tapped on item 1.3");
+        handler: () => {
+          this.$router.push(`/blog/${blog.id}`);
         }
       });
     });
     categories.push(item);
   });
+  categories.push({
+    id: "all",
+    label: "View All",
+    handler: () => {
+      this.category = "";
+    },
+    children: []
+  });
   const blogs = state.Blog.blogs.data;
+  const count = state.Blog.blogs.count;
+  this.pageSize = Math.ceil(count / this.itemPerPage);
   return {
     loading: state.Blog.categories.loading,
     categories,
@@ -105,14 +129,44 @@ export default {
   },
   created: function() {
     this.handleGetCategoris({});
-    this.handleGetBlogs({});
+    this.handleGetBlogs({
+      _limit: this.itemPerPage,
+      _start: (this.page - 1) * this.itemPerPage
+    });
   },
   data() {
     return {
       filter: "",
       expanded: [],
-      selected: ""
+      selected: "",
+      page: 1,
+      itemPerPage: 6,
+      pageSize: 1,
+      category: ""
     };
+  },
+  watch: {
+    page() {
+      this.handleGetBlogs({
+        _limit: this.itemPerPage,
+        _start: (this.page - 1) * this.itemPerPage
+      });
+    },
+    category(newValue) {
+      this.page = 1;
+      if (newValue !== "") {
+        this.handleGetBlogs({
+          _limit: this.itemPerPage,
+          _start: (this.page - 1) * this.itemPerPage,
+          category: newValue
+        });
+      } else {
+        this.handleGetBlogs({
+          _limit: this.itemPerPage,
+          _start: (this.page - 1) * this.itemPerPage
+        });
+      }
+    }
   },
   methods: {
     ...mapActions("Blog", ["getCategories", "getBlogs"]),

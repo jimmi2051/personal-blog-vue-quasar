@@ -73,6 +73,14 @@
     font-weight: bold;
     color: white;
   }
+  &__readmore {
+    text-align: center;
+    color: $light-blue;
+    padding-bottom: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+  }
 }
 .is-show {
   display: block !important;

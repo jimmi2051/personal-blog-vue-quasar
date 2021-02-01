@@ -23,14 +23,14 @@ const getters = {
 const actions = {
   /* Example Call API using Fetch */
   getMessageList(store, payload) {
-    const { nextErr, nextSuccess } = payload;
+    const { nextErr, nextSuccess, limit = 100 } = payload;
     const action = {
       beforeCallType: "GET_MESSAGE_REQUEST",
       successType: "GET_MESSAGE_SUCCESS",
       errorType: "GET_MESSAGE_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: "messages?_sort=createdAt:ASC&_limit=-1"
+      uri: `messages?_sort=createdAt:DESC&_limit=${limit}`
     };
     actionMiddleware(action, store);
   }

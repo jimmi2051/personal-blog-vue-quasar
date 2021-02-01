@@ -46,6 +46,13 @@
       <div class="message-box__body" id="message-box__body">
         <div v-if="messages.length">
           <div
+            @click="limit = -1"
+            class="message-box__readmore"
+            v-if="limit !== -1"
+          >
+            View all messages
+          </div>
+          <div
             v-for="(message, index) in messages"
             :key="index"
             style="width: 100%; max-width: 400px"
@@ -56,6 +63,7 @@
               :sent="message.sent ? true : false"
               :text-color="message.sent ? 'black' : 'white'"
               :bg-color="message.sent ? 'amber-7' : 'light-blue'"
+              :stamp="processStamp(message.createdAt)"
             />
           </div>
         </div>
@@ -123,6 +131,7 @@ import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
+import moment from "moment";
 const API_URL = process.env.VUE_APP_API_URL;
 
 import { mapActions, mapState } from "vuex";
@@ -165,7 +174,8 @@ export default {
       typeInit: 1,
       caller: null,
       activeBot: true,
-      isInit: false
+      isInit: false,
+      limit: 100
     };
   },
   methods: {
@@ -199,13 +209,15 @@ export default {
           id,
           user: "Me",
           message: "/bot on # Enable bot",
-          sent: true
+          sent: true,
+          createdAt: Date.now()
         };
         const messageDisableBot = {
           id,
           user: "Me",
           message: "/bot off # Disable bot",
-          sent: true
+          sent: true,
+          createdAt: Date.now()
         };
         this.handlePushMessage(messageEnableBot);
         this.handlePushMessage(messageDisableBot);
@@ -218,7 +230,8 @@ export default {
           id,
           user: "Me",
           message: "Bot have been enabled.",
-          sent: true
+          sent: true,
+          createdAt: Date.now()
         };
         this.handlePushMessage(messageEnableBot);
         return;
@@ -230,7 +243,8 @@ export default {
           id,
           user: "Me",
           message: "Bot have been disabled.",
-          sent: true
+          sent: true,
+          createdAt: Date.now()
         };
         this.handlePushMessage(messageDisableBot);
         return;
@@ -240,7 +254,8 @@ export default {
         id,
         user: "Me",
         message: this.msgToSend,
-        sent: true
+        sent: true,
+        createdAt: Date.now()
       };
       this.handlePushMessage(message);
 
@@ -285,7 +300,7 @@ export default {
       } else {
         this.isShow = true;
         if (this.messages.length === 0) {
-          this.handleGetMessages();
+          this.handleGetMessages(this.limit);
         }
         if (!this.isInit) {
           this.initMessageBox();
@@ -304,7 +319,12 @@ export default {
         container.scrollTop = container.scrollHeight - container.clientHeight;
       }
     },
-
+    scrollToStart() {
+      const container = this.$el.querySelector("#message-box__body");
+      if (container) {
+        container.scrollTop = 0;
+      }
+    },
     getCam() {
       //Get local audio/video feed and show it in selfview video element
       return navigator.mediaDevices.getUserMedia({
@@ -422,7 +442,7 @@ export default {
 
       this.endCall();
     },
-    handleGetMessages() {
+    handleGetMessages(limit) {
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
@@ -430,17 +450,20 @@ export default {
         nextSuccess: response => {
           if (response && isArray(response)) {
             const id = this.store.userProfile.id;
-            response.map(message => {
+            let tempData = [...response];
+            tempData.reverse().map(message => {
               const parseMessage = {
                 id: message.senderId,
                 user: message.senderId === id ? "Me" : message.senderName,
                 message: message.message,
-                sent: message.senderId === id
+                sent: message.senderId === id,
+                createdAt: message.createdAt
               };
               this.handlePushMessage(parseMessage);
             });
           }
-        }
+        },
+        limit
       };
       this.getMessageList(payload);
     },
@@ -472,7 +495,7 @@ export default {
         }
       });
       if (this.messages.length === 0) {
-        this.handleGetMessages();
+        this.handleGetMessages(this.limit);
       }
     },
 
@@ -586,6 +609,36 @@ export default {
         }
       });
       this.isInit = true;
+    },
+    processStamp(timeStamp) {
+      console.log(timeStamp);
+      const now = moment();
+      const sent = moment(timeStamp);
+      const timeSub = moment.duration(now.diff(sent));
+      const hours = Math.floor(timeSub.asHours());
+      const minutes = Math.floor(timeSub.asMinutes());
+      const seconds = Math.floor(timeSub.asSeconds());
+      const days = Math.floor(timeSub.asDays());
+      const weeks = Math.floor(timeSub.asWeeks());
+      const months = Math.floor(timeSub.asMonths());
+      const years = Math.floor(timeSub.asYears());
+      let message = "";
+      if (years > 0) {
+        message = years > 1 ? `${years} years ago` : `1 year ago`;
+      } else if (months > 0) {
+        message = months > 1 ? `${months} months ago` : `1 month ago`;
+      } else if (weeks > 0) {
+        message = weeks > 1 ? `${weeks} weeks ago` : `1 week ago`;
+      } else if (days > 0) {
+        message = days > 1 ? `${days} days ago` : `1 day ago`;
+      } else if (hours > 0) {
+        message = hours > 1 ? `${hours} hours ago` : `1 hour ago`;
+      } else if (minutes > 0) {
+        message = minutes > 1 ? `${minutes} minutes ago` : `1 minute ago`;
+      } else {
+        message = seconds > 10 ? `${seconds} seconds ago` : `a moment ago`;
+      }
+      return message;
     }
   },
   updated() {
@@ -604,6 +657,11 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  watch: {
+    limit(newValue) {
+      this.handleGetMessages(newValue);
+    }
   }
 };
 </script>

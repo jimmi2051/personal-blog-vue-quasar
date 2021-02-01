@@ -133,7 +133,7 @@
 
 <script>
 import FetchApi from "utils/FetchApi";
-import { EMAIL_RECEIVE_CONTACT } from "utils/Constants";
+
 export default {
   data() {
     return {
@@ -155,12 +155,11 @@ export default {
         });
       } else {
         const payload = {
-          uri: "email",
+          uri: "contact",
           params: {
-            to: EMAIL_RECEIVE_CONTACT,
-            subject: `Notice: You have a contact from ${this.name} - ${this.email}`,
-            text: `Name: ${this.name} - Email: ${this.email} - Message: ${this.description}`,
-            html: `<h1>Name: ${this.name} <br/>- Email: ${this.email} <br/>- Message: ${this.description}</h1>`
+            email: this.email,
+            name: this.name,
+            description: this.description
           },
           opt: {
             method: "POST"

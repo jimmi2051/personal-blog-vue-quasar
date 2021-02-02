@@ -95,7 +95,7 @@ const mutations = {
     state.categories = initialState.categories;
   },
   GET_BLOGS_REQUEST(state) {
-    state.blogs = initialState.blogs;
+    state.blogs = { ...initialState.blogs };
   },
   GET_BLOGS_SUCCESS(state, data) {
     state.blogs.data = data.data;

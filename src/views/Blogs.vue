@@ -25,7 +25,7 @@
         />
       </div>
       <div class="col-lg-9">
-        <div class="row blogs-content">
+        <div class="row blogs-content" v-if="!loading">
           <div
             class="col-xs-12 col-sm-12 col-md-4 col-lg-4"
             v-for="(blog, index) in store.blogs"
@@ -59,7 +59,7 @@
             </q-card>
           </div>
         </div>
-        <div class="row blogs-pagination">
+        <div class="row blogs-pagination" v-if="!loading">
           <div class="col-xl-12">
             <q-pagination
               v-model="page"
@@ -73,6 +73,11 @@
             >
             </q-pagination>
           </div>
+        </div>
+        <div class="row blogs-skeleton" v-if="loading">
+          <q-inner-loading :showing="true">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
         </div>
       </div>
     </div>
@@ -116,7 +121,6 @@ function mapStateToProps(state) {
   const count = state.Blog.blogs.count;
   this.pageSize = Math.ceil(count / this.itemPerPage);
   return {
-    loading: state.Blog.categories.loading,
     categories,
     blogs
   };
@@ -142,7 +146,8 @@ export default {
       page: 1,
       itemPerPage: 6,
       pageSize: 1,
-      category: ""
+      category: "",
+      loading: true
     };
   },
   watch: {
@@ -193,6 +198,7 @@ export default {
       this.getCategories(payload);
     },
     handleGetBlogs(params) {
+      this.loading = true;
       let payload = {
         nextErr: err => {
           console.log(err);
@@ -200,6 +206,7 @@ export default {
         nextSuccess: () => {
           // console.log(this.store.categories);
           // console.log(res);
+          this.loading = false;
         },
         params
       };
@@ -210,6 +217,9 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
+  },
+  updated() {
+    console.log("this is ===>", this.store);
   }
 };
 </script>

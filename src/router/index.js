@@ -21,12 +21,18 @@ const routes = [
     path: "/blogs",
     name: "blogs",
     component: () =>
-      import(/* webpackChunkName: "blogs" */ "../views/Blogs.vue")
+      import(/* webpackChunkName: "blogs" */ "../views/Blogs.vue"),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/blog/:id",
     name: "blog",
-    component: () => import(/* webpackChunkName: "blog" */ "../views/Blog.vue")
+    component: () => import(/* webpackChunkName: "blog" */ "../views/Blog.vue"),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/signin",
@@ -84,8 +90,26 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if ((to.name === "signin" || to.name === "signup") && AuthStorage.isLogin) {
+  if (
+    to.matched.some(record => record.meta.requiresAuth) &&
+    !AuthStorage.isLogin
+  ) {
+    Vue.prototype.$q.notify({
+      message: "Oops! Sorry, You must sign in to view this.",
+      type: "negative"
+    });
+    next({ name: "signin" });
+  } else if (
+    (to.name === "signin" || to.name === "signup") &&
+    AuthStorage.isLogin
+  ) {
     next({ name: from?.name ?? "home" });
+    Vue.prototype.$q.notify({
+      message: "Hola! You're logged in.",
+      // color: "green-14",
+      // icon: "announcement",
+      type: "warning"
+    });
   } else next();
 });
 

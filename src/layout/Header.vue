@@ -67,7 +67,7 @@
         <q-btn stretch flat label="Sign Up" />
       </q-item>
       <q-item v-if="store.userProfile.isLogin">
-        <q-btn stretch @click="signOut" flat label="Sign Out" />
+        <q-btn stretch @click="handleSignOut" flat label="Sign Out" />
       </q-item>
       <q-separator dark vertical />
       <q-toggle v-model="value" @input="change" color="light-blue" />
@@ -156,7 +156,7 @@
               <q-btn
                 stretch
                 flat
-                @click="signOut"
+                @click="handleSignOut"
                 label="Sign Out"
                 style="margin-left:auto;margin-right:auto;"
               />
@@ -217,6 +217,12 @@ export default {
         color: "light-blue",
         icon: "announcement"
       });
+    },
+    handleSignOut() {
+      this.signOut();
+      if (this.$route.path !== "/") {
+        this.$router.push("/");
+      }
     }
   },
   props: {

@@ -187,12 +187,9 @@ export default {
     handleGetCategoris(params) {
       let payload = {
         nextErr: err => {
-          console.log(err);
+          console.log("[ERROR] " + err);
         },
-        nextSuccess: () => {
-          // console.log(this.store.categories);
-          // console.log(res);
-        },
+        nextSuccess: () => {},
         params
       };
       this.getCategories(payload);
@@ -201,11 +198,9 @@ export default {
       this.loading = true;
       let payload = {
         nextErr: err => {
-          console.log(err);
+          console.log("[ERROR] " + err);
         },
         nextSuccess: () => {
-          // console.log(this.store.categories);
-          // console.log(res);
           this.loading = false;
         },
         params
@@ -217,9 +212,9 @@ export default {
     ...mapState({
       store: mapStateToProps
     })
-  },
-  updated() {
-    console.log("this is ===>", this.store);
   }
+  // updated() {
+  //   console.log("this is ===>", this.store);
+  // }
 };
 </script>

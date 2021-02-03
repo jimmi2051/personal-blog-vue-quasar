@@ -111,11 +111,6 @@ export default {
   components: {
     PageTitle
   },
-  created: function() {
-    if (this.store.isLogin) {
-      this.$router.push("/");
-    }
-  },
   meta: {
     // sets document title
     title: "Sign Up",

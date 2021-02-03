@@ -97,7 +97,6 @@ export default {
             });
             this.$router.push("/");
           }
-          console.log("response", response);
         },
         id
       };

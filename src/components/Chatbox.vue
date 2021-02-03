@@ -12,7 +12,6 @@
         name="phone"
         @click="endCurrentCall"
       />
-      <!-- </button> -->
     </div>
     <div
       v-if="!isShow || !store.userProfile.isLogin"
@@ -96,34 +95,8 @@
             <q-icon color="primary" name="phone" />
           </q-item-section>
         </q-item>
-        <!-- <q-separator /> -->
       </q-list>
     </div>
-    <!-- 
-    <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Your name</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input
-            dense
-            v-model="name"
-            autofocus
-            @keyup.enter="
-              prompt = false;
-              submitName();
-            "
-          />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Submit name" @click="submitName" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog> -->
   </div>
 </template>
 <script>
@@ -273,9 +246,7 @@ export default {
         }
       };
       FetchApi(payload).then(response => {
-        if (response.id) {
-          console.log("success!");
-        } else {
+        if (!response.id) {
           this.$q.notify({
             message:
               "Oops! Sorry, can't send message now. Please wait a few minutes and try again. Thanks",
@@ -611,7 +582,6 @@ export default {
       this.isInit = true;
     },
     processStamp(timeStamp) {
-      console.log(timeStamp);
       const now = moment();
       const sent = moment(timeStamp);
       const timeSub = moment.duration(now.diff(sent));

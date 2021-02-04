@@ -47,12 +47,12 @@
           <div
             @click="limit = -1"
             class="message-box__readmore"
-            v-if="limit !== -1"
+            v-if="limit !== -1 && this.messages.length === 100"
           >
             View all messages
           </div>
           <div
-            v-for="(message, index) in messages"
+            v-for="(message, index) in messagesFormat"
             :key="index"
             style="width: 100%; max-width: 400px"
           >
@@ -62,7 +62,7 @@
               :sent="message.sent ? true : false"
               :text-color="message.sent ? 'black' : 'white'"
               :bg-color="message.sent ? 'amber-7' : 'light-blue'"
-              :stamp="processStamp(message.createdAt)"
+              :stamp="message.timeDuration"
             />
           </div>
         </div>
@@ -104,7 +104,7 @@ import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
-import moment from "moment";
+import { processStamp } from "utils/Helpers";
 const API_URL = process.env.VUE_APP_API_URL;
 
 import { mapActions, mapState } from "vuex";
@@ -283,19 +283,6 @@ export default {
         }
       }
     },
-
-    scrollToEnd() {
-      const container = this.$el.querySelector("#message-box__body");
-      if (container) {
-        container.scrollTop = container.scrollHeight - container.clientHeight;
-      }
-    },
-    scrollToStart() {
-      const container = this.$el.querySelector("#message-box__body");
-      if (container) {
-        container.scrollTop = 0;
-      }
-    },
     getCam() {
       //Get local audio/video feed and show it in selfview video element
       return navigator.mediaDevices.getUserMedia({
@@ -452,8 +439,13 @@ export default {
           this.handlePushMessage(data);
           if (Notification.permission === "granted") {
             navigator.serviceWorker.getRegistration().then(reg => {
+              let name = data.user;
+              if (!name) {
+                name = this.messages.find(message => message.id === data.id)
+                  .user;
+              }
               const options = {
-                body: `${data.user}: ${data.message}`,
+                body: `${name}: ${data.message}`,
                 vibrate: [100, 50, 100],
                 data: {
                   dateOfArrival: Date.now(),
@@ -580,53 +572,19 @@ export default {
         }
       });
       this.isInit = true;
-    },
-    processStamp(timeStamp) {
-      const now = moment();
-      const sent = moment(timeStamp);
-      const timeSub = moment.duration(now.diff(sent));
-      const hours = Math.floor(timeSub.asHours());
-      const minutes = Math.floor(timeSub.asMinutes());
-      const seconds = Math.floor(timeSub.asSeconds());
-      const days = Math.floor(timeSub.asDays());
-      const weeks = Math.floor(timeSub.asWeeks());
-      const months = Math.floor(timeSub.asMonths());
-      const years = Math.floor(timeSub.asYears());
-      let message = "";
-      if (years > 0) {
-        message = years > 1 ? `${years} years ago` : `1 year ago`;
-      } else if (months > 0) {
-        message = months > 1 ? `${months} months ago` : `1 month ago`;
-      } else if (weeks > 0) {
-        message = weeks > 1 ? `${weeks} weeks ago` : `1 week ago`;
-      } else if (days > 0) {
-        message = days > 1 ? `${days} days ago` : `1 day ago`;
-      } else if (hours > 0) {
-        message = hours > 1 ? `${hours} hours ago` : `1 hour ago`;
-      } else if (minutes > 0) {
-        message = minutes > 1 ? `${minutes} minutes ago` : `1 minute ago`;
-      } else {
-        message = seconds > 10 ? `${seconds} seconds ago` : `a moment ago`;
-      }
-      return message;
-    }
-  },
-  updated() {
-    // This will be called when the component updates
-    // try toggling a todo
-    if (this.isShow) {
-      this.scrollToEnd();
-    }
-  },
-  mounted() {
-    if (this.isShow) {
-      this.scrollToEnd();
     }
   },
   computed: {
     ...mapState({
       store: mapStateToProps
-    })
+    }),
+    messagesFormat() {
+      let result = this.messages.map(message => {
+        message.timeDuration = processStamp(message.createdAt);
+        return message;
+      });
+      return result;
+    }
   },
   watch: {
     limit(newValue) {

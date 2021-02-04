@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="blogs row">
-      <div class="col-lg-3 blogs-menu">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 blogs-menu">
         <q-input ref="filter" filled v-model="filter" label="Search by title">
           <template v-slot:append>
             <q-icon
@@ -24,10 +24,10 @@
           :selected.sync="selected"
         />
       </div>
-      <div class="col-lg-9">
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div class="row blogs-content" v-if="!loading">
           <div
-            class="col-xs-12 col-sm-12 col-md-4 col-lg-4"
+            class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
             v-for="(blog, index) in store.blogs"
             :key="index"
           >

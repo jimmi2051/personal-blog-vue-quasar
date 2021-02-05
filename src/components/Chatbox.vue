@@ -43,7 +43,7 @@
         </button>
       </div>
       <div class="message-box__body" id="message-box__body">
-        <div v-if="messages.length">
+        <div v-if="!isLoading">
           <div
             @click="limit = -1"
             class="message-box__readmore"
@@ -66,6 +66,11 @@
             />
           </div>
         </div>
+        <div v-else>
+          <q-inner-loading :showing="true">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
+        </div>
       </div>
       <div class="message-box__footer">
         <input
@@ -74,13 +79,19 @@
           type="text"
           placeholder="Enter message here... (/? to get help)"
           @keyup.enter="onSendMessage"
+          :disabled="isLoading"
         />
-        <button type="button" @click="onSendMessage" class="btn-send">
+        <button
+          :disabled="isLoading"
+          type="button"
+          @click="onSendMessage"
+          class="btn-send"
+        >
           <i class="fas fa-paper-plane" />
         </button>
       </div>
     </div>
-    <div class="call-video">
+    <div v-if="isShow" class="call-video">
       <q-list bordered v-if="users.length" style="border-radius: 15px">
         <q-item
           v-for="user in users"
@@ -104,7 +115,13 @@ import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
-import { processStamp } from "utils/Helpers";
+import {
+  processStamp,
+  GetRTCIceCandidate,
+  GetRTCPeerConnection,
+  GetRTCSessionDescription,
+  getCam
+} from "utils/Helpers";
 const API_URL = process.env.VUE_APP_API_URL;
 
 import { mapActions, mapState } from "vuex";
@@ -148,20 +165,29 @@ export default {
       caller: null,
       activeBot: true,
       isInit: false,
-      limit: 100
+      limit: 100,
+      isLoading: true
     };
   },
   methods: {
     ...mapActions("Message", ["getMessageList"]),
-    handlePushMessage(message) {
-      if (this.messages.length > 0) {
-        const lastestMsg = this.messages[this.messages.length - 1];
-        if (lastestMsg.id === message.id) {
-          delete message.user;
-        }
-      }
+    handlePushMessage(message, type = 0) {
       this.msgToSend = "";
-      this.messages.push(message);
+      if (type === 0) {
+        if (this.messages.length > 0) {
+          const lastestMsg = this.messages[this.messages.length - 1];
+          if (lastestMsg.id === message.id) {
+            delete message.user;
+          }
+        }
+        this.messages.push(message);
+      } else {
+        const firstMsg = this.messages[0];
+        if (firstMsg.id === message.id) {
+          delete firstMsg.user;
+        }
+        this.messages.unshift(message);
+      }
     },
     onSendMessage() {
       // Get ID if empty will init with name & save to local storage
@@ -283,17 +309,10 @@ export default {
         }
       }
     },
-    getCam() {
-      //Get local audio/video feed and show it in selfview video element
-      return navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      });
-    },
 
     callUser(user) {
       this.isCalling = true;
-      this.getCam()
+      getCam()
         .then(stream => {
           if (window.URL) {
             // document.getElementById("selfview").srcObject = {};
@@ -323,34 +342,6 @@ export default {
           this.isCalling = false;
           this.endCall();
         });
-    },
-
-    GetRTCIceCandidate() {
-      window.RTCIceCandidate =
-        window.RTCIceCandidate ||
-        window.webkitRTCIceCandidate ||
-        window.mozRTCIceCandidate ||
-        window.msRTCIceCandidate;
-
-      return window.RTCIceCandidate;
-    },
-
-    GetRTCPeerConnection() {
-      window.RTCPeerConnection =
-        window.RTCPeerConnection ||
-        window.webkitRTCPeerConnection ||
-        window.mozRTCPeerConnection ||
-        window.msRTCPeerConnection;
-      return window.RTCPeerConnection;
-    },
-
-    GetRTCSessionDescription() {
-      window.RTCSessionDescription =
-        window.RTCSessionDescription ||
-        window.webkitRTCSessionDescription ||
-        window.mozRTCSessionDescription ||
-        window.msRTCSessionDescription;
-      return window.RTCSessionDescription;
     },
 
     prepareCaller() {
@@ -400,25 +391,44 @@ export default {
 
       this.endCall();
     },
+
     handleGetMessages(limit) {
+      this.isLoading = true;
+      // this.messages = [];
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
+          this.isLoading = false;
         },
         nextSuccess: response => {
+          this.isLoading = false;
           if (response && isArray(response)) {
             const id = this.store.userProfile.id;
             let tempData = [...response];
-            tempData.reverse().map(message => {
-              const parseMessage = {
-                id: message.senderId,
-                user: message.senderId === id ? "Me" : message.senderName,
-                message: message.message,
-                sent: message.senderId === id,
-                createdAt: message.createdAt
-              };
-              this.handlePushMessage(parseMessage);
-            });
+            if (this.messages.length > 0) {
+              tempData = tempData.slice(this.messages.length);
+              tempData.forEach(message => {
+                const parseMessage = {
+                  id: message.senderId,
+                  user: message.senderId === id ? "Me" : message.senderName,
+                  message: message.message,
+                  sent: message.senderId === id,
+                  createdAt: message.createdAt
+                };
+                this.handlePushMessage(parseMessage, 1);
+              });
+            } else {
+              tempData.reverse().forEach(message => {
+                const parseMessage = {
+                  id: message.senderId,
+                  user: message.senderId === id ? "Me" : message.senderName,
+                  message: message.message,
+                  sent: message.senderId === id,
+                  createdAt: message.createdAt
+                };
+                this.handlePushMessage(parseMessage);
+              });
+            }
           }
         },
         limit
@@ -495,9 +505,9 @@ export default {
         }
       });
       this.channel = channel;
-      this.GetRTCIceCandidate();
-      this.GetRTCPeerConnection();
-      this.GetRTCSessionDescription();
+      GetRTCIceCandidate();
+      GetRTCPeerConnection();
+      GetRTCSessionDescription();
       this.prepareCaller();
 
       channel.bind("client-candidate", async msg => {
@@ -524,7 +534,7 @@ export default {
           }
           this.isCalling = true;
           this.room = msg.room;
-          this.getCam()
+          getCam()
             .then(stream => {
               this.localUserMedia = stream;
               if (window.URL) {

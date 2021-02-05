@@ -140,7 +140,7 @@ export default {
       pReact: 0.8,
       pDjango: 0.8,
       pNet: 0.5,
-      pVue: 0.7,
+      pVue: 0.8,
       pNode: 0.7,
       pCom: 0.8,
       pTeam: 0.8,

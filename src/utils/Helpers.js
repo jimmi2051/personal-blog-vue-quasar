@@ -47,3 +47,39 @@ export const processStamp = timeStamp => {
   }
   return message;
 };
+
+export const GetRTCIceCandidate = () => {
+  window.RTCIceCandidate =
+    window.RTCIceCandidate ||
+    window.webkitRTCIceCandidate ||
+    window.mozRTCIceCandidate ||
+    window.msRTCIceCandidate;
+
+  return window.RTCIceCandidate;
+};
+
+export const GetRTCPeerConnection = () => {
+  window.RTCPeerConnection =
+    window.RTCPeerConnection ||
+    window.webkitRTCPeerConnection ||
+    window.mozRTCPeerConnection ||
+    window.msRTCPeerConnection;
+  return window.RTCPeerConnection;
+};
+
+export const GetRTCSessionDescription = () => {
+  window.RTCSessionDescription =
+    window.RTCSessionDescription ||
+    window.webkitRTCSessionDescription ||
+    window.mozRTCSessionDescription ||
+    window.msRTCSessionDescription;
+  return window.RTCSessionDescription;
+};
+
+export const getCam = () => {
+  //Get local audio/video feed and show it in selfview video element
+  return navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  });
+};

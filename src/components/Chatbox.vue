@@ -101,7 +101,7 @@
           @click="callUser(user.id)"
           style="padding-left: 15px; padding-right: 15px; border-radius: 15px"
         >
-          <q-item-section>{{ store.userProfile.fullname }}</q-item-section>
+          <q-item-section>{{ user.info.name }}</q-item-section>
           <q-item-section avatar>
             <q-icon color="primary" name="phone" />
           </q-item-section>

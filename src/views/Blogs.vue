@@ -213,8 +213,5 @@ export default {
       store: mapStateToProps
     })
   }
-  // updated() {
-  //   console.log("this is ===>", this.store);
-  // }
 };
 </script>

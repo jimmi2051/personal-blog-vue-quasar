@@ -14,6 +14,10 @@ const initialState = {
     isLogin: AuthStorage?.isLogin ?? false,
     id: AuthStorage?.id ?? "",
     fullname: AuthStorage?.fullname ?? ""
+  },
+  users: {
+    data: [],
+    loading: true
   }
 };
 
@@ -27,6 +31,9 @@ const getters = {
   },
   getUserProfile(state) {
     return state.userProfile;
+  },
+  getUsers(state) {
+    return state.users;
   }
 };
 
@@ -83,6 +90,18 @@ const actions = {
         identifier,
         password
       }
+    };
+    actionMiddleware(action, store);
+  },
+  getUsers(store, payload) {
+    const { nextErr, nextSuccess, limit = 100 } = payload;
+    const action = {
+      beforeCallType: "GET_USERS_REQUEST",
+      successType: "GET_USERS_SUCCESS",
+      errorType: "GET_USERS_ERROR",
+      afterSuccess: nextSuccess,
+      afterError: nextErr,
+      uri: `users?_sort=createdAt:DESC&_limit=${limit}`
     };
     actionMiddleware(action, store);
   },
@@ -147,6 +166,17 @@ const mutations = {
       id: "",
       fullname: ""
     };
+  },
+  GET_USERS_REQUEST(state) {
+    state.users = initialState.users;
+  },
+  GET_USERS_SUCCESS(state, data) {
+    state.users.data = data;
+    state.users.loading = false;
+  },
+  GET_USERS_ERROR(state, data) {
+    state.users.data = data;
+    state.users.loading = false;
   }
 };
 

@@ -91,6 +91,36 @@
         </button>
       </div>
     </div>
+    <div v-if="isShow" class="message-box is-show" style="left: 15px;">
+      <div class="message-box__header">
+        <p>Contact</p>
+        <i class="fas fa-list custom-i" />
+        <i class="fas fa-video custom-i" />
+        <i class="fas fa-search custom-i" />
+      </div>
+      <div class="message-box__users">
+        <ul class="list-users">
+          <li v-for="user in store.users" :key="user.id">
+            <q-avatar size="40px">
+              <img
+                src="https://icons-for-free.com/iconfiles/png/512/business+costume+male+man+office+user+icon-1320196264882354682.png"
+              />
+            </q-avatar>
+            <p>
+              {{ user.fullname || "Anonymous" }}
+            </p>
+            <i
+              v-if="
+                users.findIndex(i => i.id === user.id) > -1 ||
+                  user.id === store.userProfile.id
+              "
+              class="fas fa-circle green"
+            />
+            <i v-else class="fas fa-circle " />
+          </li>
+        </ul>
+      </div>
+    </div>
     <div v-if="isShow" class="call-video">
       <q-list bordered v-if="users.length" style="border-radius: 15px">
         <q-item
@@ -128,11 +158,12 @@ import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Message.messageList.data;
   const userProfile = state.User.userProfile;
-
+  const users = state.User.users.data;
   return {
     loading: state.Message.messageList.loading,
     messageList: data,
-    userProfile
+    userProfile,
+    users
   };
 }
 
@@ -145,6 +176,7 @@ export default {
       this.id = id;
       this.name = name;
       this.initCallBox(id, name);
+      this.handleGetUsers();
     }
   },
   data() {
@@ -171,6 +203,21 @@ export default {
   },
   methods: {
     ...mapActions("Message", ["getMessageList"]),
+    ...mapActions("User", ["getUsers"]),
+    handleGetUsers() {
+      let payload = {
+        nextErr: err => {
+          console.log("[ERROR] " + err);
+          this.isLoading = false;
+        },
+        nextSuccess: response => {
+          this.isLoading = false;
+          console.log(response);
+        },
+        limit: this.limit
+      };
+      this.getUsers(payload);
+    },
     handlePushMessage(message, type = 0) {
       this.msgToSend = "";
       if (type === 0) {
@@ -493,7 +540,9 @@ export default {
       });
 
       channel.bind("pusher:member_added", member => {
+        console.log("addd ", member);
         this.users.push(member);
+        console.log("this ==>", this.users);
       });
 
       channel.bind("pusher:member_removed", member => {

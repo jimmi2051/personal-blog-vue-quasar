@@ -11,6 +11,7 @@
     // text-align: right;
     background: #000;
     position: relative;
+    color: white;
     // margin: 15px;
     height: 60px;
     .q-avatar {
@@ -19,7 +20,7 @@
     .name-user {
       margin: 0px;
       display: inline-block;
-      color: white;
+
       padding-left: 10px;
     }
     padding: 15px;
@@ -31,12 +32,24 @@
       position: absolute;
       right: 15px;
       background-color: $light-blue;
-      color: white;
+
       border: none;
       border-radius: 32px;
       &:hover {
         cursor: pointer;
       }
+    }
+    p {
+      padding: 0;
+      margin: 0;
+      line-height: 30px;
+      display: inline-block;
+    }
+    .custom-i {
+      display: block;
+      line-height: 30px;
+      float: right;
+      padding-left: 15px;
     }
   }
   &__body {
@@ -82,6 +95,43 @@
     cursor: pointer;
     font-weight: bold;
     text-decoration: underline;
+  }
+  &__users {
+    position: relative;
+    height: calc(100% - 60px);
+    .list-users {
+      // height: calc(100% - 90px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      // width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
+      width: 100%;
+      height: 100%;
+      padding: 0px;
+      list-style: none;
+      margin: 0px;
+      padding: 5px;
+      li {
+        padding: 5px;
+        cursor: pointer;
+        position: relative;
+        p {
+          display: inline-block;
+          font-weight: 500;
+          padding-left: 8px;
+        }
+        &:hover {
+          background: rgba(0, 0, 0, 0.2);
+        }
+        i {
+          position: absolute;
+          right: 15px;
+          line-height: 45px;
+          // bottom: 15px;
+        }
+      }
+    }
   }
 }
 .is-show {

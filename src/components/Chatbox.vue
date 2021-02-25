@@ -16,98 +16,98 @@
         </q-tooltip>
       </button>
     </div>
+    <div v-else>
+      <div class="message-box is-show">
+        <div class="message-box__header">
+          <input
+            v-if="isSearchUser"
+            v-model="keySearch"
+            placeholder="Enter keyword here ..."
+          />
 
-    <div v-if="isShow" class="message-box is-show">
-      <div class="message-box__header">
-        <input
-          v-if="isSearchUser"
-          v-model="keySearch"
-          placeholder="Enter keyword here ..."
-        />
-
-        <div class="block-name" v-else>
-          <q-avatar>
-            <img
-              class="avatar-img"
-              :src="require(`@/assets/images/Icons/chat.png`)"
-            />
-          </q-avatar>
-          <p class="name-user">Contact</p>
-        </div>
-        <i class="fas fa-times custom-i" @click="isShow = false" />
-        <i class="fas fa-list custom-i" />
-        <i class="fas fa-video custom-i" />
-        <i
-          class="fas fa-search custom-i"
-          @click="isSearchUser = !isSearchUser"
-        />
-      </div>
-      <div class="message-box__users">
-        <ul class="list-users">
-          <li
-            v-for="user in usersWithSort"
-            :key="user.id"
-            @click="handleOpenMessage(user.id, user.fullname || 'Anonymous')"
-          >
-            <q-avatar size="40px">
-              <img :src="require(`@/assets/images/Icons/user.png`)" />
+          <div class="block-name" v-else>
+            <q-avatar>
+              <img
+                class="avatar-img"
+                :src="require(`@/assets/images/Icons/chat.png`)"
+              />
             </q-avatar>
-            <p>
-              {{ user.fullname || "Anonymous" }}
-            </p>
-            <i
-              v-if="
-                users.findIndex(i => i.id === user.id) > -1 ||
-                  user.id === store.userProfile.id
-              "
-              class="fas fa-circle green"
-            />
-            <i v-else class="fas fa-circle " />
-          </li>
-          <li @click="handleOpenMessage(CHANNEL, 'All Members')">
-            <q-avatar size="40px">
-              <img :src="require(`@/assets/images/Icons/users.jpg`)" />
-            </q-avatar>
-            <p>
-              All Members
-            </p>
-            <i class="fas fa-circle green" />
-          </li>
-        </ul>
+            <p class="name-user">Contact</p>
+          </div>
+          <i class="fas fa-times custom-i" @click="isShow = false" />
+          <i class="fas fa-list custom-i" />
+          <i class="fas fa-video custom-i" />
+          <i
+            class="fas fa-search custom-i"
+            @click="isSearchUser = !isSearchUser"
+          />
+        </div>
+        <div class="message-box__users">
+          <ul class="list-users">
+            <li
+              v-for="user in usersWithSort"
+              :key="user.id"
+              @click="handleOpenMessage(user.id, user.fullname || 'Anonymous')"
+            >
+              <q-avatar size="40px">
+                <img :src="require(`@/assets/images/Icons/user.png`)" />
+              </q-avatar>
+              <p>
+                {{ user.fullname || "Anonymous" }}
+              </p>
+              <i
+                v-if="
+                  users.findIndex(i => i.id === user.id) > -1 ||
+                    user.id === store.userProfile.id
+                "
+                class="fas fa-circle green"
+              />
+              <i v-else class="fas fa-circle " />
+            </li>
+            <li @click="handleOpenMessage(CHANNEL, 'All Members')">
+              <q-avatar size="40px">
+                <img :src="require(`@/assets/images/Icons/users.jpg`)" />
+              </q-avatar>
+              <p>
+                All Members
+              </p>
+              <i class="fas fa-circle green" />
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div
-      v-for="(channel, idx) in messagesOpen"
-      :key="channel.id"
-      class="message-box is-show"
-      :style="`right: ${(idx + 1) * 315 + 15}px`"
-    >
-      <div class="message-box__header">
-        <div class="block-name">
-          <q-avatar>
-            <img
-              class="avatar-img"
-              :src="require(`@/assets/images/Icons/user.png`)"
-            />
-          </q-avatar>
-          <p class="name-user">{{ channel.channel }}</p>
+      <div
+        v-for="(channel, idx) in messagesOpen"
+        :key="channel.id"
+        class="message-box is-show"
+        :style="`right: ${(idx + 1) * 315 + 15}px`"
+      >
+        <div class="message-box__header">
+          <div class="block-name">
+            <q-avatar>
+              <img
+                class="avatar-img"
+                :src="require(`@/assets/images/Icons/user.png`)"
+              />
+            </q-avatar>
+            <p class="name-user">{{ channel.channel }}</p>
+          </div>
+          <i
+            class="fas fa-times custom-i"
+            @click="handleCloseMessage(channel.id)"
+          />
+          <i class="fas fa-list custom-i" />
+          <i class="fas fa-video custom-i" />
         </div>
-        <i
-          class="fas fa-times custom-i"
-          @click="handleCloseMessage(channel.id)"
-        />
-        <i class="fas fa-list custom-i" />
-        <i class="fas fa-video custom-i" />
-      </div>
-      <div class="message-box__body" id="message-box__body">
-        <div v-if="loadingMsg && loadingMsg[channel.id]">
-          <q-inner-loading :showing="true">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </div>
-        <div v-else>
-          <!-- <div
+        <div class="message-box__body" id="message-box__body">
+          <div v-if="loadingMsg && loadingMsg[channel.id]">
+            <q-inner-loading :showing="true">
+              <q-spinner-gears size="50px" color="primary" />
+            </q-inner-loading>
+          </div>
+          <div v-else>
+            <!-- <div
             @click="handleViewAllMessages(channel.id)"
             v-if="
               messagesFormat[channel.id] &&
@@ -117,42 +117,43 @@
           >
             View all messages
           </div> -->
-          <div
-            v-for="(message, index) in messagesFormat[channel.id]"
-            :key="index"
-            style="width: 100%; max-width: 400px"
-          >
-            <q-chat-message
-              :name="message.user ? message.user : ''"
-              :sent="message.sent ? true : false"
-              :text-color="message.sent ? 'black' : 'white'"
-              :bg-color="message.sent ? 'amber-7' : 'light-blue'"
-              :stamp="message.timeDuration"
+            <div
+              v-for="(message, index) in messagesFormat[channel.id]"
+              :key="index"
+              style="width: 100%; max-width: 400px"
             >
-              <VueMarkdown>
-                {{ message.message }}
-              </VueMarkdown>
-            </q-chat-message>
+              <q-chat-message
+                :name="message.user ? message.user : ''"
+                :sent="message.sent ? true : false"
+                :text-color="message.sent ? 'black' : 'white'"
+                :bg-color="message.sent ? 'amber-7' : 'light-blue'"
+                :stamp="message.timeDuration"
+              >
+                <VueMarkdown>
+                  {{ message.message }}
+                </VueMarkdown>
+              </q-chat-message>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="message-box__footer">
-        <input
-          v-model="newMsgToSend[channel.id]"
-          class="input-chat"
-          type="text"
-          placeholder="Enter message here... (/? to get help)"
-          @keyup.enter="onSendMessage(channel.id)"
-          :disabled="loadingMsg && loadingMsg[channel.id]"
-        />
-        <button
-          :disabled="loadingMsg && loadingMsg[channel.id]"
-          type="button"
-          @click="onSendMessage(channel.id)"
-          class="btn-send"
-        >
-          <i class="fas fa-paper-plane" />
-        </button>
+        <div class="message-box__footer">
+          <input
+            v-model="newMsgToSend[channel.id]"
+            class="input-chat"
+            type="text"
+            placeholder="Enter message here... (/? to get help)"
+            @keyup.enter="onSendMessage(channel.id)"
+            :disabled="loadingMsg && loadingMsg[channel.id]"
+          />
+          <button
+            :disabled="loadingMsg && loadingMsg[channel.id]"
+            type="button"
+            @click="onSendMessage(channel.id)"
+            class="btn-send"
+          >
+            <i class="fas fa-paper-plane" />
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -94,14 +94,14 @@ const actions = {
     actionMiddleware(action, store);
   },
   getUsers(store, payload) {
-    const { nextErr, nextSuccess, limit = 100 } = payload;
+    const { nextErr, nextSuccess, limit = -1 } = payload;
     const action = {
       beforeCallType: "GET_USERS_REQUEST",
       successType: "GET_USERS_SUCCESS",
       errorType: "GET_USERS_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: `users?_sort=createdAt:DESC&_limit=${limit}`
+      uri: `users?_sort=fullname:DESC&_limit=${limit}`
     };
     actionMiddleware(action, store);
   },

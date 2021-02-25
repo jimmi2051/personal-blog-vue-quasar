@@ -16,111 +16,41 @@
         </q-tooltip>
       </button>
     </div>
-    <div
-      v-for="(channel, idx) in messagesOpen"
-      :key="channel.id"
-      class="message-box is-show"
-      :style="`right: ${(idx + 1) * 315 + 15}px`"
-    >
-      <div class="message-box__header">
-        <q-avatar>
-          <img
-            src="https://cdn.quasar.dev/img/avatar1.jpg"
-            class="avatar-img"
-          />
-        </q-avatar>
-        <p class="name-user">{{ channel.channel }}</p>
-        <button
-          @click="handleCloseMessage(channel.id)"
-          type="button"
-          class="btn-remove"
-        >
-          <i class="fa fa-times" />
-        </button>
-      </div>
-      <div class="message-box__body" id="message-box__body">
-        <div v-if="!isLoading">
-          <div
-            @click="limit = -1"
-            v-if="
-              limit !== -1 &&
-                messagesFormatVer2[channel.id] &&
-                messagesFormatVer2[channel.id].length > 99
-            "
-            class="message-box__readmore"
-          >
-            View all messages
-          </div>
-          <div
-            v-for="(message, index) in messagesFormatVer2[channel.id]"
-            :key="index"
-            style="width: 100%; max-width: 400px"
-          >
-            <q-chat-message
-              :name="message.user ? message.user : ''"
-              :text="[message.message]"
-              :sent="message.sent ? true : false"
-              :text-color="message.sent ? 'black' : 'white'"
-              :bg-color="message.sent ? 'amber-7' : 'light-blue'"
-              :stamp="message.timeDuration"
-            />
-          </div>
-        </div>
-        <div v-else>
-          <q-inner-loading :showing="true">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </div>
-      </div>
-      <div class="message-box__footer">
-        <input
-          v-model="newMsgToSend[channel.id]"
-          class="input-chat"
-          type="text"
-          placeholder="Enter message here... (/? to get help)"
-          @keyup.enter="onSendMessage(channel.id)"
-          :disabled="isLoading"
-        />
-        <button
-          :disabled="isLoading"
-          type="button"
-          @click="onSendMessage(channel.id)"
-          class="btn-send"
-        >
-          <i class="fas fa-paper-plane" />
-        </button>
-      </div>
-    </div>
 
     <div v-if="isShow" class="message-box is-show">
-      <div class="message-box__header" @click="isShow = false">
-        <p>Contact</p>
+      <div class="message-box__header">
+        <input
+          v-if="isSearchUser"
+          v-model="keySearch"
+          placeholder="Enter keyword here ..."
+        />
+
+        <div class="block-name" v-else>
+          <q-avatar>
+            <img
+              class="avatar-img"
+              :src="require(`@/assets/images/Icons/chat.png`)"
+            />
+          </q-avatar>
+          <p class="name-user">Contact</p>
+        </div>
+        <i class="fas fa-times custom-i" @click="isShow = false" />
         <i class="fas fa-list custom-i" />
         <i class="fas fa-video custom-i" />
-        <i class="fas fa-search custom-i" />
+        <i
+          class="fas fa-search custom-i"
+          @click="isSearchUser = !isSearchUser"
+        />
       </div>
       <div class="message-box__users">
         <ul class="list-users">
-          <li @click="handleOpenMessage(CHANNEL, 'All Members')">
-            <q-avatar size="40px">
-              <img
-                src="https://cdn3.iconfinder.com/data/icons/online-user-1/120/group-2-512.png"
-              />
-            </q-avatar>
-            <p>
-              All Members
-            </p>
-            <i class="fas fa-circle green" />
-          </li>
           <li
-            v-for="user in store.users"
+            v-for="user in usersWithSort"
             :key="user.id"
             @click="handleOpenMessage(user.id, user.fullname || 'Anonymous')"
           >
             <q-avatar size="40px">
-              <img
-                src="https://icons-for-free.com/iconfiles/png/512/business+costume+male+man+office+user+icon-1320196264882354682.png"
-              />
+              <img :src="require(`@/assets/images/Icons/user.png`)" />
             </q-avatar>
             <p>
               {{ user.fullname || "Anonymous" }}
@@ -134,7 +64,95 @@
             />
             <i v-else class="fas fa-circle " />
           </li>
+          <li @click="handleOpenMessage(CHANNEL, 'All Members')">
+            <q-avatar size="40px">
+              <img :src="require(`@/assets/images/Icons/users.jpg`)" />
+            </q-avatar>
+            <p>
+              All Members
+            </p>
+            <i class="fas fa-circle green" />
+          </li>
         </ul>
+      </div>
+    </div>
+
+    <div
+      v-for="(channel, idx) in messagesOpen"
+      :key="channel.id"
+      class="message-box is-show"
+      :style="`right: ${(idx + 1) * 315 + 15}px`"
+    >
+      <div class="message-box__header">
+        <div class="block-name">
+          <q-avatar>
+            <img
+              class="avatar-img"
+              :src="require(`@/assets/images/Icons/user.png`)"
+            />
+          </q-avatar>
+          <p class="name-user">{{ channel.channel }}</p>
+        </div>
+        <i
+          class="fas fa-times custom-i"
+          @click="handleCloseMessage(channel.id)"
+        />
+        <i class="fas fa-list custom-i" />
+        <i class="fas fa-video custom-i" />
+      </div>
+      <div class="message-box__body" id="message-box__body">
+        <div v-if="loadingMsg && loadingMsg[channel.id]">
+          <q-inner-loading :showing="true">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
+        </div>
+        <div v-else>
+          <!-- <div
+            @click="handleViewAllMessages(channel.id)"
+            v-if="
+              messagesFormat[channel.id] &&
+                messagesFormat[channel.id].length === 100
+            "
+            class="message-box__readmore"
+          >
+            View all messages
+          </div> -->
+          <div
+            v-for="(message, index) in messagesFormat[channel.id]"
+            :key="index"
+            style="width: 100%; max-width: 400px"
+          >
+            <q-chat-message
+              :name="message.user ? message.user : ''"
+              :sent="message.sent ? true : false"
+              :text-color="message.sent ? 'black' : 'white'"
+              :bg-color="message.sent ? 'amber-7' : 'light-blue'"
+              :stamp="message.timeDuration"
+            >
+              <VueMarkdown>
+                {{ message.message }}
+              </VueMarkdown>
+            </q-chat-message>
+          </div>
+        </div>
+      </div>
+      <div class="message-box__footer">
+        <input
+          v-model="newMsgToSend[channel.id]"
+          class="input-chat"
+          type="text"
+          placeholder="Enter message here... (/? to get help)"
+          @keyup.enter="onSendMessage(channel.id)"
+          :disabled="loadingMsg && loadingMsg[channel.id]"
+        />
+        <button
+          :disabled="loadingMsg && loadingMsg[channel.id]"
+          type="button"
+          @click="onSendMessage(channel.id)"
+          class="btn-send"
+        >
+          <i class="fas fa-paper-plane" />
+        </button>
       </div>
     </div>
   </div>
@@ -145,9 +163,10 @@ import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
 import { processStamp } from "utils/Helpers";
+import VueMarkdown from "vue-markdown";
 const API_URL = process.env.VUE_APP_API_URL;
 // Enable pusher logging - don't include this in production
-Pusher.logToConsole = true;
+Pusher.logToConsole = false;
 const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
   cluster: "ap1"
 });
@@ -165,6 +184,9 @@ function mapStateToProps(state) {
 }
 
 export default {
+  components: {
+    VueMarkdown
+  },
   created: function() {
     if (this.store.userProfile.isLogin) {
       this.handleGetUsers();
@@ -180,17 +202,21 @@ export default {
       isShow: false,
       users: [],
       activeBot: true,
-      limit: 100,
+      limit: -1,
       isLoading: true,
       messagesOpen: [],
       newMessages: {},
       newMsgToSend: {},
-      CHANNEL
+      CHANNEL,
+      loadingMsg: {},
+      keySearch: "",
+      isSearchUser: false
     };
   },
   methods: {
     ...mapActions("Message", ["getMessageList"]),
     ...mapActions("User", ["getUsers"]),
+
     handleOpenMessage(id, channel) {
       const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
       if (idx > -1) {
@@ -205,6 +231,7 @@ export default {
         }
       }
     },
+
     handleCloseMessage(id) {
       const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
       if (idx > -1) {
@@ -212,6 +239,7 @@ export default {
         this.messagesOpen.splice(idx, 1);
       }
     },
+
     handleGetUsers() {
       let payload = {
         nextErr: err => {
@@ -225,6 +253,7 @@ export default {
       };
       this.getUsers(payload);
     },
+
     handlePushMessage(channel, message, type = 0) {
       this.newMsgToSend[channel] = "";
       if (type === 0) {
@@ -248,6 +277,7 @@ export default {
       }
       this.newMessages = { ...this.newMessages };
     },
+
     onSendMessage(channelId) {
       // Get ID if empty will init with name & save to local storage
       const id = this.store.userProfile.id;
@@ -345,6 +375,7 @@ export default {
         }
       });
     },
+
     showMessage() {
       if (!this.store.userProfile.isLogin) {
         this.$q.notify({
@@ -359,10 +390,11 @@ export default {
       } else {
         this.isShow = true;
       }
-      this.handleGetUsers();
     },
 
     handleGetMessages(channel, limit) {
+      this.loadingMsg[channel] = true;
+      this.isLoading = true;
       let channelA;
       let channelB;
       if (channel === CHANNEL) {
@@ -371,14 +403,15 @@ export default {
         channelA = channel + this.store.userProfile.id;
         channelB = this.store.userProfile.id + channel;
       }
-      this.isLoading = true;
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
+          this.loadingMsg[channel] = false;
         },
         nextSuccess: response => {
           this.isLoading = false;
+          this.loadingMsg[channel] = false;
           if (response && isArray(response)) {
             const id = this.store.userProfile.id;
             let tempData = [...response];
@@ -455,10 +488,15 @@ export default {
         this.handleGetMessages(channelId, this.limit);
       }
     },
+
     handleRemoveListen(channelId) {
-      const channel = this.store.userProfile.id + channelId;
+      let channel = this.store.userProfile.id + channelId;
+      if (channelId === CHANNEL) {
+        channel = CHANNEL;
+      }
       pusherMessage.unsubscribe(channel);
     },
+
     iniCountUsers(userId, userName) {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
@@ -486,20 +524,17 @@ export default {
         const index = this.users.findIndex(user => user.id === member.id);
         this.users.splice(index, 1);
       });
+    },
+    handleViewAllMessages(channelId) {
+      this.handleGetMessages(channelId, -1);
     }
   },
   computed: {
     ...mapState({
       store: mapStateToProps
     }),
+
     messagesFormat() {
-      let result = this.messages.map(message => {
-        message.timeDuration = processStamp(message.createdAt);
-        return message;
-      });
-      return result;
-    },
-    messagesFormatVer2() {
       const result = {};
       for (let key in this.newMessages) {
         result[key] = this.newMessages[key].map(message => {
@@ -508,12 +543,17 @@ export default {
         });
       }
       return result;
+    },
+    usersWithSort() {
+      return this.store.users.filter(
+        user =>
+          (user.fullname &&
+            user.fullname
+              .toLowerCase()
+              .includes(this.keySearch.toLowerCase())) ||
+          user.username.includes(this.keySearch.toLowerCase())
+      );
     }
   }
-  // watch: {
-  //   limit(newValue) {
-  //     this.handleGetMessages(newValue);
-  //   }
-  // }
 };
 </script>

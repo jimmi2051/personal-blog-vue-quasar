@@ -1,19 +1,6 @@
 <template>
   <div>
     <div
-      :class="isCalling ? `popup-calling is-show` : `popup-calling`"
-      id="app"
-    >
-      <video muted playsinline id="selfview" autoplay></video>
-      <video id="remoteview" playsinline autoplay></video>
-      <q-icon
-        color="danger"
-        class="endcall"
-        name="phone"
-        @click="endCurrentCall"
-      />
-    </div>
-    <div
       v-if="!isShow || !store.userProfile.isLogin"
       class="show-message is-show"
     >
@@ -29,7 +16,12 @@
         </q-tooltip>
       </button>
     </div>
-    <div v-else class="message-box is-show">
+    <div
+      v-for="(channel, idx) in messagesOpen"
+      :key="channel.id"
+      class="message-box is-show"
+      :style="`right: ${(idx + 1) * 315 + 15}px`"
+    >
       <div class="message-box__header">
         <q-avatar>
           <img
@@ -37,8 +29,12 @@
             class="avatar-img"
           />
         </q-avatar>
-        <p class="name-user">{{ store.userProfile.fullname }}</p>
-        <button @click="isShow = false" type="button" class="btn-remove">
+        <p class="name-user">{{ channel.channel }}</p>
+        <button
+          @click="handleCloseMessage(channel.id)"
+          type="button"
+          class="btn-remove"
+        >
           <i class="fa fa-times" />
         </button>
       </div>
@@ -46,13 +42,17 @@
         <div v-if="!isLoading">
           <div
             @click="limit = -1"
+            v-if="
+              limit !== -1 &&
+                messagesFormatVer2[channel.id] &&
+                messagesFormatVer2[channel.id].length > 99
+            "
             class="message-box__readmore"
-            v-if="limit !== -1 && this.messages.length === 100"
           >
             View all messages
           </div>
           <div
-            v-for="(message, index) in messagesFormat"
+            v-for="(message, index) in messagesFormatVer2[channel.id]"
             :key="index"
             style="width: 100%; max-width: 400px"
           >
@@ -74,25 +74,26 @@
       </div>
       <div class="message-box__footer">
         <input
-          v-model="msgToSend"
+          v-model="newMsgToSend[channel.id]"
           class="input-chat"
           type="text"
           placeholder="Enter message here... (/? to get help)"
-          @keyup.enter="onSendMessage"
+          @keyup.enter="onSendMessage(channel.id)"
           :disabled="isLoading"
         />
         <button
           :disabled="isLoading"
           type="button"
-          @click="onSendMessage"
+          @click="onSendMessage(channel.id)"
           class="btn-send"
         >
           <i class="fas fa-paper-plane" />
         </button>
       </div>
     </div>
-    <div v-if="isShow" class="message-box is-show" style="left: 15px;">
-      <div class="message-box__header">
+
+    <div v-if="isShow" class="message-box is-show">
+      <div class="message-box__header" @click="isShow = false">
         <p>Contact</p>
         <i class="fas fa-list custom-i" />
         <i class="fas fa-video custom-i" />
@@ -100,7 +101,22 @@
       </div>
       <div class="message-box__users">
         <ul class="list-users">
-          <li v-for="user in store.users" :key="user.id">
+          <li @click="handleOpenMessage(CHANNEL, 'All Members')">
+            <q-avatar size="40px">
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/online-user-1/120/group-2-512.png"
+              />
+            </q-avatar>
+            <p>
+              All Members
+            </p>
+            <i class="fas fa-circle green" />
+          </li>
+          <li
+            v-for="user in store.users"
+            :key="user.id"
+            @click="handleOpenMessage(user.id, user.fullname || 'Anonymous')"
+          >
             <q-avatar size="40px">
               <img
                 src="https://icons-for-free.com/iconfiles/png/512/business+costume+male+man+office+user+icon-1320196264882354682.png"
@@ -121,23 +137,6 @@
         </ul>
       </div>
     </div>
-    <div v-if="isShow" class="call-video">
-      <q-list bordered v-if="users.length" style="border-radius: 15px">
-        <q-item
-          v-for="user in users"
-          :key="user.id"
-          clickable
-          v-ripple
-          @click="callUser(user.id)"
-          style="padding-left: 15px; padding-right: 15px; border-radius: 15px"
-        >
-          <q-item-section>{{ user.info.name }}</q-item-section>
-          <q-item-section avatar>
-            <q-icon color="primary" name="phone" />
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
   </div>
 </template>
 <script>
@@ -145,15 +144,13 @@ import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
-import {
-  processStamp,
-  GetRTCIceCandidate,
-  GetRTCPeerConnection,
-  GetRTCSessionDescription,
-  getCam
-} from "utils/Helpers";
+import { processStamp } from "utils/Helpers";
 const API_URL = process.env.VUE_APP_API_URL;
-
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = true;
+const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
+  cluster: "ap1"
+});
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Message.messageList.data;
@@ -170,78 +167,97 @@ function mapStateToProps(state) {
 export default {
   created: function() {
     if (this.store.userProfile.isLogin) {
-      this.initMessageBox();
-      const id = this.store.userProfile.id;
-      const name = this.store.userProfile.fullname;
-      this.id = id;
-      this.name = name;
-      this.initCallBox(id, name);
       this.handleGetUsers();
     }
+    const userId = this.store.userProfile.id;
+    const userName = this.store.userProfile.fullName;
+    this.iniCountUsers(userId, userName);
   },
   data() {
     return {
       messages: [],
       msgToSend: "",
       isShow: false,
-      prompt: false,
-      name: "",
-      id: "",
       users: [],
-      usersOnline: 0,
-      channcel: "",
-      room: "",
-      localUserMedia: "",
-      isCalling: false,
-      typeInit: 1,
-      caller: null,
       activeBot: true,
-      isInit: false,
       limit: 100,
-      isLoading: true
+      isLoading: true,
+      messagesOpen: [],
+      newMessages: {},
+      newMsgToSend: {},
+      CHANNEL
     };
   },
   methods: {
     ...mapActions("Message", ["getMessageList"]),
     ...mapActions("User", ["getUsers"]),
+    handleOpenMessage(id, channel) {
+      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
+      if (idx > -1) {
+        this.handleRemoveListen(id);
+        this.messagesOpen.splice(idx, 1);
+      } else {
+        this.handleAddListen(id);
+        this.messagesOpen.push({ id, channel });
+        this.handleGetMessages(id, this.limit);
+        if (this.messagesOpen.length > 4) {
+          this.messagesOpen.splice(0, 1);
+        }
+      }
+    },
+    handleCloseMessage(id) {
+      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
+      if (idx > -1) {
+        this.handleRemoveListen(id);
+        this.messagesOpen.splice(idx, 1);
+      }
+    },
     handleGetUsers() {
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
         },
-        nextSuccess: response => {
+        nextSuccess: () => {
           this.isLoading = false;
-          console.log(response);
         },
         limit: this.limit
       };
       this.getUsers(payload);
     },
-    handlePushMessage(message, type = 0) {
-      this.msgToSend = "";
+    handlePushMessage(channel, message, type = 0) {
+      this.newMsgToSend[channel] = "";
       if (type === 0) {
-        if (this.messages.length > 0) {
-          const lastestMsg = this.messages[this.messages.length - 1];
-          if (lastestMsg.id === message.id) {
+        if (
+          this.newMessages[channel].length &&
+          this.newMessages[channel].length > 0
+        ) {
+          const length = this.newMessages[channel].length;
+          const lastestMsg = this.newMessages[channel][length - 1];
+          if (lastestMsg && lastestMsg.id === message.id) {
             delete message.user;
           }
         }
-        this.messages.push(message);
+        this.newMessages[channel].push(message);
       } else {
-        const firstMsg = this.messages[0];
+        const firstMsg = this.newMessages[channel][0];
         if (firstMsg.id === message.id) {
           delete firstMsg.user;
         }
-        this.messages.unshift(message);
+        this.newMessages[channel].unshift(message);
       }
+      this.newMessages = { ...this.newMessages };
     },
-    onSendMessage() {
+    onSendMessage(channelId) {
       // Get ID if empty will init with name & save to local storage
       const id = this.store.userProfile.id;
+      let channel = id + channelId;
+      if (channelId === CHANNEL) {
+        channel = CHANNEL;
+      }
       const name = this.store.userProfile.fullname;
       // Case Msg Empty Return
-      if (this.msgToSend === "") {
+      if (this.newMsgToSend[channelId] === "") {
         this.$q.notify({
           message: "Oops! Sorry, please enter your message.",
           color: "light-blue",
@@ -250,7 +266,7 @@ export default {
         return;
       }
       // Case get help
-      if (this.msgToSend === "/?") {
+      if (this.newMsgToSend[channelId] === "/?") {
         const messageEnableBot = {
           id,
           user: "Me",
@@ -265,12 +281,12 @@ export default {
           sent: true,
           createdAt: Date.now()
         };
-        this.handlePushMessage(messageEnableBot);
-        this.handlePushMessage(messageDisableBot);
+        this.handlePushMessage(channelId, messageEnableBot);
+        this.handlePushMessage(channelId, messageDisableBot);
         return;
       }
       // Case enable bot
-      if (this.msgToSend === "/bot on") {
+      if (this.newMsgToSend[channelId] === "/bot on") {
         this.activeBot = true;
         const messageEnableBot = {
           id,
@@ -279,11 +295,11 @@ export default {
           sent: true,
           createdAt: Date.now()
         };
-        this.handlePushMessage(messageEnableBot);
+        this.handlePushMessage(channelId, messageEnableBot);
         return;
       }
       // Case disable bot
-      if (this.msgToSend === "/bot off") {
+      if (this.newMsgToSend[channelId] === "/bot off") {
         this.activeBot = false;
         const messageDisableBot = {
           id,
@@ -292,18 +308,18 @@ export default {
           sent: true,
           createdAt: Date.now()
         };
-        this.handlePushMessage(messageDisableBot);
+        this.handlePushMessage(channelId, messageDisableBot);
         return;
       }
       // Case normal
       const message = {
         id,
         user: "Me",
-        message: this.msgToSend,
+        message: this.newMsgToSend[channelId],
         sent: true,
         createdAt: Date.now()
       };
-      this.handlePushMessage(message);
+      this.handlePushMessage(channelId, message);
 
       const payload = {
         uri: "send-message",
@@ -311,7 +327,7 @@ export default {
           id,
           user: name,
           message: message.message,
-          channel: CHANNEL,
+          channel: channel,
           activeBot: this.activeBot
         },
         opt: {
@@ -329,7 +345,6 @@ export default {
         }
       });
     },
-
     showMessage() {
       if (!this.store.userProfile.isLogin) {
         this.$q.notify({
@@ -343,105 +358,20 @@ export default {
         }
       } else {
         this.isShow = true;
-        if (this.messages.length === 0) {
-          this.handleGetMessages(this.limit);
-        }
-        if (!this.isInit) {
-          this.initMessageBox();
-          const id = this.store.userProfile.id;
-          const name = this.store.userProfile.fullname;
-          this.id = id;
-          this.name = name;
-          this.initCallBox(id, name);
-        }
       }
+      this.handleGetUsers();
     },
 
-    callUser(user) {
-      this.isCalling = true;
-      getCam()
-        .then(stream => {
-          if (window.URL) {
-            // document.getElementById("selfview").srcObject = {};
-            document.getElementById("selfview").srcObject = stream;
-          } else {
-            // document.getElementById("selfview").src = "";
-            document.getElementById("selfview").src = stream;
-          }
-          this.caller.addStream(stream);
-          this.localUserMedia = stream;
-          this.caller.createOffer().then(desc => {
-            this.caller.setLocalDescription(new RTCSessionDescription(desc));
-            this.channel.trigger("client-sdp", {
-              sdp: desc,
-              room: user,
-              from: this.id
-            });
-            this.room = user;
-          });
-        })
-        .catch(error => {
-          this.$q.notify({
-            message: error,
-            color: "light-blue",
-            icon: "announcement"
-          });
-          this.isCalling = false;
-          this.endCall();
-        });
-    },
-
-    prepareCaller() {
-      //Initializing a peer connection
-      this.caller = new window.RTCPeerConnection();
-      //Listen for ICE Candidates and send them to remote peers
-      this.caller.onicecandidate = evt => {
-        if (!evt.candidate) return;
-        console.log("onicecandidate called");
-        this.onIceCandidate(this.caller, evt);
-      };
-      //onaddstream handler to receive remote feed and show in remoteview video element
-      this.caller.onaddstream = evt => {
-        if (window.URL) {
-          // document.getElementById("remoteview").srcObject = {};
-          document.getElementById("remoteview").srcObject = evt.stream;
-        } else {
-          // document.getElementById("remoteview").src = "";
-          document.getElementById("remoteview").src = evt.stream;
-        }
-      };
-    },
-
-    endCall() {
-      this.isCalling = false;
-      this.room = undefined;
-      this.caller.close();
-      for (let track of this.localUserMedia.getTracks()) {
-        track.stop();
+    handleGetMessages(channel, limit) {
+      let channelA;
+      let channelB;
+      if (channel === CHANNEL) {
+        channelA = channelB = channel;
+      } else {
+        channelA = channel + this.store.userProfile.id;
+        channelB = this.store.userProfile.id + channel;
       }
-      this.prepareCaller();
-    },
-
-    onIceCandidate(peer, evt) {
-      if (evt.candidate) {
-        this.channel.trigger("client-candidate", {
-          candidate: evt.candidate,
-          room: this.room
-        });
-      }
-    },
-
-    endCurrentCall() {
-      this.channel.trigger("client-endcall", {
-        room: this.room
-      });
-
-      this.endCall();
-    },
-
-    handleGetMessages(limit) {
       this.isLoading = true;
-      // this.messages = [];
       let payload = {
         nextErr: err => {
           console.log("[ERROR] " + err);
@@ -452,8 +382,11 @@ export default {
           if (response && isArray(response)) {
             const id = this.store.userProfile.id;
             let tempData = [...response];
-            if (this.messages.length > 0) {
-              tempData = tempData.slice(this.messages.length);
+            if (
+              this.newMessages[channel] &&
+              this.newMessages[channel].length > 0
+            ) {
+              tempData = tempData.slice(this.newMessages[channel].length);
               tempData.forEach(message => {
                 const parseMessage = {
                   id: message.senderId,
@@ -462,9 +395,10 @@ export default {
                   sent: message.senderId === id,
                   createdAt: message.createdAt
                 };
-                this.handlePushMessage(parseMessage, 1);
+                this.handlePushMessage(channel, parseMessage, 1);
               });
             } else {
+              this.newMessages[channel] = [];
               tempData.reverse().forEach(message => {
                 const parseMessage = {
                   id: message.senderId,
@@ -473,33 +407,35 @@ export default {
                   sent: message.senderId === id,
                   createdAt: message.createdAt
                 };
-                this.handlePushMessage(parseMessage);
+                this.handlePushMessage(channel, parseMessage);
               });
             }
           }
         },
-        limit
+        limit,
+        channelA,
+        channelB
       };
       this.getMessageList(payload);
     },
 
-    initMessageBox() {
-      // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
-      const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
-        cluster: "ap1"
-      });
-      const channelMessage = pusherMessage.subscribe("deftnt-channel");
+    handleAddListen(channelId) {
+      let channel = this.store.userProfile.id + channelId;
+      if (channelId === CHANNEL) {
+        channel = CHANNEL;
+      }
+      const channelMessage = pusherMessage.subscribe(channel);
       channelMessage.bind("chat-message", data => {
         const id = this.store.userProfile.id;
         if (id !== data.id) {
-          this.handlePushMessage(data);
+          this.handlePushMessage(channelId, data);
           if (Notification.permission === "granted") {
             navigator.serviceWorker.getRegistration().then(reg => {
               let name = data.user;
               if (!name) {
-                name = this.messages.find(message => message.id === data.id)
-                  .user;
+                name = this.newMessages[channelId].find(
+                  message => message.id === data.id
+                ).user;
               }
               const options = {
                 body: `${name}: ${data.message}`,
@@ -514,24 +450,26 @@ export default {
           }
         }
       });
+
       if (this.messages.length === 0) {
-        this.handleGetMessages(this.limit);
+        this.handleGetMessages(channelId, this.limit);
       }
     },
-
-    initCallBox(userId, userName) {
+    handleRemoveListen(channelId) {
+      const channel = this.store.userProfile.id + channelId;
+      pusherMessage.unsubscribe(channel);
+    },
+    iniCountUsers(userId, userName) {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
         encrypted: true,
         authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
       });
-
       const channel = pusher.subscribe("presence-videocall");
+
       channel.bind("pusher:subscription_succeeded", members => {
         //set the member count
         this.usersOnline = members.count;
-        this.id = channel.members.me.id;
-
         members.each(member => {
           if (member.id != channel.members.me.id) {
             this.users.push(member);
@@ -540,97 +478,14 @@ export default {
       });
 
       channel.bind("pusher:member_added", member => {
-        console.log("addd ", member);
         this.users.push(member);
-        console.log("this ==>", this.users);
       });
 
       channel.bind("pusher:member_removed", member => {
         // for remove member from list:
         const index = this.users.findIndex(user => user.id === member.id);
         this.users.splice(index, 1);
-        if (member.id == this.room) {
-          this.endCall();
-        }
       });
-      this.channel = channel;
-      GetRTCIceCandidate();
-      GetRTCPeerConnection();
-      GetRTCSessionDescription();
-      this.prepareCaller();
-
-      channel.bind("client-candidate", async msg => {
-        if (msg.room == this.room) {
-          await this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
-        }
-      });
-      channel.bind("client-endcall", msg => {
-        if (msg.room == this.room) {
-          this.endCall();
-          this.isCalling = false;
-        }
-      });
-      channel.bind("client-sdp", msg => {
-        if (msg.room == this.id) {
-          const answer = confirm(
-            "You have a call from: " + msg.from + "Would you like to answer?"
-          );
-          if (!answer) {
-            return channel.trigger("client-reject", {
-              room: msg.room,
-              rejected: this.id
-            });
-          }
-          this.isCalling = true;
-          this.room = msg.room;
-          getCam()
-            .then(stream => {
-              this.localUserMedia = stream;
-              if (window.URL) {
-                // document.getElementById("selfview").srcObject = {};
-                document.getElementById("selfview").srcObject = stream;
-              } else {
-                // document.getElementById("selfview").src = "";
-                document.getElementById("selfview").src = stream;
-              }
-              this.caller.addStream(stream);
-              var sessionDesc = new RTCSessionDescription(msg.sdp);
-              this.caller.setRemoteDescription(sessionDesc);
-              this.caller.createAnswer().then(sdp => {
-                this.caller.setLocalDescription(new RTCSessionDescription(sdp));
-                channel.trigger("client-answer", {
-                  sdp: sdp,
-                  room: this.room
-                });
-              });
-            })
-            .catch(error => {
-              this.$q.notify({
-                message: error,
-                color: "light-blue",
-                icon: "announcement"
-              });
-              this.isCalling = false;
-            });
-        }
-      });
-      channel.bind("client-answer", answer => {
-        if (answer.room == this.room) {
-          console.log("answer received");
-          this.caller.setRemoteDescription(
-            new RTCSessionDescription(answer.sdp)
-          );
-        }
-      });
-
-      channel.bind("client-reject", answer => {
-        if (answer.room == this.room) {
-          console.log("Call declined");
-          alert("call to " + answer.rejected + "was politely declined");
-          this.endCall();
-        }
-      });
-      this.isInit = true;
     }
   },
   computed: {
@@ -643,12 +498,22 @@ export default {
         return message;
       });
       return result;
-    }
-  },
-  watch: {
-    limit(newValue) {
-      this.handleGetMessages(newValue);
+    },
+    messagesFormatVer2() {
+      const result = {};
+      for (let key in this.newMessages) {
+        result[key] = this.newMessages[key].map(message => {
+          message.timeDuration = processStamp(message.createdAt);
+          return message;
+        });
+      }
+      return result;
     }
   }
+  // watch: {
+  //   limit(newValue) {
+  //     this.handleGetMessages(newValue);
+  //   }
+  // }
 };
 </script>

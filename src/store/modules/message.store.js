@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* User.store.js */
 import actionMiddleware from "store/actionMiddleware";
+import { CHANNEL } from "utils/Constants";
 const initialState = {
   messageList: {
     data: [],
@@ -23,14 +24,20 @@ const getters = {
 const actions = {
   /* Example Call API using Fetch */
   getMessageList(store, payload) {
-    const { nextErr, nextSuccess, limit = 100 } = payload;
+    const {
+      nextErr,
+      nextSuccess,
+      limit = 100,
+      channelA = CHANNEL,
+      channelB = ""
+    } = payload;
     const action = {
       beforeCallType: "GET_MESSAGE_REQUEST",
       successType: "GET_MESSAGE_SUCCESS",
       errorType: "GET_MESSAGE_ERROR",
       afterSuccess: nextSuccess,
       afterError: nextErr,
-      uri: `messages?_sort=createdAt:DESC&_limit=${limit}`
+      uri: `messages?_sort=createdAt:DESC&_limit=${limit}&channel_in=${channelA}&channel_in=${channelB}`
     };
     actionMiddleware(action, store);
   }

@@ -57,8 +57,8 @@
               </p>
               <i
                 v-if="
-                  users.findIndex((i) => i.id === user.id) > -1 ||
-                  user.id === store.userProfile.id
+                  users.findIndex(i => i.id === user.id) > -1 ||
+                    user.id === store.userProfile.id
                 "
                 class="fas fa-circle green"
               />
@@ -154,8 +154,32 @@
         </div>
       </div>
     </div>
+    <div>
+      <h4>Local video</h4>
+      <div id="me"></div>
+      <h4>Remote video</h4>
+      <div id="remote-container"></div>
+    </div>
   </div>
 </template>
+<style>
+#me {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  display: block;
+}
+#me video {
+  position: relative !important;
+}
+#remote-container {
+  display: flex;
+}
+#remote-container video {
+  height: auto;
+  position: relative !important;
+}
+</style>
 <script>
 import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
@@ -163,11 +187,26 @@ import FetchApi from "utils/FetchApi";
 import { CHANNEL } from "utils/Constants";
 import { processStamp } from "utils/Helpers";
 import VueMarkdown from "vue-markdown";
+import AgoraRTC from "agora-rtc-sdk";
+import { v4 as uuidv4 } from "uuid";
+const {
+  RtcTokenBuilder,
+  // RtmTokenBuilder,
+  RtcRole
+  // RtmRole
+} = require("agora-access-token");
+const role = RtcRole.PUBLISHER;
+const expirationTimeInSeconds = 3600;
+
+const currentTimestamp = Math.floor(Date.now() / 1000);
+
+const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
 const API_URL = process.env.VUE_APP_API_URL;
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = false;
 const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
-  cluster: "ap1",
+  cluster: "ap1"
 });
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
@@ -178,11 +217,112 @@ function mapStateToProps(state) {
     loading: state.Message.messageList.loading,
     messageList: data,
     userProfile,
-    users,
+    users
   };
 }
+let options = {
+  appid: "422854541c4e4aff9ebb89e8352ccdc7",
+  channel: "test",
+  uid: uuidv4(),
+  certificate: "f1436f246ba244a68235c7da09c5338a"
+};
+const token = RtcTokenBuilder.buildTokenWithUid(
+  options.appid,
+  options.certificate,
+  options.channel,
+  options.uid,
+  role,
+  privilegeExpiredTs
+);
+let localStream = AgoraRTC.createStream({
+  audio: true,
+  video: true
+});
 
+// Handle errors.
+let handleError = function(err) {
+  console.log("Error: ", err);
+};
+// Add video streams to the container.
+function addVideoStream(elementId) {
+  const remoteContainer = document.getElementById("remote-container");
+  // Creates a new div for every stream
+  let streamDiv = document.createElement("div");
+  // Assigns the elementId to the div.
+  streamDiv.id = elementId;
+  // Takes care of the lateral inversion
+  streamDiv.style.transform = "rotateY(180deg)";
+  // Adds the div to the container.
+  remoteContainer.appendChild(streamDiv);
+}
+
+// Remove the video stream from the container.
+function removeVideoStream(elementId) {
+  let remoteDiv = document.getElementById(elementId);
+  if (remoteDiv) remoteDiv.parentNode.removeChild(remoteDiv);
+}
 export default {
+  components: {
+    VueMarkdown
+  },
+  created: async function() {
+    if (this.store.userProfile.isLogin) {
+      this.handleGetUsers();
+    }
+    const userId = this.store.userProfile.id;
+    const userName = this.store.userProfile.fullName;
+    this.iniCountUsers(userId, userName);
+    let client = AgoraRTC.createClient({
+      mode: "live",
+      codec: "vp8"
+    });
+
+    client.init(options.appid);
+    // client.setClientRole("Admin");
+    // Join a channel
+    client.join(
+      token,
+      options.channel,
+      options.uid,
+      uid => {
+        // Create a local stream
+        // Initialize the local stream
+        console.log(uid);
+        localStream.init(() => {
+          // Play the local stream
+          localStream.play("me");
+          // Publish the local stream
+          client.publish(localStream, handleError);
+        }, handleError);
+        // Subscribe to the remote stream when it is published
+        client.on("stream-added", function(evt) {
+          client.subscribe(evt.stream, handleError);
+        });
+        // Play the remote stream when it is subsribed
+        client.on("stream-subscribed", function(evt) {
+          let stream = evt.stream;
+          let streamId = String(stream.getId());
+          addVideoStream(streamId);
+          stream.play(streamId);
+        });
+        // Remove the corresponding view when a remote user unpublishes.
+        client.on("stream-removed", function(evt) {
+          let stream = evt.stream;
+          let streamId = String(stream.getId());
+          stream.close();
+          removeVideoStream(streamId);
+        });
+        // Remove the corresponding view when a remote user leaves the channel.
+        client.on("peer-leave", function(evt) {
+          let stream = evt.stream;
+          let streamId = String(stream.getId());
+          stream.close();
+          removeVideoStream(streamId);
+        });
+      },
+      handleError
+    );
+  },
   data() {
     return {
       messages: [],
@@ -199,20 +339,20 @@ export default {
       loadingMsg: {},
       keySearch: "",
       isSearchUser: false,
-      isFetchUser: false,
+      isFetchUser: false
     };
   },
-  components: {
-    VueMarkdown,
-  },
-  created: function () {
-    if (this.store.userProfile.isLogin) {
-      this.handleGetUsers();
-    }
-    const userId = this.store.userProfile.id;
-    const userName = this.store.userProfile.fullName;
-    this.iniCountUsers(userId, userName);
-  },
+  // components: {
+  //   VueMarkdown,
+  // },
+  // created: function () {
+  //   if (this.store.userProfile.isLogin) {
+  //     this.handleGetUsers();
+  //   }
+  //   const userId = this.store.userProfile.id;
+  //   const userName = this.store.userProfile.fullName;
+  //   this.iniCountUsers(userId, userName);
+  // },
 
   methods: {
     ...mapActions("Message", ["getMessageList"]),
@@ -223,7 +363,7 @@ export default {
         this.handleGetUsers();
       }
 
-      const idx = this.messagesOpen.findIndex((msgOpen) => msgOpen.id === id);
+      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
       if (idx > -1) {
         this.handleRemoveListen(id);
         this.messagesOpen.splice(idx, 1);
@@ -238,7 +378,7 @@ export default {
     },
 
     handleCloseMessage(id) {
-      const idx = this.messagesOpen.findIndex((msgOpen) => msgOpen.id === id);
+      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
       if (idx > -1) {
         this.handleRemoveListen(id);
         this.messagesOpen.splice(idx, 1);
@@ -247,7 +387,7 @@ export default {
 
     handleGetUsers() {
       let payload = {
-        nextErr: (err) => {
+        nextErr: err => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
         },
@@ -255,7 +395,7 @@ export default {
           this.isLoading = false;
           this.isFetchUser = true;
         },
-        limit: this.limit,
+        limit: this.limit
       };
       this.getUsers(payload);
     },
@@ -297,7 +437,7 @@ export default {
         this.$q.notify({
           message: "Oops! Sorry, please enter your message.",
           color: "light-blue",
-          icon: "announcement",
+          icon: "announcement"
         });
         return;
       }
@@ -308,14 +448,14 @@ export default {
           user: "Me",
           message: "/bot on # Enable bot",
           sent: true,
-          createdAt: Date.now(),
+          createdAt: Date.now()
         };
         const messageDisableBot = {
           id,
           user: "Me",
           message: "/bot off # Disable bot",
           sent: true,
-          createdAt: Date.now(),
+          createdAt: Date.now()
         };
         this.handlePushMessage(channelId, messageEnableBot);
         this.handlePushMessage(channelId, messageDisableBot);
@@ -329,7 +469,7 @@ export default {
           user: "Me",
           message: "Bot have been enabled.",
           sent: true,
-          createdAt: Date.now(),
+          createdAt: Date.now()
         };
         this.handlePushMessage(channelId, messageEnableBot);
         return;
@@ -342,7 +482,7 @@ export default {
           user: "Me",
           message: "Bot have been disabled.",
           sent: true,
-          createdAt: Date.now(),
+          createdAt: Date.now()
         };
         this.handlePushMessage(channelId, messageDisableBot);
         return;
@@ -353,7 +493,7 @@ export default {
         user: "Me",
         message: this.newMsgToSend[channelId],
         sent: true,
-        createdAt: Date.now(),
+        createdAt: Date.now()
       };
       this.handlePushMessage(channelId, message);
 
@@ -364,19 +504,19 @@ export default {
           user: name,
           message: message.message,
           channel: channel,
-          activeBot: this.activeBot,
+          activeBot: this.activeBot
         },
         opt: {
-          method: "POST",
-        },
+          method: "POST"
+        }
       };
-      FetchApi(payload).then((response) => {
+      FetchApi(payload).then(response => {
         if (!response.id) {
           this.$q.notify({
             message:
               "Oops! Sorry, can't send message now. Please wait a few minutes and try again. Thanks",
             color: "light-blue",
-            icon: "announcement",
+            icon: "announcement"
           });
         }
       });
@@ -388,7 +528,7 @@ export default {
           color: "red-5",
           textColor: "white",
           icon: "warning",
-          message: "Must sign in to join the chat room.",
+          message: "Must sign in to join the chat room."
         });
         if (this.$route.path !== "/signin") {
           this.$router.push("/signin");
@@ -410,12 +550,12 @@ export default {
         channelB = this.store.userProfile.id + channel;
       }
       let payload = {
-        nextErr: (err) => {
+        nextErr: err => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
           this.loadingMsg[channel] = false;
         },
-        nextSuccess: (response) => {
+        nextSuccess: response => {
           this.isLoading = false;
           this.loadingMsg[channel] = false;
           if (response && isArray(response)) {
@@ -426,25 +566,25 @@ export default {
               this.newMessages[channel].length > 0
             ) {
               tempData = tempData.slice(this.newMessages[channel].length);
-              tempData.forEach((message) => {
+              tempData.forEach(message => {
                 const parseMessage = {
                   id: message.senderId,
                   user: message.senderId === id ? "Me" : message.senderName,
                   message: message.message,
                   sent: message.senderId === id,
-                  createdAt: message.createdAt,
+                  createdAt: message.createdAt
                 };
                 this.handlePushMessage(channel, parseMessage, 1);
               });
             } else {
               this.newMessages[channel] = [];
-              tempData.reverse().forEach((message) => {
+              tempData.reverse().forEach(message => {
                 const parseMessage = {
                   id: message.senderId,
                   user: message.senderId === id ? "Me" : message.senderName,
                   message: message.message,
                   sent: message.senderId === id,
-                  createdAt: message.createdAt,
+                  createdAt: message.createdAt
                 };
                 this.handlePushMessage(channel, parseMessage);
               });
@@ -453,7 +593,7 @@ export default {
         },
         limit,
         channelA,
-        channelB,
+        channelB
       };
       this.getMessageList(payload);
     },
@@ -464,16 +604,16 @@ export default {
         channel = CHANNEL;
       }
       const channelMessage = pusherMessage.subscribe(channel);
-      channelMessage.bind("chat-message", (data) => {
+      channelMessage.bind("chat-message", data => {
         const id = this.store.userProfile.id;
         if (id !== data.id) {
           this.handlePushMessage(channelId, data);
           if (Notification.permission === "granted") {
-            navigator.serviceWorker.getRegistration().then((reg) => {
+            navigator.serviceWorker.getRegistration().then(reg => {
               let name = data.user;
               if (!name) {
                 name = this.newMessages[channelId].find(
-                  (message) => message.id === data.id
+                  message => message.id === data.id
                 ).user;
               }
               const options = {
@@ -481,8 +621,8 @@ export default {
                 vibrate: [100, 50, 100],
                 data: {
                   dateOfArrival: Date.now(),
-                  primaryKey: 1,
-                },
+                  primaryKey: 1
+                }
               };
               reg.showNotification("Notification", options);
             });
@@ -507,43 +647,43 @@ export default {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
         encrypted: true,
-        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`,
+        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
       });
       const channel = pusher.subscribe("presence-videocall");
 
-      channel.bind("pusher:subscription_succeeded", (members) => {
+      channel.bind("pusher:subscription_succeeded", members => {
         //set the member count
         this.usersOnline = members.count;
-        members.each((member) => {
+        members.each(member => {
           if (member.id != channel.members.me.id) {
             this.users.push(member);
           }
         });
       });
 
-      channel.bind("pusher:member_added", (member) => {
+      channel.bind("pusher:member_added", member => {
         this.users.push(member);
       });
 
-      channel.bind("pusher:member_removed", (member) => {
+      channel.bind("pusher:member_removed", member => {
         // for remove member from list:
-        const index = this.users.findIndex((user) => user.id === member.id);
+        const index = this.users.findIndex(user => user.id === member.id);
         this.users.splice(index, 1);
       });
     },
     handleViewAllMessages(channelId) {
       this.handleGetMessages(channelId, -1);
-    },
+    }
   },
   computed: {
     ...mapState({
-      store: mapStateToProps,
+      store: mapStateToProps
     }),
 
     messagesFormat() {
       const result = {};
       for (let key in this.newMessages) {
-        result[key] = this.newMessages[key].map((message) => {
+        result[key] = this.newMessages[key].map(message => {
           message.timeDuration = processStamp(message.createdAt);
           return message;
         });
@@ -552,14 +692,14 @@ export default {
     },
     usersWithSort() {
       return this.store.users.filter(
-        (user) =>
+        user =>
           (user.fullname &&
             user.fullname
               .toLowerCase()
               .includes(this.keySearch.toLowerCase())) ||
           user.username.includes(this.keySearch.toLowerCase())
       );
-    },
-  },
+    }
+  }
 };
 </script>

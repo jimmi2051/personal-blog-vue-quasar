@@ -57,20 +57,18 @@
               </p>
               <i
                 v-if="
-                  users.findIndex(i => i.id === user.id) > -1 ||
-                    user.id === store.userProfile.id
+                  users.findIndex((i) => i.id === user.id) > -1 ||
+                  user.id === store.userProfile.id
                 "
                 class="fas fa-circle green"
               />
-              <i v-else class="fas fa-circle " />
+              <i v-else class="fas fa-circle" />
             </li>
             <li @click="handleOpenMessage(CHANNEL, 'All Members')">
               <q-avatar size="40px">
                 <img :src="require(`@/assets/images/Icons/users.jpg`)" />
               </q-avatar>
-              <p>
-                All Members
-              </p>
+              <p>All Members</p>
               <i class="fas fa-circle green" />
             </li>
           </ul>
@@ -169,7 +167,7 @@ const API_URL = process.env.VUE_APP_API_URL;
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = false;
 const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
-  cluster: "ap1"
+  cluster: "ap1",
 });
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
@@ -180,22 +178,11 @@ function mapStateToProps(state) {
     loading: state.Message.messageList.loading,
     messageList: data,
     userProfile,
-    users
+    users,
   };
 }
 
 export default {
-  components: {
-    VueMarkdown
-  },
-  created: function() {
-    if (this.store.userProfile.isLogin) {
-      this.handleGetUsers();
-    }
-    const userId = this.store.userProfile.id;
-    const userName = this.store.userProfile.fullName;
-    this.iniCountUsers(userId, userName);
-  },
   data() {
     return {
       messages: [],
@@ -211,15 +198,32 @@ export default {
       CHANNEL,
       loadingMsg: {},
       keySearch: "",
-      isSearchUser: false
+      isSearchUser: false,
+      isFetchUser: false,
     };
   },
+  components: {
+    VueMarkdown,
+  },
+  created: function () {
+    if (this.store.userProfile.isLogin) {
+      this.handleGetUsers();
+    }
+    const userId = this.store.userProfile.id;
+    const userName = this.store.userProfile.fullName;
+    this.iniCountUsers(userId, userName);
+  },
+
   methods: {
     ...mapActions("Message", ["getMessageList"]),
     ...mapActions("User", ["getUsers"]),
 
     handleOpenMessage(id, channel) {
-      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
+      if (!this.isFetchUser) {
+        this.handleGetUsers();
+      }
+
+      const idx = this.messagesOpen.findIndex((msgOpen) => msgOpen.id === id);
       if (idx > -1) {
         this.handleRemoveListen(id);
         this.messagesOpen.splice(idx, 1);
@@ -234,7 +238,7 @@ export default {
     },
 
     handleCloseMessage(id) {
-      const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
+      const idx = this.messagesOpen.findIndex((msgOpen) => msgOpen.id === id);
       if (idx > -1) {
         this.handleRemoveListen(id);
         this.messagesOpen.splice(idx, 1);
@@ -243,14 +247,15 @@ export default {
 
     handleGetUsers() {
       let payload = {
-        nextErr: err => {
+        nextErr: (err) => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
         },
         nextSuccess: () => {
           this.isLoading = false;
+          this.isFetchUser = true;
         },
-        limit: this.limit
+        limit: this.limit,
       };
       this.getUsers(payload);
     },
@@ -292,7 +297,7 @@ export default {
         this.$q.notify({
           message: "Oops! Sorry, please enter your message.",
           color: "light-blue",
-          icon: "announcement"
+          icon: "announcement",
         });
         return;
       }
@@ -303,14 +308,14 @@ export default {
           user: "Me",
           message: "/bot on # Enable bot",
           sent: true,
-          createdAt: Date.now()
+          createdAt: Date.now(),
         };
         const messageDisableBot = {
           id,
           user: "Me",
           message: "/bot off # Disable bot",
           sent: true,
-          createdAt: Date.now()
+          createdAt: Date.now(),
         };
         this.handlePushMessage(channelId, messageEnableBot);
         this.handlePushMessage(channelId, messageDisableBot);
@@ -324,7 +329,7 @@ export default {
           user: "Me",
           message: "Bot have been enabled.",
           sent: true,
-          createdAt: Date.now()
+          createdAt: Date.now(),
         };
         this.handlePushMessage(channelId, messageEnableBot);
         return;
@@ -337,7 +342,7 @@ export default {
           user: "Me",
           message: "Bot have been disabled.",
           sent: true,
-          createdAt: Date.now()
+          createdAt: Date.now(),
         };
         this.handlePushMessage(channelId, messageDisableBot);
         return;
@@ -348,7 +353,7 @@ export default {
         user: "Me",
         message: this.newMsgToSend[channelId],
         sent: true,
-        createdAt: Date.now()
+        createdAt: Date.now(),
       };
       this.handlePushMessage(channelId, message);
 
@@ -359,19 +364,19 @@ export default {
           user: name,
           message: message.message,
           channel: channel,
-          activeBot: this.activeBot
+          activeBot: this.activeBot,
         },
         opt: {
-          method: "POST"
-        }
+          method: "POST",
+        },
       };
-      FetchApi(payload).then(response => {
+      FetchApi(payload).then((response) => {
         if (!response.id) {
           this.$q.notify({
             message:
               "Oops! Sorry, can't send message now. Please wait a few minutes and try again. Thanks",
             color: "light-blue",
-            icon: "announcement"
+            icon: "announcement",
           });
         }
       });
@@ -383,7 +388,7 @@ export default {
           color: "red-5",
           textColor: "white",
           icon: "warning",
-          message: "Must sign in to join the chat room."
+          message: "Must sign in to join the chat room.",
         });
         if (this.$route.path !== "/signin") {
           this.$router.push("/signin");
@@ -405,12 +410,12 @@ export default {
         channelB = this.store.userProfile.id + channel;
       }
       let payload = {
-        nextErr: err => {
+        nextErr: (err) => {
           console.log("[ERROR] " + err);
           this.isLoading = false;
           this.loadingMsg[channel] = false;
         },
-        nextSuccess: response => {
+        nextSuccess: (response) => {
           this.isLoading = false;
           this.loadingMsg[channel] = false;
           if (response && isArray(response)) {
@@ -421,25 +426,25 @@ export default {
               this.newMessages[channel].length > 0
             ) {
               tempData = tempData.slice(this.newMessages[channel].length);
-              tempData.forEach(message => {
+              tempData.forEach((message) => {
                 const parseMessage = {
                   id: message.senderId,
                   user: message.senderId === id ? "Me" : message.senderName,
                   message: message.message,
                   sent: message.senderId === id,
-                  createdAt: message.createdAt
+                  createdAt: message.createdAt,
                 };
                 this.handlePushMessage(channel, parseMessage, 1);
               });
             } else {
               this.newMessages[channel] = [];
-              tempData.reverse().forEach(message => {
+              tempData.reverse().forEach((message) => {
                 const parseMessage = {
                   id: message.senderId,
                   user: message.senderId === id ? "Me" : message.senderName,
                   message: message.message,
                   sent: message.senderId === id,
-                  createdAt: message.createdAt
+                  createdAt: message.createdAt,
                 };
                 this.handlePushMessage(channel, parseMessage);
               });
@@ -448,7 +453,7 @@ export default {
         },
         limit,
         channelA,
-        channelB
+        channelB,
       };
       this.getMessageList(payload);
     },
@@ -459,16 +464,16 @@ export default {
         channel = CHANNEL;
       }
       const channelMessage = pusherMessage.subscribe(channel);
-      channelMessage.bind("chat-message", data => {
+      channelMessage.bind("chat-message", (data) => {
         const id = this.store.userProfile.id;
         if (id !== data.id) {
           this.handlePushMessage(channelId, data);
           if (Notification.permission === "granted") {
-            navigator.serviceWorker.getRegistration().then(reg => {
+            navigator.serviceWorker.getRegistration().then((reg) => {
               let name = data.user;
               if (!name) {
                 name = this.newMessages[channelId].find(
-                  message => message.id === data.id
+                  (message) => message.id === data.id
                 ).user;
               }
               const options = {
@@ -476,8 +481,8 @@ export default {
                 vibrate: [100, 50, 100],
                 data: {
                   dateOfArrival: Date.now(),
-                  primaryKey: 1
-                }
+                  primaryKey: 1,
+                },
               };
               reg.showNotification("Notification", options);
             });
@@ -502,43 +507,43 @@ export default {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
         encrypted: true,
-        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
+        authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`,
       });
       const channel = pusher.subscribe("presence-videocall");
 
-      channel.bind("pusher:subscription_succeeded", members => {
+      channel.bind("pusher:subscription_succeeded", (members) => {
         //set the member count
         this.usersOnline = members.count;
-        members.each(member => {
+        members.each((member) => {
           if (member.id != channel.members.me.id) {
             this.users.push(member);
           }
         });
       });
 
-      channel.bind("pusher:member_added", member => {
+      channel.bind("pusher:member_added", (member) => {
         this.users.push(member);
       });
 
-      channel.bind("pusher:member_removed", member => {
+      channel.bind("pusher:member_removed", (member) => {
         // for remove member from list:
-        const index = this.users.findIndex(user => user.id === member.id);
+        const index = this.users.findIndex((user) => user.id === member.id);
         this.users.splice(index, 1);
       });
     },
     handleViewAllMessages(channelId) {
       this.handleGetMessages(channelId, -1);
-    }
+    },
   },
   computed: {
     ...mapState({
-      store: mapStateToProps
+      store: mapStateToProps,
     }),
 
     messagesFormat() {
       const result = {};
       for (let key in this.newMessages) {
-        result[key] = this.newMessages[key].map(message => {
+        result[key] = this.newMessages[key].map((message) => {
           message.timeDuration = processStamp(message.createdAt);
           return message;
         });
@@ -547,14 +552,14 @@ export default {
     },
     usersWithSort() {
       return this.store.users.filter(
-        user =>
+        (user) =>
           (user.fullname &&
             user.fullname
               .toLowerCase()
               .includes(this.keySearch.toLowerCase())) ||
           user.username.includes(this.keySearch.toLowerCase())
       );
-    }
-  }
+    },
+  },
 };
 </script>

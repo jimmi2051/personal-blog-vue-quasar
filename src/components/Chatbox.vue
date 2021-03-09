@@ -36,7 +36,7 @@
           </div>
           <i class="fas fa-times custom-i" @click="isShow = false" />
           <i class="fas fa-list custom-i" />
-          <i class="fas fa-video custom-i" />
+          <i class="fas fa-video custom-i" @click="handleJoinChannelAgora" />
           <i
             class="fas fa-search custom-i"
             @click="isSearchUser = !isSearchUser"
@@ -96,7 +96,7 @@
             @click="handleCloseMessage(channel.id)"
           />
           <i class="fas fa-list custom-i" />
-          <i class="fas fa-video custom-i" />
+          <i class="fas fa-video custom-i" @click="handleJoinChannelAgora" />
         </div>
         <div class="message-box__body" id="message-box__body">
           <div v-if="loadingMsg && loadingMsg[channel.id]">
@@ -157,6 +157,7 @@
     <div>
       <h4>Local video</h4>
       <div id="me"></div>
+      <button @click="handleLeaveChannelAgora">Leave</button>
       <h4>Remote video</h4>
       <div id="remote-container"></div>
     </div>
@@ -184,17 +185,11 @@
 import Pusher from "pusher-js"; // import Pusher
 import { isArray } from "lodash";
 import FetchApi from "utils/FetchApi";
-import { CHANNEL } from "utils/Constants";
+import { CHANNEL, AGORA_APP_ID, AGORA_CERTIFICATE } from "utils/Constants";
 import { processStamp } from "utils/Helpers";
 import VueMarkdown from "vue-markdown";
 import AgoraRTC from "agora-rtc-sdk";
-import { v4 as uuidv4 } from "uuid";
-const {
-  RtcTokenBuilder,
-  // RtmTokenBuilder,
-  RtcRole
-  // RtmRole
-} = require("agora-access-token");
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 const role = RtcRole.PUBLISHER;
 const expirationTimeInSeconds = 3600;
 
@@ -208,6 +203,12 @@ Pusher.logToConsole = false;
 const pusherMessage = new Pusher("1bb3ea564162ad9f320a", {
   cluster: "ap1"
 });
+const clientAgora = AgoraRTC.createClient({
+  mode: "live",
+  codec: "vp8"
+});
+clientAgora.init(AGORA_APP_ID);
+
 import { mapActions, mapState } from "vuex";
 function mapStateToProps(state) {
   const data = state.Message.messageList.data;
@@ -220,24 +221,6 @@ function mapStateToProps(state) {
     users
   };
 }
-let options = {
-  appid: "422854541c4e4aff9ebb89e8352ccdc7",
-  channel: "test",
-  uid: uuidv4(),
-  certificate: "f1436f246ba244a68235c7da09c5338a"
-};
-const token = RtcTokenBuilder.buildTokenWithUid(
-  options.appid,
-  options.certificate,
-  options.channel,
-  options.uid,
-  role,
-  privilegeExpiredTs
-);
-let localStream = AgoraRTC.createStream({
-  audio: true,
-  video: true
-});
 
 // Handle errors.
 let handleError = function(err) {
@@ -261,6 +244,33 @@ function removeVideoStream(elementId) {
   let remoteDiv = document.getElementById(elementId);
   if (remoteDiv) remoteDiv.parentNode.removeChild(remoteDiv);
 }
+
+// Subscribe to the remote stream when it is published
+clientAgora.on("stream-added", function(evt) {
+  clientAgora.subscribe(evt.stream, handleError);
+});
+// Play the remote stream when it is subsribed
+clientAgora.on("stream-subscribed", function(evt) {
+  let stream = evt.stream;
+  let streamId = String(stream.getId());
+  addVideoStream(streamId);
+  stream.play(streamId);
+});
+// Remove the corresponding view when a remote user unpublishes.
+clientAgora.on("stream-removed", function(evt) {
+  let stream = evt.stream;
+  let streamId = String(stream.getId());
+  stream.close();
+  removeVideoStream(streamId);
+});
+// Remove the corresponding view when a remote user leaves the channel.
+clientAgora.on("peer-leave", function(evt) {
+  let stream = evt.stream;
+  let streamId = String(stream.getId());
+  stream.close();
+  removeVideoStream(streamId);
+});
+
 export default {
   components: {
     VueMarkdown
@@ -268,60 +278,11 @@ export default {
   created: async function() {
     if (this.store.userProfile.isLogin) {
       this.handleGetUsers();
+      this.handleGetTokenAgora();
+      const userId = this.store.userProfile.id;
+      const userName = this.store.userProfile.fullName;
+      this.iniCountUsers(userId, userName);
     }
-    const userId = this.store.userProfile.id;
-    const userName = this.store.userProfile.fullName;
-    this.iniCountUsers(userId, userName);
-    let client = AgoraRTC.createClient({
-      mode: "live",
-      codec: "vp8"
-    });
-
-    client.init(options.appid);
-    // client.setClientRole("Admin");
-    // Join a channel
-    client.join(
-      token,
-      options.channel,
-      options.uid,
-      uid => {
-        // Create a local stream
-        // Initialize the local stream
-        console.log(uid);
-        localStream.init(() => {
-          // Play the local stream
-          localStream.play("me");
-          // Publish the local stream
-          client.publish(localStream, handleError);
-        }, handleError);
-        // Subscribe to the remote stream when it is published
-        client.on("stream-added", function(evt) {
-          client.subscribe(evt.stream, handleError);
-        });
-        // Play the remote stream when it is subsribed
-        client.on("stream-subscribed", function(evt) {
-          let stream = evt.stream;
-          let streamId = String(stream.getId());
-          addVideoStream(streamId);
-          stream.play(streamId);
-        });
-        // Remove the corresponding view when a remote user unpublishes.
-        client.on("stream-removed", function(evt) {
-          let stream = evt.stream;
-          let streamId = String(stream.getId());
-          stream.close();
-          removeVideoStream(streamId);
-        });
-        // Remove the corresponding view when a remote user leaves the channel.
-        client.on("peer-leave", function(evt) {
-          let stream = evt.stream;
-          let streamId = String(stream.getId());
-          stream.close();
-          removeVideoStream(streamId);
-        });
-      },
-      handleError
-    );
   },
   data() {
     return {
@@ -339,30 +300,17 @@ export default {
       loadingMsg: {},
       keySearch: "",
       isSearchUser: false,
-      isFetchUser: false
+      isFetchUser: false,
+      accessToken: "",
+      localStream: null
     };
   },
-  // components: {
-  //   VueMarkdown,
-  // },
-  // created: function () {
-  //   if (this.store.userProfile.isLogin) {
-  //     this.handleGetUsers();
-  //   }
-  //   const userId = this.store.userProfile.id;
-  //   const userName = this.store.userProfile.fullName;
-  //   this.iniCountUsers(userId, userName);
-  // },
 
   methods: {
     ...mapActions("Message", ["getMessageList"]),
     ...mapActions("User", ["getUsers"]),
 
     handleOpenMessage(id, channel) {
-      if (!this.isFetchUser) {
-        this.handleGetUsers();
-      }
-
       const idx = this.messagesOpen.findIndex(msgOpen => msgOpen.id === id);
       if (idx > -1) {
         this.handleRemoveListen(id);
@@ -534,6 +482,13 @@ export default {
           this.$router.push("/signin");
         }
       } else {
+        if (!this.isFetchUser) {
+          this.handleGetUsers();
+          this.handleGetTokenAgora();
+          const userId = this.store.userProfile.id;
+          const userName = this.store.userProfile.fullName;
+          this.iniCountUsers(userId, userName);
+        }
         this.isShow = true;
       }
     },
@@ -671,8 +626,56 @@ export default {
         this.users.splice(index, 1);
       });
     },
+
     handleViewAllMessages(channelId) {
       this.handleGetMessages(channelId, -1);
+    },
+    handleGetTokenAgora() {
+      const userId = this.store.userProfile.id;
+      const token = RtcTokenBuilder.buildTokenWithUid(
+        AGORA_APP_ID,
+        AGORA_CERTIFICATE,
+        CHANNEL,
+        userId,
+        role,
+        privilegeExpiredTs
+      );
+      this.accessToken = token;
+    },
+
+    async handleJoinChannelAgora() {
+      if (!this.localStream) {
+        this.localStream = AgoraRTC.createStream({
+          audio: true,
+          video: true
+        });
+      }
+      const userId = this.store.userProfile.id;
+      // Join a channel
+      clientAgora.join(
+        this.accessToken,
+        CHANNEL,
+        userId,
+        () => {
+          // Create a local stream
+          // Initialize the local stream
+          console.log(this);
+          this.localStream.init(() => {
+            // Play the local stream
+            this.localStream.play("me");
+            // Publish the local stream
+            clientAgora.publish(this.localStream, handleError);
+          }, handleError);
+        },
+        handleError
+      );
+    },
+    async handleLeaveChannelAgora() {
+      // clientAgora.unpublish(this.localStream);
+      // Leave the channel.
+      await clientAgora.leave();
+      this.localStream.stop();
+      this.localStream.close();
     }
   },
   computed: {

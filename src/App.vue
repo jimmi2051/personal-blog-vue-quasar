@@ -2,12 +2,12 @@
   <div id="app">
     <q-layout>
       <q-page-container v-if="!store.loading">
-        <Header :change="changeMode" />
+        <Header :change="changeMode" v-if="isShow" />
         <router-view />
-        <Footer />
+        <Footer v-if="isShow" />
       </q-page-container>
     </q-layout>
-    <Chatbox />
+    <Chatbox v-if="isShow" />
   </div>
 </template>
 
@@ -26,6 +26,11 @@ function mapStateToProps(state) {
   };
 }
 export default {
+  data() {
+    return {
+      isShow: true
+    };
+  },
   components: {
     Header,
     Footer,
@@ -61,6 +66,13 @@ export default {
   watch: {
     "$q.dark.isActive"(val) {
       console.log(val ? "On dark mode" : "On light mode");
+    },
+    "$route.path"(to) {
+      if (to === "/video-call") {
+        this.isShow = false;
+      } else {
+        this.isShow = true;
+      }
     }
   }
 };

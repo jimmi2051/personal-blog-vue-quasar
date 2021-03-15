@@ -65,6 +65,12 @@ const routes = [
       import(/* webpackChunkName: "blog" */ "../views/ModuleDetail.vue")
   },
   {
+    path: "/video-call",
+    name: "video-call",
+    component: () =>
+      import(/* webpackChunkName: "blog" */ "../views/VideoCall.vue")
+  },
+  {
     path: "*",
     name: "homeRedirect",
     component: Home

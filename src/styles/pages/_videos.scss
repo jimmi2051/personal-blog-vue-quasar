@@ -1,0 +1,21 @@
+.video-call {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  #me {
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+    video {
+      position: relative !important;
+    }
+  }
+  #remote-container {
+    display: flex;
+    video {
+      height: auto;
+      position: relative !important;
+    }
+  }
+}

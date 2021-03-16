@@ -1,13 +1,14 @@
 <template>
-  <q-page>
-    <div class="video-call">
-      <h4>Local video</h4>
+  <div class="video-call">
+    <div class="list-video">
       <div id="me"></div>
-      <button @click="handleLeaveChannelAgora">Leave</button>
-      <h4>Remote video</h4>
-      <div id="remote-container"></div>
     </div>
-  </q-page>
+
+    <div id="remote-container"></div>
+    <div class="bottom-bar">
+      <i class="fa fa-phone text-red fa-2x" @click="handleLeaveChannelAgora" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -38,6 +39,7 @@ function addVideoStream(elementId) {
   let streamDiv = document.createElement("div");
   // Assigns the elementId to the div.
   streamDiv.id = elementId;
+  streamDiv.className = "margin-center";
   // Takes care of the lateral inversion
   streamDiv.style.transform = "rotateY(180deg)";
   // Adds the div to the container.
@@ -114,7 +116,6 @@ export default {
     //   }
     // }
     const accessToken = this.handleGetTokenAgora(peerId, channelCalling);
-    // console.log("accessToken ===>", accessToken);
     // Join a channel
     clientAgora.join(
       accessToken,
@@ -123,7 +124,6 @@ export default {
       () => {
         // Create a local stream
         // Initialize the local stream
-
         this.localStream.init(() => {
           // Play the local stream
           this.localStream.play("me");
@@ -141,6 +141,7 @@ export default {
       await clientAgora.leave();
       this.localStream.stop();
       this.localStream.close();
+      window.close();
     },
     handleGetTokenAgora(userId, channel) {
       const token = RtcTokenBuilder.buildTokenWithUid(

@@ -157,6 +157,25 @@
         </div>
       </div>
     </div>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="phone" color="primary" text-color="white" />
+          <span class="q-ml-sm"> You have a call from {{ caller }} </span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Accept"
+            @click="handleAcceptCall(callerId, channelId)"
+            color="primary"
+            v-close-popup
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 <script>
@@ -198,6 +217,7 @@ export default {
       const userId = this.store.userProfile.id;
       const userName = this.store.userProfile.fullName;
       this.iniCountUsers(userId, userName);
+      this.initChannelCall();
     }
   },
   data() {
@@ -216,7 +236,11 @@ export default {
       loadingMsg: {},
       keySearch: "",
       isSearchUser: false,
-      isFetchUser: false
+      isFetchUser: false,
+      confirm: false,
+      caller: "",
+      channelId: "",
+      callerId: ""
     };
   },
 
@@ -293,7 +317,7 @@ export default {
       if (channelId === CHANNEL) {
         channel = CHANNEL;
       }
-      const name = this.store.userProfile.fullname;
+      const name = this.store.userProfile.fullName;
       // Case Msg Empty Return
       if (this.newMsgToSend[channelId] === "") {
         this.$q.notify({
@@ -518,6 +542,7 @@ export default {
         encrypted: true,
         authEndpoint: `${API_URL}pusher/auth?userName=${userName}&userId=${userId}`
       });
+
       const channel = pusher.subscribe("presence-videocall");
 
       channel.bind("pusher:subscription_succeeded", members => {
@@ -540,15 +565,44 @@ export default {
         this.users.splice(index, 1);
       });
     },
-
+    initChannelCall() {
+      const channelCalling = pusherMessage.subscribe("channel-calling");
+      channelCalling.bind("receive-call", data => {
+        const id = this.store.userProfile.id;
+        if (id !== data.id) {
+          this.confirm = true;
+          this.caller = data.caller;
+          this.callerId = data.id;
+          this.channelId = data.channelId;
+        }
+        this.confirm = true;
+      });
+    },
     handleViewAllMessages(channelId) {
       this.handleGetMessages(channelId, -1);
     },
     handleCallingToUser(userId) {
-      var n =
+      const channelId = `${userId}${this.store.userProfile.id}`;
+      const n =
         "width=1354,height=836,status=0,titlebar=0,scrollbars=0,menubar=0,toolbar=0,location=0,resizable=1";
       let route = this.$router.resolve({
-        path: `/video-call?isHost=true&iscallingId=${userId}&peerId=${this.store.userProfile.id}&isVideo=true`
+        path: `/video-call?isHost=true&callingId=${userId}&peerId=${this.store.userProfile.id}&isVideo=true&channelId=${channelId}`
+      });
+      window.open(route.href, "_blank", n);
+
+      // const data = {
+      //   id: this.store.userProfile.id,
+      //   caller: this.store.userProfile.fullname,
+      //   channelId,
+      //   receiverId: userId
+      // };
+      // TODO: Add API to trigger send event ---- Calling
+    },
+    handleAcceptCall(userId, channelId) {
+      const n =
+        "width=1354,height=836,status=0,titlebar=0,scrollbars=0,menubar=0,toolbar=0,location=0,resizable=1";
+      let route = this.$router.resolve({
+        path: `/video-call?isHost=false&callingId=${userId}&peerId=${this.store.userProfile.id}&isVideo=true&channelId=${channelId}`
       });
       window.open(route.href, "_blank", n);
     }

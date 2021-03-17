@@ -36,7 +36,7 @@
           </div>
           <i class="fas fa-times custom-i" @click="isShow = false" />
           <i class="fas fa-list custom-i" />
-          <i class="fas fa-video custom-i" @click="handleCallingToUser" />
+          <!-- <i class="fas fa-video custom-i" @click="handleCallingToUser" /> -->
           <i
             class="fas fa-search custom-i"
             @click="isSearchUser = !isSearchUser"
@@ -54,6 +54,7 @@
               </q-avatar>
               <p>
                 {{ user.fullname || "Anonymous" }}
+                <span v-if="store.me === user.id">( Me )</span>
               </p>
               <i
                 v-if="
@@ -97,6 +98,7 @@
           />
           <i class="fas fa-list custom-i" />
           <i
+            v-if="channel.id !== store.me && channel.id !== CHANNEL"
             class="fas fa-video custom-i"
             @click="handleCallingToUser(channel.id)"
           />
@@ -203,7 +205,9 @@ function mapStateToProps(state) {
     loading: state.Message.messageList.loading,
     messageList: data,
     userProfile,
-    users
+    users,
+    isLogin: userProfile.isLogin,
+    me: userProfile.id
   };
 }
 
@@ -211,13 +215,13 @@ export default {
   components: {
     VueMarkdown
   },
-  created: async function() {
+  created: function() {
     if (this.store.userProfile.isLogin) {
-      this.handleGetUsers();
       const userId = this.store.userProfile.id;
       const userName = this.store.userProfile.fullName;
-      this.iniCountUsers(userId, userName);
+      this.initCountUsers(userId, userName);
       this.initChannelCall();
+      this.handleGetUsers();
     }
   },
   data() {
@@ -420,13 +424,6 @@ export default {
           this.$router.push("/signin");
         }
       } else {
-        if (!this.isFetchUser) {
-          this.handleGetUsers();
-
-          const userId = this.store.userProfile.id;
-          const userName = this.store.userProfile.fullName;
-          this.iniCountUsers(userId, userName);
-        }
         this.isShow = true;
       }
     },
@@ -536,7 +533,7 @@ export default {
       pusherMessage.unsubscribe(channel);
     },
 
-    iniCountUsers(userId, userName) {
+    initCountUsers(userId, userName) {
       const pusher = new Pusher("1bb3ea564162ad9f320a", {
         cluster: "ap1",
         encrypted: true,
@@ -565,46 +562,55 @@ export default {
         this.users.splice(index, 1);
       });
     },
+
     initChannelCall() {
-      const channelCalling = pusherMessage.subscribe("channel-calling");
-      channelCalling.bind("receive-call", data => {
+      const channelCalling = pusherMessage.subscribe("call-channel");
+      channelCalling.bind("trigger-call", data => {
+        const { channelId, callerId, receiverId } = data;
         const id = this.store.userProfile.id;
-        if (id !== data.id) {
+        if (id !== callerId && id === receiverId) {
           this.confirm = true;
-          this.caller = data.caller;
-          this.callerId = data.id;
-          this.channelId = data.channelId;
+          this.caller = callerId;
+          this.callerId = callerId;
+          this.channelId = channelId;
         }
-        this.confirm = true;
       });
     },
+
     handleViewAllMessages(channelId) {
       this.handleGetMessages(channelId, -1);
     },
+
     handleCallingToUser(userId) {
       const channelId = `${userId}${this.store.userProfile.id}`;
       const n =
         "width=1354,height=836,status=0,titlebar=0,scrollbars=0,menubar=0,toolbar=0,location=0,resizable=1";
       let route = this.$router.resolve({
-        path: `/video-call?isHost=true&callingId=${userId}&peerId=${this.store.userProfile.id}&isVideo=true&channelId=${channelId}`
+        path: `/video-call?receiverId=${userId}&callerId=${this.store.userProfile.id}&isVideo=true&channelId=${channelId}`
       });
       window.open(route.href, "_blank", n);
-
-      // const data = {
-      //   id: this.store.userProfile.id,
-      //   caller: this.store.userProfile.fullname,
-      //   channelId,
-      //   receiverId: userId
-      // };
-      // TODO: Add API to trigger send event ---- Calling
+      // API Send signal to Pusher --- Trigger event
+      this.handleSendCall(channelId, this.store.userProfile.id, userId);
     },
+
     handleAcceptCall(userId, channelId) {
       const n =
         "width=1354,height=836,status=0,titlebar=0,scrollbars=0,menubar=0,toolbar=0,location=0,resizable=1";
       let route = this.$router.resolve({
-        path: `/video-call?isHost=false&callingId=${userId}&peerId=${this.store.userProfile.id}&isVideo=true&channelId=${channelId}`
+        path: `/video-call?receiverId=${this.store.userProfile.id}&callerId=${userId}&isVideo=true&channelId=${channelId}`
       });
       window.open(route.href, "_blank", n);
+    },
+
+    handleSendCall(channelId, callerId, receiverId) {
+      const payload = {
+        uri: "sendCall",
+        params: { channelId, callerId, receiverId },
+        opt: {
+          method: "POST"
+        }
+      };
+      FetchApi(payload);
     }
   },
   computed: {
@@ -631,6 +637,26 @@ export default {
               .includes(this.keySearch.toLowerCase())) ||
           user.username.includes(this.keySearch.toLowerCase())
       );
+    }
+  },
+  watch: {
+    store(newValue) {
+      if (newValue.isLogin) {
+        if (!this.isFetchUser) {
+          const userId = newValue.userProfile.id;
+          const userName = newValue.userProfile.fullName;
+          this.initCountUsers(userId, userName);
+          this.initChannelCall();
+          this.handleGetUsers();
+        }
+      } else {
+        try {
+          this.handleRemoveListen("presence-videocall");
+          this.handleRemoveListen("call-channel");
+        } catch {
+          // console.log("[DEBUG] NOTHING")
+        }
+      }
     }
   }
 };

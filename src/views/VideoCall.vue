@@ -78,6 +78,14 @@ clientAgora.on("peer-leave", function(evt) {
   removeVideoStream(streamId);
 });
 
+import { mapState } from "vuex";
+function mapStateToProps(state) {
+  const userProfile = state.User.userProfile;
+  return {
+    userProfile
+  };
+}
+
 export default {
   meta: {
     // sets document title
@@ -91,15 +99,9 @@ export default {
   },
   created: function() {
     const { query } = this.$route;
-    let {
-      peerId,
-      callingId,
-      isHost = "true",
-      isVideo = "true",
-      channelCalling = CHANNEL
-    } = query;
-    console.log("====", isHost, callingId);
-    isHost = Boolean(isHost === "true");
+    const myId = this.store.userProfile.id;
+    let { isVideo = "true", channelId = CHANNEL } = query;
+
     isVideo = Boolean(isVideo === "true");
     if (!this.localStream) {
       this.localStream = AgoraRTC.createStream({
@@ -115,12 +117,12 @@ export default {
     //     channelCalling = `${callingId}${peerId}`;
     //   }
     // }
-    const accessToken = this.handleGetTokenAgora(peerId, channelCalling);
+    const accessToken = this.handleGetTokenAgora(myId, channelId);
     // Join a channel
     clientAgora.join(
       accessToken,
-      channelCalling,
-      peerId,
+      channelId,
+      myId,
       () => {
         // Create a local stream
         // Initialize the local stream
@@ -154,6 +156,11 @@ export default {
       );
       return token;
     }
+  },
+  computed: {
+    ...mapState({
+      store: mapStateToProps
+    })
   },
   destroyed() {
     clientAgora.leave();

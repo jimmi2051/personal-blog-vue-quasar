@@ -65,6 +65,13 @@
               />
               <i v-else class="fas fa-circle" />
             </li>
+             <li @click="handleOpenMessage(BOT_CHANNEL, 'Tèo Bot')">
+              <q-avatar size="40px">
+                <img :src="require(`@/assets/images/Icons/bot.png`)" />
+              </q-avatar>
+              <p>Tèo Bot</p>
+              <i class="fas fa-circle green" />
+            </li>
             <li @click="handleOpenMessage(CHANNEL, 'All Members')">
               <q-avatar size="40px">
                 <img :src="require(`@/assets/images/Icons/users.jpg`)" />
@@ -98,7 +105,7 @@
           />
           <i class="fas fa-list custom-i" />
           <i
-            v-if="channel.id !== store.me && channel.id !== CHANNEL"
+            v-if="channel.id !== store.me && channel.id !== CHANNEL && channel.id !== BOT_CHANNEL"
             class="fas fa-video custom-i"
             @click="handleCallingToUser(channel.id)"
           />
@@ -163,7 +170,7 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="phone" color="primary" text-color="white" />
-          <span class="q-ml-sm"> You have a call from {{ caller }} </span>
+          <span class="q-ml-sm"> You have a call from: <b>{{ caller }}</b> </span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -187,7 +194,7 @@ import FetchApi from "utils/FetchApi";
 
 import { processStamp } from "utils/Helpers";
 import VueMarkdown from "vue-markdown";
-import { CHANNEL } from "utils/Constants";
+import { CHANNEL, BOT_CHANNEL } from "utils/Constants";
 
 const API_URL = process.env.VUE_APP_API_URL;
 // Enable pusher logging - don't include this in production
@@ -218,7 +225,7 @@ export default {
   created: function() {
     if (this.store.userProfile.isLogin) {
       const userId = this.store.userProfile.id;
-      const userName = this.store.userProfile.fullName;
+      const userName = this.store.userProfile.fullname;
       this.initCountUsers(userId, userName);
       this.initChannelCall();
       this.handleGetUsers();
@@ -230,7 +237,7 @@ export default {
       msgToSend: "",
       isShow: false,
       users: [],
-      activeBot: true,
+      activeBot: false,
       limit: -1,
       isLoading: true,
       messagesOpen: [],
@@ -244,7 +251,8 @@ export default {
       confirm: false,
       caller: "",
       channelId: "",
-      callerId: ""
+      callerId: "",
+      BOT_CHANNEL
     };
   },
 
@@ -321,7 +329,7 @@ export default {
       if (channelId === CHANNEL) {
         channel = CHANNEL;
       }
-      const name = this.store.userProfile.fullName;
+      const name = this.store.userProfile.fullname;
       // Case Msg Empty Return
       if (this.newMsgToSend[channelId] === "") {
         this.$q.notify({
@@ -394,7 +402,7 @@ export default {
           user: name,
           message: message.message,
           channel: channel,
-          activeBot: this.activeBot
+          activeBot: channelId === this.BOT_CHANNEL ? true : this.activeBot
         },
         opt: {
           method: "POST"
@@ -566,11 +574,12 @@ export default {
     initChannelCall() {
       const channelCalling = pusherMessage.subscribe("call-channel");
       channelCalling.bind("trigger-call", data => {
-        const { channelId, callerId, receiverId } = data;
+        const { channelId, callerId, receiverId, callerName } = data;
+        console.log("data ===>",data)
         const id = this.store.userProfile.id;
         if (id !== callerId && id === receiverId) {
           this.confirm = true;
-          this.caller = callerId;
+          this.caller = callerName;
           this.callerId = callerId;
           this.channelId = channelId;
         }
@@ -590,7 +599,7 @@ export default {
       });
       window.open(route.href, "_blank", n);
       // API Send signal to Pusher --- Trigger event
-      this.handleSendCall(channelId, this.store.userProfile.id, userId);
+      this.handleSendCall(channelId, this.store.userProfile.id, userId, this.store.userProfile.fullname);
     },
 
     handleAcceptCall(userId, channelId) {
@@ -602,10 +611,10 @@ export default {
       window.open(route.href, "_blank", n);
     },
 
-    handleSendCall(channelId, callerId, receiverId) {
+    handleSendCall(channelId, callerId, receiverId, callerName) {
       const payload = {
         uri: "sendCall",
-        params: { channelId, callerId, receiverId },
+        params: { channelId, callerId, receiverId, callerName },
         opt: {
           method: "POST"
         }
@@ -644,7 +653,7 @@ export default {
       if (newValue.isLogin) {
         if (!this.isFetchUser) {
           const userId = newValue.userProfile.id;
-          const userName = newValue.userProfile.fullName;
+          const userName = newValue.userProfile.fullname;
           this.initCountUsers(userId, userName);
           this.initChannelCall();
           this.handleGetUsers();
@@ -653,6 +662,7 @@ export default {
         try {
           this.handleRemoveListen("presence-videocall");
           this.handleRemoveListen("call-channel");
+          this.isFetchUser = false;
         } catch {
           // console.log("[DEBUG] NOTHING")
         }

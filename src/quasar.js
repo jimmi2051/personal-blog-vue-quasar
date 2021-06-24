@@ -29,7 +29,7 @@ import {
   Dialog,
   Meta
 } from "quasar";
-
+Loading.show();
 Vue.use(Quasar, {
   config: { LoadingBar, Notify },
   components: {

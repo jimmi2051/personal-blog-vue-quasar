@@ -1,5 +1,6 @@
 import FetchApi from "utils/FetchApi";
 import { LoadingBar } from "quasar";
+import Vue from "vue";
 
 const actionMiddleware = (action, store) => {
   LoadingBar.setDefaults({
@@ -16,6 +17,7 @@ const actionMiddleware = (action, store) => {
     ...rest
   } = action;
   LoadingBar.start();
+  Vue.prototype.$q.loading.show();
   if (beforeCallType) {
     store.commit(beforeCallType);
   }
@@ -36,9 +38,11 @@ const actionMiddleware = (action, store) => {
           afterError(response);
         }
       }
+      Vue.prototype.$q.loading.hide();
       LoadingBar.stop();
     })
     .catch(error => {
+      Vue.prototype.$q.loading.hide();
       LoadingBar.stop();
       if (errorType) {
         store.commit(errorType, error);

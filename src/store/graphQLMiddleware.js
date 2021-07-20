@@ -5,6 +5,7 @@ import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
+import Vue from "vue";
 
 const API_URL = process.env.VUE_APP_API_URL;
 /* Tutorial update fragmentTypes
@@ -32,6 +33,7 @@ const actionMiddleware = (action, store) => {
     payload
   } = action;
   LoadingBar.start();
+  Vue.prototype.$q.loading.show();
 
   // Init ApploClient
   // HTTP connection to the API
@@ -71,6 +73,7 @@ const actionMiddleware = (action, store) => {
         }
       }
       LoadingBar.stop();
+      Vue.prototype.$q.loading.hide();
     })
     .catch(error => {
       // Error
@@ -89,6 +92,7 @@ const actionMiddleware = (action, store) => {
         afterError(error);
       }
       LoadingBar.stop();
+      Vue.prototype.$q.loading.hide();
     });
 };
 

@@ -82,7 +82,6 @@ export default {
     ...mapActions("User", ["signIn"]),
 
     handleSignIn(identifier, password) {
-      this.$q.loading.show();
       let payload = {
         nextErr: err => {
           this.$q.notify({
@@ -91,7 +90,6 @@ export default {
             icon: "warning",
             message: JSON.stringify(err)
           });
-          this.$q.loading.hide();
         },
         nextSuccess: res => {
           if (res.jwt) {
@@ -113,7 +111,6 @@ export default {
               message: JSON.stringify(res)
             });
           }
-          this.$q.loading.hide();
         },
         identifier,
         password

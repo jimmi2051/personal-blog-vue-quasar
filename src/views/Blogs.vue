@@ -74,11 +74,11 @@
             </q-pagination>
           </div>
         </div>
-        <div class="row blogs-skeleton" v-if="loading">
+        <!-- <div class="row blogs-skeleton" v-if="loading">
           <q-inner-loading :showing="true">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
-        </div>
+        </div> -->
       </div>
     </div>
   </q-page>

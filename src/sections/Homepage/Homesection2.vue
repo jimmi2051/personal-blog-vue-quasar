@@ -2,10 +2,10 @@
   <div id="work">
     <h2 class="section--title">My Experience</h2>
     <q-timeline color="secondary">
-      <q-timeline-entry heading>From 2018 to 2021</q-timeline-entry>
+      <q-timeline-entry heading>From 2018 to Now</q-timeline-entry>
       <q-timeline-entry
         title="JOBHOPIN"
-        subtitle="Mar 1, 2021 - July 10, 2021"
+        subtitle="Mar 1, 2022 - July 10, 2022"
         :avatar="require('@/assets/images/Homepage/jobhopin-logo.png')"
       >
         <div clas="text-body-1">

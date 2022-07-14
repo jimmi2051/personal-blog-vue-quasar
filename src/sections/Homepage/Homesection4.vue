@@ -6,6 +6,36 @@
       </div>
     </div>
 
+    <!-- <div class="col-sm-4 q-pa-md"> -->
+    <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
+      <div class="thumbnail-video">
+        <img
+          :src="require('@/assets/images/Homepage/job-ai-lysis.jpg')"
+          alt="company-1"
+          class="thumbnail-video-image"
+        />
+      </div>
+      <q-card-section>
+        <div class="text-h6">Jobhopin - JobAI-Lysis - SAP Success Factors</div>
+        <div class="text-subtitle2">
+          Faster screening, Better decision-making with AI-powered Market
+          Insights
+        </div>
+        <q-btn
+          type="a"
+          href="https://store.sap.com/dcp/en/product/display-0000060344_live_v1/JobAI-lysis%20-%20Mass%20CV%20Parser%20&%20Market%20Intelligence"
+          no-shadow
+          target="__blank"
+          class="q-mt-md"
+          >References
+        </q-btn>
+      </q-card-section>
+
+      <!-- <q-card-section class="q-pt-none">
+      </q-card-section>-->
+    </q-card>
+    <!-- </div> -->
+
     <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
       <div class="thumbnail-video">
         <img
@@ -48,34 +78,6 @@
         <q-btn
           type="a"
           href="https://www.cynopsis-solutions.com/ares"
-          no-shadow
-          target="__blank"
-          class="q-mt-md"
-          >References
-        </q-btn>
-      </q-card-section>
-
-      <!-- <q-card-section class="q-pt-none">
-      </q-card-section>-->
-    </q-card>
-    <!-- </div> -->
-    <!-- <div class="col-sm-4 q-pa-md"> -->
-    <q-card class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-md">
-      <div class="thumbnail-video">
-        <img
-          :src="require('@/assets/images/Homepage/background-h3zoom.jpg')"
-          alt="company-1"
-          class="thumbnail-video-image"
-        />
-      </div>
-      <q-card-section>
-        <div class="text-h6">H3Zoom - Facade Inspector</div>
-        <div class="text-subtitle2">
-          Automating and Digitizing Building Facade Inspections
-        </div>
-        <q-btn
-          type="a"
-          href="https://www.h3zoom.ai/facade-inspector"
           no-shadow
           target="__blank"
           class="q-mt-md"

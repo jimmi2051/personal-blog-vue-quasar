@@ -64,7 +64,7 @@
             </q-item-section>
 
             <q-item-section>
-              <q-btn type="a" href="tel:0569363575" no-shadow target="__blank">
+              <q-btn type="a" href="tel:0385xxxxxx" no-shadow target="__blank">
                 [Thành Nguyễn Lý] (+84) 569363575
               </q-btn>
             </q-item-section>
@@ -81,8 +81,8 @@
             hint="E-mail"
             lazy-rules
             :rules="[
-              val => (val && val.length > 0) || 'Please type something',
-              isValidEmail
+              (val) => (val && val.length > 0) || 'Please type something',
+              isValidEmail,
             ]"
             ref="email"
             name="email"
@@ -94,7 +94,9 @@
             label="Your name *"
             hint="Name and surname"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Please type something']"
+            :rules="[
+              (val) => (val && val.length > 0) || 'Please type something',
+            ]"
             ref="name"
             name="fullname"
           />
@@ -105,7 +107,9 @@
             filled
             type="textarea"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Please type something']"
+            :rules="[
+              (val) => (val && val.length > 0) || 'Please type something',
+            ]"
             ref="description"
           />
           <q-toggle v-model="accept" label="I'm not a bot" />
@@ -141,7 +145,7 @@ export default {
       name: null,
       email: null,
       accept: false,
-      description: null
+      description: null,
     };
   },
   methods: {
@@ -151,7 +155,7 @@ export default {
           color: "red-5",
           textColor: "white",
           icon: "warning",
-          message: "You need confirm you aren't a bot."
+          message: "You need confirm you aren't a bot.",
         });
       } else {
         const payload = {
@@ -159,19 +163,19 @@ export default {
           params: {
             email: this.email,
             name: this.name,
-            description: this.description
+            description: this.description,
           },
           opt: {
-            method: "POST"
-          }
+            method: "POST",
+          },
         };
-        FetchApi(payload).then(response => {
+        FetchApi(payload).then((response) => {
           if (response.error) {
             this.$q.notify({
               color: "red-5",
               textColor: "white",
               icon: "warning",
-              message: response.message
+              message: response.message,
             });
           } else {
             this.$q.notify({
@@ -179,7 +183,7 @@ export default {
               textColor: "white",
               icon: "cloud_done",
               message:
-                "Submitted. Thanks for your contact. I'll check it as soon as possible."
+                "Submitted. Thanks for your contact. I'll check it as soon as possible.",
             });
             this.onReset();
             this.$refs.email.resetValidation();
@@ -197,9 +201,10 @@ export default {
       this.accept = false;
     },
     isValidEmail(val) {
-      const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+      const emailPattern =
+        /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
       return emailPattern.test(val) || "Invalid email";
-    }
-  }
+    },
+  },
 };
 </script>

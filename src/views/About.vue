@@ -12,7 +12,7 @@
               <p class="text-subtitle1 text-bold">GET IN CONTACT</p>
               <p class="text-body1">
                 <span class="text-bold">Mobile:</span>
-                <a href="tel:0569363575">(+84) 569363575</a>
+                <a href="tel:0385xxxxxx">(+84) 569363575</a>
                 <br />
                 <span class="text-bold">Email:</span>
                 <a href="mailto:thanhnl0697@gmail.com">thanhnl0697@gmail.com</a>
@@ -85,14 +85,14 @@ export default {
   data() {
     return {
       lorem:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     };
   },
   meta: {
     // sets document title
     title: "About Page",
-    titleTemplate: title => `${title} - DefTnt Blog`
-  }
+    titleTemplate: (title) => `${title} - DefTnt Blog`,
+  },
 };
 </script>
 
